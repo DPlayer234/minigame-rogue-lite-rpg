@@ -31,6 +31,7 @@ namespace SAE.RougePG
         {
             if (instance != null)
             {
+                Debug.LogWarning("There is an additional active StateManager. The old instance was destroyed.");
                 Destroy(instance);
             }
 

@@ -12,16 +12,22 @@ namespace SAE.RougePG.Main
     public class SpriteManager3D : MonoBehaviour
     {
         /// <summary> The camera to rotate to. Defaults to <see cref="StateManager.MainCamera"/>. </summary>
-        public Camera mainCamera;
+        public Transform mainCameraTransform;
+
+        [HideInInspector]
+        /// <summary> Contains all the associated <see cref="Transform"/>s. </summary>
+        public Transform[] animatedTransforms;
+
+        [HideInInspector]
+        /// <summary> Transform of the Sprite root </summary>
+        public Transform rootTransform;
+
+        [HideInInspector]
+        /// <summary> Transform of the Sprite body </summary>
+        public Transform bodyTransform;
 
         /// <summary> The associated <see cref="SortingGroup"/>. </summary>
         private SortingGroup sortingGroup;
-
-        /// <summary> Contains all the associated <see cref="Transform"/>s. </summary>
-        private Transform[] transforms;
-
-        /// <summary> First child of this <seealso cref="GameObject"/> </summary>
-        private Transform firstChild;
 
         /// <summary> Whether it's facing right. </summary>
         private bool isFacingRight;
@@ -77,7 +83,7 @@ namespace SAE.RougePG.Main
                 if (visiblyFacingRight && this.flipStatus <= 0.0f || !visiblyFacingRight && this.flipStatus > 0.0f)
                 {
                     // Invert relative Z-position
-                    foreach (Transform transform in this.transforms)
+                    foreach (Transform transform in this.animatedTransforms)
                     {
                         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -transform.localPosition.z);
                     }
@@ -85,10 +91,30 @@ namespace SAE.RougePG.Main
                     visiblyFacingRight = this.flipStatus > 0.0f;
                 }
 
-                this.firstChild.transform.localRotation = Quaternion.Euler(0.0f, 90.0f - this.flipStatus * 90.0f, 0.0f);
+                this.bodyTransform.localRotation = Quaternion.Euler(0.0f, 90.0f - this.flipStatus * 90.0f, 0.0f);
 
                 yield return null;
             }
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="SpriteManager3D"/> whether it is or is not active.
+        /// </summary>
+        private void Awake()
+        {
+            this.isFacingRight = true;
+            this.flipStatus = 1.0f;
+
+            this.sortingGroup = this.GetComponent<SortingGroup>();
+            if (this.sortingGroup == null) Debug.LogWarning("There is no <b>SortingGroup</b> attached to this GameObject. Render priority may not be correct.");
+
+            if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a <b>Sprite Root/Hierarchy</b>.");
+            this.rootTransform = this.transform.GetChild(0);
+
+            if (this.rootTransform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a <b>Sprite Body</b>.");
+            this.bodyTransform = this.rootTransform.GetChild(0);
+
+            this.animatedTransforms = this.bodyTransform.GetComponentsInChildren<Transform>();
         }
 
         /// <summary>
@@ -96,27 +122,25 @@ namespace SAE.RougePG.Main
         /// </summary>
         private void Start()
         {
-            if (mainCamera == null)
+            if (this.mainCameraTransform == null)
             {
                 // Default to the main camera of the scene
-                mainCamera = StateManager.MainCamera;
+                this.mainCameraTransform = StateManager.MainCamera.transform;
             }
-            
-            this.sortingGroup = GetComponent<SortingGroup>();
-            this.isFacingRight = true;
-            this.flipStatus = 1.0f;
-
-            this.firstChild = this.transform.GetChild(0);
-            this.transforms = this.firstChild.GetComponentsInChildren<Transform>();
         }
-        
+
+#if UNITY_EDITOR
+        /// <summary>
+        ///     FLIP TEST
+        /// </summary>
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                FlipToDirection(!isFacingRight);
+                this.FlipToDirection(!isFacingRight);
             }
         }
+#endif
 
         /// <summary>
         ///     Called by Unity once every frame after all Updates and FixedUpdates have been executed.
@@ -124,16 +148,18 @@ namespace SAE.RougePG.Main
         private void LateUpdate()
         {
             // Face Camera
-            this.transform.rotation = Quaternion.Euler(0.0f, mainCamera.transform.rotation.eulerAngles.y, 0.0f);
+            this.rootTransform.rotation = Quaternion.Euler(0.0f, this.mainCameraTransform.rotation.eulerAngles.y, 0.0f);
 
-            // Set Layer Order => Get Distance to camera, add int.MinValue to increase overall range and cap the value at int.MaxValue
+            if (this.sortingGroup != null)
+            {
+                // Set Layer Order => Get Distance to camera, add int.MinValue to increase overall range and cap the value at int.MaxValue
+                Vector3 positionDifference = this.mainCameraTransform.position - this.rootTransform.position;
 
-            Vector3 positionDifference = mainCamera.transform.position - this.transform.position;
+                float sqrDistance = (positionDifference - Vector3.Dot(positionDifference, this.rootTransform.right) * this.rootTransform.right).sqrMagnitude;
 
-            float sqrDistance = (positionDifference - Vector3.Dot(positionDifference, this.transform.right) * this.transform.right).sqrMagnitude;
-
-            sortingGroup.sortingOrder = -(int)Mathf.Min(int.MaxValue,
-                SortingOrderMultiplier * sqrDistance);
+                this.sortingGroup.sortingOrder = -(int)Mathf.Min(int.MaxValue,
+                    SortingOrderMultiplier * sqrDistance);
+            }
         }
     }
 }
