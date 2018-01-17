@@ -16,7 +16,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Entities
   - 
   - 
   - 
@@ -44,11 +44,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: LeftLeg
-    uniqueID: 960590975
-    locked: 0
   - name: LeftArm
     uniqueID: 836097237
+    locked: 0
+  - name: LeftLeg
+    uniqueID: 960590975
     locked: 0
   - name: Body
     uniqueID: 2200102429

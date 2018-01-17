@@ -9,8 +9,14 @@ namespace SAE.RougePG.Main
     /// </summary>
     public class SpriteAnimator3D : MonoBehaviour
     {
+        /// <summary> How far the current animation state has progressed </summary>
+        private float progress;
+        
         /// <summary> The current animation information </summary>
-        public SpriteAnimationInformation3D information;
+        private SpriteAnimationStatus3D endStatus;
+        
+        /// <summary> Reference information for interpolation </summary>
+        private SpriteAnimationStatus3D startStatus;
 
         /// <summary> The <seealso cref="SpriteManager3D"/> also attached to this <seealso cref="GameObject"/> </summary>
         private SpriteManager3D spriteManager;
@@ -33,7 +39,7 @@ namespace SAE.RougePG.Main
 
                 if (value != null)
                 {
-                    this.animationCoroutine = StartCoroutine(value(this));
+                    this.animationCoroutine = StartCoroutine(value(this.SetAnimationTarget));
                 }
 
                 this.animation = value;
@@ -43,6 +49,27 @@ namespace SAE.RougePG.Main
             {
                 return this.animation;
             }
+        }
+
+        /// <summary>
+        ///     Sets the <seealso cref="SpriteAnimationStatus3D"/>.
+        /// </summary>
+        /// <param name="status">The new status to use</param>
+        private void SetAnimationTarget(SpriteAnimationStatus3D status)
+        {
+            this.progress = 0.0f;
+            this.endStatus = status;
+
+            Vector3[] currentRotations = new Vector3[this.spriteManager.animatedTransforms.Length];
+            for (int i = 0; i < this.spriteManager.animatedTransforms.Length; i++)
+            {
+                currentRotations[i] = VariousCommon.WrapAngle(this.spriteManager.animatedTransforms[i].localEulerAngles);
+            }
+
+            this.startStatus = new SpriteAnimationStatus3D(
+                0.0f,
+                this.spriteManager.bodyTransform.localPosition,
+                currentRotations);
         }
 
         /// <summary>
@@ -62,45 +89,50 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Called by Unity to update the current animation, if any.
+        ///     Called by Unity every frame to update the <see cref="SpriteAnimator3D"/>
         /// </summary>
         private void Update()
         {
-            if (this.information != null)
+            this.UpdateAnimation();
+        }
+
+        /// <summary>
+        ///     Updates the current animation if there is one.
+        /// </summary>
+        private void UpdateAnimation()
+        {
+            if (this.endStatus != null)
             {
+                this.progress += Time.deltaTime * this.endStatus.speed;
+
 #if UNITY_EDITOR
-                if (this.information.rotations.Length + 1 != this.spriteManager.animatedTransforms.Length)
+                if (this.endStatus.rotations.Length != this.startStatus.rotations.Length)
                     Debug.LogWarning("The Amount of Sprites and Rotations does not match up.");
 #endif
-                float deltaTime = Time.deltaTime;
-                float @base = 1.0f - this.information.importance;
 
                 // Move Body
                 this.spriteManager.bodyTransform.localPosition =
-                    VariousCommon.ExponentialLerp(
-                        this.spriteManager.bodyTransform.localPosition,
-                        this.information.position,
-                        @base,
-                        deltaTime);
+                    VariousCommon.SmootherStep(this.startStatus.position, this.endStatus.position, this.progress);
 
                 // Rotate Absolutely Everything Else
-                int length = Mathf.Min(this.information.rotations.Length + 1, this.spriteManager.animatedTransforms.Length);
-                for (int i = 1; i < length; i++)
+                int length = Mathf.Min(this.endStatus.rotations.Length, this.startStatus.rotations.Length);
+                for (int i = 0; i < length; i++)
                 {
                     this.spriteManager.animatedTransforms[i].localEulerAngles =
-                        VariousCommon.ExponentialLerpEuler(
-                            this.spriteManager.animatedTransforms[i].localEulerAngles,
-                            this.information.rotations[i - 1],
-                            @base,
-                            deltaTime);
+                        VariousCommon.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress);
                 }
             }
         }
 
         /// <summary>
-        ///     Allows animating a sprite by replacing the referenced <seealso cref="SpriteAnimationInformation3D"/>.
+        ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus3D"/>.
         ///     It's run as a <see cref="Coroutine"/>, just in case the return type didn't make that obvious enough.
         /// </summary>
-        public delegate IEnumerator SpriteAnimation(SpriteAnimator3D spriteAnimator);
+        public delegate IEnumerator SpriteAnimation(StatusSetter statusSetter);
+
+        /// <summary>
+        ///     Used to set information in a <see cref="SpriteAnimator3D"/>
+        /// </summary>
+        public delegate void StatusSetter(SpriteAnimationStatus3D status);
     }
 }

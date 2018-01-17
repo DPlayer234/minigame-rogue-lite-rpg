@@ -31,8 +31,9 @@ namespace SAE.RougePG
         {
             if (instance != null)
             {
-                Debug.LogWarning("There is an additional active StateManager. The old instance was destroyed.");
-                Destroy(instance);
+                Debug.LogWarning("There is an additional active StateManager. The new instance was destroyed.");
+                Destroy(this);
+                return;
             }
 
             instance = this;
@@ -40,6 +41,13 @@ namespace SAE.RougePG
 
             // Copy relevant set fields.
             MainCamera = mainCamera;
+
+            // Entities should ignore collisions with each other
+            Physics.IgnoreLayerCollision(8, 8, true);
+
+#if UNITY_EDITOR
+            // Debug code... or something goes here
+#endif
         }
     }
 }

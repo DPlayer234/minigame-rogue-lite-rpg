@@ -9,37 +9,23 @@ namespace SAE.RougePG.Main
     /// </summary>
     public class EntityDriver : MonoBehaviour
     {
-        /// <summary> The <seealso cref="SpriteManager3D"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteManager3D spriteManager;
-
         /// <summary> The <seealso cref="SpriteAnimator3D"/> also attached to this <seealso cref="GameObject"/> </summary>
         private SpriteAnimator3D spriteAnimator;
 
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> whether it is or is not active.
-        /// </summary>
-        private void Awake()
-        {
-            this.spriteManager = this.GetComponent<SpriteManager3D>();
-            this.spriteAnimator = this.GetComponent<SpriteAnimator3D>();
-        }
+        /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
+        new private Rigidbody rigidbody;
 
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> when it first becomes active
-        /// </summary>
-        private void Start()
-        {
-            this.spriteAnimator.Animation = IdleAnimation;
-        }
+        /// <summary> Rotation in RADIANS (not degrees) from the top </summary>
+        public float Rotation { set; get; }
 
         /// <summary>
         ///     Generic idle animation! Yay!
         /// </summary>
-        /// <param name="spriteAnimator">The used <seealso cref="SpriteAnimator3D"/></param>
+        /// <param name="informationSetter">Used to set the information</param>
         /// <returns>More time.</returns>
-        private IEnumerator IdleAnimation(SpriteAnimator3D spriteAnimator)
+        public IEnumerator IdleAnimation(SpriteAnimator3D.StatusSetter informationSetter)
         {
-            var lowState = new SpriteAnimationInformation3D(
+            var lowState = new SpriteAnimationStatus3D(
                 // importance
                 0.8f,
                 // position
@@ -52,7 +38,7 @@ namespace SAE.RougePG.Main
                 new Vector3(0.0f, 0.0f, -20.0f),
                 new Vector3(0.0f, 0.0f, -10.0f));
 
-            var highState = new SpriteAnimationInformation3D(
+            var highState = new SpriteAnimationStatus3D(
                 // importance
                 0.8f,
                 // position
@@ -67,14 +53,44 @@ namespace SAE.RougePG.Main
 
             while (true)
             {
-                spriteAnimator.information = lowState;
+                informationSetter(lowState);
 
                 yield return new WaitForSeconds(1.0f);
 
-                spriteAnimator.information = highState;
+                informationSetter(highState);
 
                 yield return new WaitForSeconds(1.0f);
             }
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> whether it is or is not active.
+        /// </summary>
+        private void Awake()
+        {
+            this.spriteAnimator = this.GetComponent<SpriteAnimator3D>();
+            if (this.spriteAnimator == null) throw new Exceptions.EntityDriverException("There is no SpriteAnimator3D attached to this GameObject.");
+
+            this.rigidbody = this.GetComponent<Rigidbody>();
+            if (this.rigidbody == null) throw new Exceptions.EntityDriverException("There is no Rigidbody attached to this GameObject.");
+
+            this.Rotation = 0.0f;
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> when it first becomes active
+        /// </summary>
+        private void Start()
+        {
+            this.spriteAnimator.Animation = this.IdleAnimation;
+        }
+
+        /// <summary>
+        ///     Called by Unity for every physics update to update the <see cref="EntityDriver"/>
+        /// </summary>
+        private void FixedUpdate()
+        {
+            
         }
     }
 }

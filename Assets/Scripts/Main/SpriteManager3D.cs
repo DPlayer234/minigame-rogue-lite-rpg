@@ -15,7 +15,7 @@ namespace SAE.RougePG.Main
         public Transform mainCameraTransform;
 
         [HideInInspector]
-        /// <summary> Contains all the associated <see cref="Transform"/>s. </summary>
+        /// <summary> Contains all the associated <see cref="Transform"/>s usable in animations. </summary>
         public Transform[] animatedTransforms;
 
         [HideInInspector]
@@ -106,15 +106,17 @@ namespace SAE.RougePG.Main
             this.flipStatus = 1.0f;
 
             this.sortingGroup = this.GetComponent<SortingGroup>();
-            if (this.sortingGroup == null) Debug.LogWarning("There is no <b>SortingGroup</b> attached to this GameObject. Render priority may not be correct.");
+            if (this.sortingGroup == null) Debug.LogWarning("There is no SortingGroup attached to this GameObject. Render priority may not be correct.");
 
-            if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a <b>Sprite Root/Hierarchy</b>.");
+            if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
             this.rootTransform = this.transform.GetChild(0);
 
-            if (this.rootTransform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a <b>Sprite Body</b>.");
+            if (this.rootTransform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
             this.bodyTransform = this.rootTransform.GetChild(0);
 
-            this.animatedTransforms = this.bodyTransform.GetComponentsInChildren<Transform>();
+            List<Transform> transformList = new List<Transform>(this.bodyTransform.GetComponentsInChildren<Transform>());
+            transformList.Remove(this.bodyTransform);
+            this.animatedTransforms = transformList.ToArray();
         }
 
         /// <summary>
@@ -128,19 +130,6 @@ namespace SAE.RougePG.Main
                 this.mainCameraTransform = StateManager.MainCamera.transform;
             }
         }
-
-#if UNITY_EDITOR
-        /// <summary>
-        ///     FLIP TEST
-        /// </summary>
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                this.FlipToDirection(!isFacingRight);
-            }
-        }
-#endif
 
         /// <summary>
         ///     Called by Unity once every frame after all Updates and FixedUpdates have been executed.
