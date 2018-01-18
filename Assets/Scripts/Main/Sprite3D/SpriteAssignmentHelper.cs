@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SAE.RougePG.Main
+namespace SAE.RougePG.Main.Sprite3D
 {
     /// <summary>
     ///     Assigns sprites.

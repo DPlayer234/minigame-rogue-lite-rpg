@@ -102,7 +102,7 @@ namespace SAE.RougePG
         /// </summary>
         /// <param name="value">The value to wrap</param>
         /// <returns>A better value</returns>
-        public static float WrapAngle(float value)
+        public static float WrapDegrees(float value)
         {
             return (value + 180.0f) % 360.0f - 180.0f;
         }
@@ -112,12 +112,22 @@ namespace SAE.RougePG
         /// </summary>
         /// <param name="value">The value to wrap</param>
         /// <returns>A better value</returns>
-        public static Vector3 WrapAngle(Vector3 value)
+        public static Vector3 WrapDegrees(Vector3 value)
         {
             return new Vector3(
-                WrapAngle(value.x),
-                WrapAngle(value.y),
-                WrapAngle(value.z));
+                WrapDegrees(value.x),
+                WrapDegrees(value.y),
+                WrapDegrees(value.z));
+        }
+
+        /// <summary>
+        ///     Wraps an Angle to -PI..PI
+        /// </summary>
+        /// <param name="value">The value to wrap</param>
+        /// <returns>A better value</returns>
+        public static float WrapRadians(float value)
+        {
+            return (value + Mathf.PI) % (Mathf.PI * 2) - Mathf.PI;
         }
     }
 }

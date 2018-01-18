@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG.Main
+namespace SAE.RougePG.Main.Sprite3D
 {
     /// <summary>
-    ///     Allows for animating sprites using a <see cref="SpriteManager3D"/>
+    ///     Allows for animating sprites using a <see cref="SpriteManager"/>
     /// </summary>
-    public class SpriteAnimator3D : MonoBehaviour
+    [RequireComponent(typeof(SpriteManager))]
+    public class SpriteAnimator : MonoBehaviour
     {
         /// <summary> How far the current animation state has progressed </summary>
         private float progress;
         
         /// <summary> The current animation information </summary>
-        private SpriteAnimationStatus3D endStatus;
+        private SpriteAnimationStatus endStatus;
         
         /// <summary> Reference information for interpolation </summary>
-        private SpriteAnimationStatus3D startStatus;
+        private SpriteAnimationStatus startStatus;
 
-        /// <summary> The <seealso cref="SpriteManager3D"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteManager3D spriteManager;
+        /// <summary> The <seealso cref="SpriteManager"/> also attached to this <seealso cref="GameObject"/> </summary>
+        private SpriteManager spriteManager;
 
         /// <summary> The active animation coroutine </summary>
         private Coroutine animationCoroutine;
@@ -52,10 +53,10 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Sets the <seealso cref="SpriteAnimationStatus3D"/>.
+        ///     Sets the <seealso cref="SpriteAnimationStatus"/>.
         /// </summary>
         /// <param name="status">The new status to use</param>
-        private void SetAnimationTarget(SpriteAnimationStatus3D status)
+        private void SetAnimationTarget(SpriteAnimationStatus status)
         {
             this.progress = 0.0f;
             this.endStatus = status;
@@ -63,25 +64,25 @@ namespace SAE.RougePG.Main
             Vector3[] currentRotations = new Vector3[this.spriteManager.animatedTransforms.Length];
             for (int i = 0; i < this.spriteManager.animatedTransforms.Length; i++)
             {
-                currentRotations[i] = VariousCommon.WrapAngle(this.spriteManager.animatedTransforms[i].localEulerAngles);
+                currentRotations[i] = VariousCommon.WrapDegrees(this.spriteManager.animatedTransforms[i].localEulerAngles);
             }
 
-            this.startStatus = new SpriteAnimationStatus3D(
+            this.startStatus = new SpriteAnimationStatus(
                 0.0f,
                 this.spriteManager.bodyTransform.localPosition,
                 currentRotations);
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="SpriteAnimator3D"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="SpriteAnimator"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            this.spriteManager = this.GetComponent<SpriteManager3D>();
+            this.spriteManager = this.GetComponent<SpriteManager>();
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="SpriteAnimator3D"/> when it first becomes active
+        ///     Called by Unity to initialize the <seealso cref="SpriteAnimator"/> when it first becomes active
         /// </summary>
         private void Start()
         {
@@ -89,7 +90,7 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Called by Unity every frame to update the <see cref="SpriteAnimator3D"/>
+        ///     Called by Unity every frame to update the <see cref="SpriteAnimator"/>
         /// </summary>
         private void Update()
         {
@@ -125,14 +126,14 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus3D"/>.
+        ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus"/>.
         ///     It's run as a <see cref="Coroutine"/>, just in case the return type didn't make that obvious enough.
         /// </summary>
         public delegate IEnumerator SpriteAnimation(StatusSetter statusSetter);
 
         /// <summary>
-        ///     Used to set information in a <see cref="SpriteAnimator3D"/>
+        ///     Used to set information in a <see cref="SpriteAnimator"/>
         /// </summary>
-        public delegate void StatusSetter(SpriteAnimationStatus3D status);
+        public delegate void StatusSetter(SpriteAnimationStatus status);
     }
 }

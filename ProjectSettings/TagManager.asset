@@ -7,6 +7,8 @@ TagManager:
   - StateManager
   - Ground
   - Entity
+  - PlayerEntity
+  - EnemyEntity
   layers:
   - Default
   - TransparentFX

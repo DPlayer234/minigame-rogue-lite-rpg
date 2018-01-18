@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG.Main
+namespace SAE.RougePG.Main.Sprite3D
 {
     /// <summary>
     ///     Contains information about Animations
     /// </summary>
-    public class SpriteAnimationStatus3D
+    public class SpriteAnimationStatus
     {
         /// <summary>
         ///     How fast does the animation go?
@@ -29,12 +29,12 @@ namespace SAE.RougePG.Main
         public readonly Vector3[] rotations;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SpriteAnimationStatus3D"/> class.
+        ///     Initializes a new instance of the <see cref="SpriteAnimationStatus"/> class.
         /// </summary>
         /// <param name="speed">How fast does the animation go?</param>
         /// <param name="position">Where should the body go?</param>
         /// <param name="rotations">Where should anything else rotate to?</param>
-        public SpriteAnimationStatus3D(float speed, Vector3 position, params Vector3[] rotations)
+        public SpriteAnimationStatus(float speed, Vector3 position, params Vector3[] rotations)
         {
             this.speed = speed;
             this.position = position;

@@ -1,31 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SAE.RougePG.Main.Sprite3D;
 
-namespace SAE.RougePG.Main
+namespace SAE.RougePG.Main.Driver
 {
     /// <summary>
     ///     Makes Entities work.
     /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(SpriteManager))]
+    [RequireComponent(typeof(SpriteAnimator))]
     public class EntityDriver : MonoBehaviour
     {
-        /// <summary> The <seealso cref="SpriteAnimator3D"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteAnimator3D spriteAnimator;
+        /// <summary> The <seealso cref="SpriteManager"/> also attached to this <seealso cref="GameObject"/> </summary>
+        private SpriteManager spriteManager;
+
+        /// <summary> The <seealso cref="SpriteAnimator"/> also attached to this <seealso cref="GameObject"/> </summary>
+        private SpriteAnimator spriteAnimator;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
         new private Rigidbody rigidbody;
 
-        /// <summary> Rotation in RADIANS (not degrees) from the top </summary>
-        public float Rotation { set; get; }
+        /// <summary> Velocity during the last frame </summary>
+        private Vector3 lastVelocity;
+
+        /// <summary> Minimum angle between movement velocity and forward vector required to flip </summary>
+        private const float MinimumFlipAngle = 15.0f;
 
         /// <summary>
         ///     Generic idle animation! Yay!
         /// </summary>
         /// <param name="informationSetter">Used to set the information</param>
         /// <returns>More time.</returns>
-        public IEnumerator IdleAnimation(SpriteAnimator3D.StatusSetter informationSetter)
+        public IEnumerator IdleAnimation(SpriteAnimator.StatusSetter informationSetter)
         {
-            var lowState = new SpriteAnimationStatus3D(
+            var lowState = new SpriteAnimationStatus(
                 // importance
                 0.8f,
                 // position
@@ -38,7 +48,7 @@ namespace SAE.RougePG.Main
                 new Vector3(0.0f, 0.0f, -20.0f),
                 new Vector3(0.0f, 0.0f, -10.0f));
 
-            var highState = new SpriteAnimationStatus3D(
+            var highState = new SpriteAnimationStatus(
                 // importance
                 0.8f,
                 // position
@@ -68,13 +78,11 @@ namespace SAE.RougePG.Main
         /// </summary>
         private void Awake()
         {
-            this.spriteAnimator = this.GetComponent<SpriteAnimator3D>();
-            if (this.spriteAnimator == null) throw new Exceptions.EntityDriverException("There is no SpriteAnimator3D attached to this GameObject.");
-
+            this.spriteManager = this.GetComponent<SpriteManager>();
+            this.spriteAnimator = this.GetComponent<SpriteAnimator>();
             this.rigidbody = this.GetComponent<Rigidbody>();
-            if (this.rigidbody == null) throw new Exceptions.EntityDriverException("There is no Rigidbody attached to this GameObject.");
 
-            this.Rotation = 0.0f;
+            this.lastVelocity = this.transform.forward;
         }
 
         /// <summary>
@@ -90,7 +98,27 @@ namespace SAE.RougePG.Main
         /// </summary>
         private void FixedUpdate()
         {
-            
+            // Make sure the SpriteManager is looking in the correct direction
+            Vector3 currentVelocity = this.rigidbody.velocity;
+            if (currentVelocity.x != 0 || currentVelocity.z != 0)
+            {
+                this.lastVelocity = currentVelocity;
+                this.lastVelocity.y = 0.0f;
+            }
+
+            Vector3 facingVector = spriteManager.rootTransform.forward;
+            facingVector.y = 0.0f;
+
+            float angle = Vector3.SignedAngle(this.lastVelocity, facingVector, new Vector3(0.0f, 1.0f, 0.0f));
+
+            if (angle < -MinimumFlipAngle)
+            {
+                spriteManager.FlipToDirection(true);
+            }
+            else if (angle > MinimumFlipAngle)
+            {
+                spriteManager.FlipToDirection(false);
+            }
         }
     }
 }

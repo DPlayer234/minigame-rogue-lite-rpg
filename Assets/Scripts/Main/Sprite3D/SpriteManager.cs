@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace SAE.RougePG.Main
+namespace SAE.RougePG.Main.Sprite3D
 {
     /// <summary>
     ///     Will make <seealso cref="Sprite"/>s rotate towards the set <seealso cref="Camera"/>.
     ///     Also makes sure that all Sprites have the correct order within the 3D space.
     /// </summary>
-    public class SpriteManager3D : MonoBehaviour
+    [RequireComponent(typeof(SortingGroup))]
+    public class SpriteManager : MonoBehaviour
     {
-        /// <summary> The camera to rotate to. Defaults to <see cref="StateManager.MainCamera"/>. </summary>
-        public Transform mainCameraTransform;
-
         [HideInInspector]
         /// <summary> Contains all the associated <see cref="Transform"/>s usable in animations. </summary>
         public Transform[] animatedTransforms;
@@ -25,6 +23,9 @@ namespace SAE.RougePG.Main
         [HideInInspector]
         /// <summary> Transform of the Sprite body </summary>
         public Transform bodyTransform;
+
+        /// <summary> The camera <seealso cref="Transform"/> to rotate to. Is set to <see cref="StateManager.MainCamera"/>. </summary>
+        private Transform mainCameraTransform;
 
         /// <summary> The associated <see cref="SortingGroup"/>. </summary>
         private SortingGroup sortingGroup;
@@ -98,7 +99,7 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="SpriteManager3D"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="SpriteManager"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
@@ -106,7 +107,6 @@ namespace SAE.RougePG.Main
             this.flipStatus = 1.0f;
 
             this.sortingGroup = this.GetComponent<SortingGroup>();
-            if (this.sortingGroup == null) Debug.LogWarning("There is no SortingGroup attached to this GameObject. Render priority may not be correct.");
 
             if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
             this.rootTransform = this.transform.GetChild(0);
@@ -120,15 +120,11 @@ namespace SAE.RougePG.Main
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="SpriteManager3D"/> when it first becomes active
+        ///     Called by Unity to initialize the <seealso cref="SpriteManager"/> when it first becomes active
         /// </summary>
         private void Start()
         {
-            if (this.mainCameraTransform == null)
-            {
-                // Default to the main camera of the scene
-                this.mainCameraTransform = StateManager.MainCamera.transform;
-            }
+            this.mainCameraTransform = StateManager.MainCamera.transform;
         }
 
         /// <summary>
@@ -138,17 +134,14 @@ namespace SAE.RougePG.Main
         {
             // Face Camera
             this.rootTransform.rotation = Quaternion.Euler(0.0f, this.mainCameraTransform.rotation.eulerAngles.y, 0.0f);
+            
+            // Set Layer Order => Get Distance to camera, add int.MinValue to increase overall range and cap the value at int.MaxValue
+            Vector3 positionDifference = this.mainCameraTransform.position - this.rootTransform.position;
 
-            if (this.sortingGroup != null)
-            {
-                // Set Layer Order => Get Distance to camera, add int.MinValue to increase overall range and cap the value at int.MaxValue
-                Vector3 positionDifference = this.mainCameraTransform.position - this.rootTransform.position;
+            float sqrDistance = (positionDifference - Vector3.Dot(positionDifference, this.rootTransform.right) * this.rootTransform.right).sqrMagnitude;
 
-                float sqrDistance = (positionDifference - Vector3.Dot(positionDifference, this.rootTransform.right) * this.rootTransform.right).sqrMagnitude;
-
-                this.sortingGroup.sortingOrder = -(int)Mathf.Min(int.MaxValue,
-                    SortingOrderMultiplier * sqrDistance);
-            }
+            this.sortingGroup.sortingOrder = -(int)Mathf.Min(int.MaxValue,
+                SortingOrderMultiplier * sqrDistance);
         }
     }
 }

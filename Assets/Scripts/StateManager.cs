@@ -10,9 +10,13 @@ namespace SAE.RougePG
     /// </summary>
     public class StateManager : MonoBehaviour
     {
-        [SerializeField]
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
+        [SerializeField]
         private Camera mainCamera;
+
+        /// <summary> The layer entities are on. </summary>
+        [SerializeField]
+        private int entitiesLayer;
 
         /// <summary>
         ///     The global instance of the <see cref="StateManager"/>.
@@ -37,13 +41,27 @@ namespace SAE.RougePG
             }
 
             instance = this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
 
             // Copy relevant set fields.
             MainCamera = mainCamera;
 
             // Entities should ignore collisions with each other
-            Physics.IgnoreLayerCollision(8, 8, true);
+            if (entitiesLayer >= 0 && entitiesLayer <= 31)
+            {
+                Physics.IgnoreLayerCollision(entitiesLayer, entitiesLayer, true);
+            }
+            else
+            {
+                Debug.LogWarning("Physics Layers range from 0-31. Entities will collide until this is corrected.");
+            }
+
+            // Add camera follow script to Main Camera
+            if (MainCamera.gameObject.GetComponent<Main.CameraController>() == null)
+            {
+                Debug.LogWarning("There is no CameraController attached to the Main Camera. Attaching one at run-time; please set it in the Editor!");
+                MainCamera.gameObject.AddComponent<Main.CameraController>();
+            }
 
 #if UNITY_EDITOR
             // Debug code... or something goes here
