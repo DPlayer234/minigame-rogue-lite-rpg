@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG.Main
+namespace SAE.RoguePG.Main
 {
     /// <summary>
     ///     Will make the Camera that this is attached to follow the referenced GameObject
@@ -10,10 +10,10 @@ namespace SAE.RougePG.Main
     public class CameraController : MonoBehaviour
     {
         /// <summary>
-        ///     The GameObject to follow
+        ///     The <seealso cref="Transform"/> of the GameObject to follow
         /// </summary>
         [HideInInspector]
-        public GameObject following;
+        public Transform following;
 
         /// <summary>
         ///     How much higher should the camera be than the pivot of <see cref="following"/>
@@ -25,23 +25,43 @@ namespace SAE.RougePG.Main
         /// </summary>
         public float preferredDistance = 4.0f;
 
-        /// <summary> Leniency in distance when following </summary>
-        private const float FollowDistanceLeniency = 0.5f;
+        /// <summary> How fast the camera approaches the target position. Lower values increase the speed. </summary>
+        [Range(0.0f, 1.0f)]
+        public float movementSpeedBase = 0.1f;
+
+        /// <summary> How fast the camera approaches the target rotation. Lower values increase the speed. </summary>
+        [Range(0.0f, 1.0f)]
+        public float rotationSpeedBase = 0.01f;
 
         /// <summary>
         ///     Called by Unity once every frame after all Updates and FixedUpdates have been executed.
         /// </summary>
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (this.following != null)
             {
-                this.transform.LookAt(this.following.transform);
+                Vector3 currentRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
+                this.transform.LookAt(this.following);
+                Vector3 targetRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
 
                 Vector3 thisToFollowing = this.transform.forward;
+                thisToFollowing.y = 0.0f;
+                thisToFollowing.Normalize();
 
-                float distanceToFollowing = (this.following.transform.position - this.transform.position).magnitude;
+                Vector3 newPosition = VariousCommon.ExponentialLerp(
+                    this.transform.position,
+                    this.following.position - thisToFollowing * preferredDistance,
+                    this.movementSpeedBase,
+                    Time.fixedDeltaTime);
 
-                
+                newPosition.y = this.following.position.y + preferredHeight;
+                this.transform.position = newPosition;
+
+                this.transform.eulerAngles = VariousCommon.ExponentialLerp(
+                    currentRotation,
+                    targetRotation,
+                    this.rotationSpeedBase,
+                    Time.fixedDeltaTime);
             }
         }
     }

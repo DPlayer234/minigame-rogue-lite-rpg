@@ -1,23 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SAE.RougePG.Main.Sprite3D;
+using SAE.RoguePG.Main.Sprite3D;
 
-namespace SAE.RougePG.Main.Driver
+namespace SAE.RoguePG.Main.Driver
 {
     /// <summary>
     ///     Makes Players work.
-    ///     Will automatically tag the attached GameObject as "PlayerEntity".
     /// </summary>
     [RequireComponent(typeof(EntityDriver))]
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(SpriteAnimator))]
+    [DisallowMultipleComponent]
     public class PlayerDriver : MonoBehaviour
     {
         /// <summary>
         ///     Player Movement Speed
         /// </summary>
         public float movementSpeed = 1.5f;
+
+        /// <summary>
+        ///     Player Jump Speed
+        /// </summary>
+        public float jumpSpeed;
 
         /// <summary>
         ///     The <seealso cref="PlayerDriver"/> leading the group (Main Player).
@@ -36,9 +40,6 @@ namespace SAE.RougePG.Main.Driver
         /// </summary>
         private CameraController mainCameraController;
 
-        /// <summary> The <seealso cref="SpriteAnimator"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteAnimator spriteAnimator;
-
         /// <summary> The <seealso cref="EntityDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         private EntityDriver entityDriver;
 
@@ -51,13 +52,24 @@ namespace SAE.RougePG.Main.Driver
         private const float MinimumFollowDistance = 1.0f;
 
         /// <summary>
+        ///     Calculates and returns the top-down movement vector.
+        ///     The axes are mapped X: X, Y: Z.
+        /// </summary>
+        /// <returns>Target Top-Down Movement Vector</returns>
+        private Vector2 GetMovementInput()
+        {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+
+            Vector3 rawMovement = StateManager.MainCamera.transform.forward * vertical + StateManager.MainCamera.transform.right * horizontal;
+            return new Vector2(rawMovement.x, rawMovement.z).normalized;
+        }
+
+        /// <summary>
         ///     Called by Unity to initialize the <seealso cref="PlayerDriver"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            this.tag = "PlayerEntity";
-
-            this.spriteAnimator = this.GetComponent<SpriteAnimator>();
             this.entityDriver = this.GetComponent<EntityDriver>();
             this.rigidbody = this.GetComponent<Rigidbody>();
         }
@@ -83,33 +95,30 @@ namespace SAE.RougePG.Main.Driver
         /// </summary>
         private void FixedUpdate()
         {
-            Vector3 movement;
-
-            movement = (
+            Vector2 movement = (
                 // Leading and not following
                 this.leader == null && this.following == null ?
-                new Vector3(
-                    Input.GetAxisRaw("Horizontal"),
-                    0.0f,
-                    Input.GetAxisRaw("Vertical")) :
+                this.GetMovementInput() :
 
                 // Following and not impeding personal space
                 this.following != null && (this.following.transform.position - this.transform.position).sqrMagnitude > MinimumFollowDistance ?
-                new Vector3(
+                new Vector2(
                     this.following.transform.position.x - this.transform.position.x,
-                    0.0f,
                     this.following.transform.position.z - this.transform.position.z) :
                 
                 // Not walking
-                Vector3.zero).normalized * movementSpeed;
+                Vector2.zero).normalized * movementSpeed;
 
-            movement.y = this.rigidbody.velocity.y;
+            Vector3 velocity = this.rigidbody.velocity;
 
-            this.rigidbody.velocity = VariousCommon.ExponentialLerp(this.rigidbody.velocity, movement, 0.01f, Time.deltaTime);
+            this.rigidbody.velocity = new Vector3(
+                VariousCommon.ExponentialLerp(velocity.x, movement.x, 0.01f, Time.deltaTime),
+                velocity.y,
+                VariousCommon.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
 
-            if (this.leader == null && this.mainCameraController.following != this.gameObject)
+            if (this.leader == null && this.mainCameraController.following != this.entityDriver.spriteManager.rootTransform)
             {
-                this.mainCameraController.following = this.gameObject;
+                this.mainCameraController.following = this.entityDriver.spriteManager.rootTransform;
             }
         }
     }

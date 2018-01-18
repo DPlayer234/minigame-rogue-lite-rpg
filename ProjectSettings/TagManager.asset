@@ -9,6 +9,8 @@ TagManager:
   - Entity
   - PlayerEntity
   - EnemyEntity
+  - SpriteRoot
+  - SpriteBody
   layers:
   - Default
   - TransparentFX

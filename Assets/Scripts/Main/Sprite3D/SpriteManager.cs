@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace SAE.RougePG.Main.Sprite3D
+namespace SAE.RoguePG.Main.Sprite3D
 {
     /// <summary>
     ///     Will make <seealso cref="Sprite"/>s rotate towards the set <seealso cref="Camera"/>.
@@ -23,12 +23,6 @@ namespace SAE.RougePG.Main.Sprite3D
         [HideInInspector]
         /// <summary> Transform of the Sprite body </summary>
         public Transform bodyTransform;
-
-        /// <summary> The camera <seealso cref="Transform"/> to rotate to. Is set to <see cref="StateManager.MainCamera"/>. </summary>
-        private Transform mainCameraTransform;
-
-        /// <summary> The associated <see cref="SortingGroup"/>. </summary>
-        private SortingGroup sortingGroup;
 
         /// <summary> Whether it's facing right. </summary>
         private bool isFacingRight;
@@ -106,25 +100,34 @@ namespace SAE.RougePG.Main.Sprite3D
             this.isFacingRight = true;
             this.flipStatus = 1.0f;
 
-            this.sortingGroup = this.GetComponent<SortingGroup>();
+            //if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
+            //this.rootTransform = this.transform.GetChild(0);
 
-            if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
-            this.rootTransform = this.transform.GetChild(0);
+            for (int i = 0; i < this.transform.childCount; i++)
+            {
+                Transform transform = this.transform.GetChild(i);
+                if (transform.CompareTag("SpriteRoot"))
+                {
+                    this.rootTransform = transform;
+                    break;
+                }
+            }
+            if (this.rootTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
 
-            if (this.rootTransform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
-            this.bodyTransform = this.rootTransform.GetChild(0);
+            for (int i = 0; i < this.rootTransform.childCount; i++)
+            {
+                Transform transform = this.rootTransform.GetChild(i);
+                if (transform.CompareTag("SpriteBody"))
+                {
+                    this.bodyTransform = transform;
+                    break;
+                }
+            }
+            if (this.bodyTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
 
             List<Transform> transformList = new List<Transform>(this.bodyTransform.GetComponentsInChildren<Transform>());
             transformList.Remove(this.bodyTransform);
             this.animatedTransforms = transformList.ToArray();
-        }
-
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="SpriteManager"/> when it first becomes active
-        /// </summary>
-        private void Start()
-        {
-            this.mainCameraTransform = StateManager.MainCamera.transform;
         }
 
         /// <summary>
@@ -133,15 +136,7 @@ namespace SAE.RougePG.Main.Sprite3D
         private void LateUpdate()
         {
             // Face Camera
-            this.rootTransform.rotation = Quaternion.Euler(0.0f, this.mainCameraTransform.rotation.eulerAngles.y, 0.0f);
-            
-            // Set Layer Order => Get Distance to camera, add int.MinValue to increase overall range and cap the value at int.MaxValue
-            Vector3 positionDifference = this.mainCameraTransform.position - this.rootTransform.position;
-
-            float sqrDistance = (positionDifference - Vector3.Dot(positionDifference, this.rootTransform.right) * this.rootTransform.right).sqrMagnitude;
-
-            this.sortingGroup.sortingOrder = -(int)Mathf.Min(int.MaxValue,
-                SortingOrderMultiplier * sqrDistance);
+            this.rootTransform.rotation = Quaternion.Euler(0.0f, StateManager.MainCamera.transform.rotation.eulerAngles.y, 0.0f);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG
+namespace SAE.RoguePG
 {
     /// <summary>
     ///     Contains various common functions.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG.Main.Sprite3D
+namespace SAE.RoguePG.Main.Sprite3D
 {
     /// <summary>
     ///     Allows for animating sprites using a <see cref="SpriteManager"/>

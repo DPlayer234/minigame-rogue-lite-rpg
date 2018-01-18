@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SAE.RougePG.Main.Sprite3D;
+using SAE.RoguePG.Main.Sprite3D;
 
-namespace SAE.RougePG.Main.Driver
+namespace SAE.RoguePG.Main.Driver
 {
     /// <summary>
     ///     Makes Entities work.
@@ -11,13 +11,16 @@ namespace SAE.RougePG.Main.Driver
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SpriteManager))]
     [RequireComponent(typeof(SpriteAnimator))]
+    [DisallowMultipleComponent]
     public class EntityDriver : MonoBehaviour
     {
         /// <summary> The <seealso cref="SpriteManager"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteManager spriteManager;
+        [HideInInspector]
+        public SpriteManager spriteManager;
 
         /// <summary> The <seealso cref="SpriteAnimator"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private SpriteAnimator spriteAnimator;
+        [HideInInspector]
+        public SpriteAnimator spriteAnimator;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
         new private Rigidbody rigidbody;
@@ -25,8 +28,11 @@ namespace SAE.RougePG.Main.Driver
         /// <summary> Velocity during the last frame </summary>
         private Vector3 lastVelocity;
 
-        /// <summary> Minimum angle between movement velocity and forward vector required to flip </summary>
-        private const float MinimumFlipAngle = 15.0f;
+        /// <summary> Minimum angle in degrees between movement velocity and forward vector required to flip </summary>
+        private const float MinimumFlipAngle = 5.0f;
+
+        /// <summary> Minimum velocity needed to flip </summary>
+        private const float MinimumFlipVelocity = 0.1f;
 
         /// <summary>
         ///     Generic idle animation! Yay!
@@ -100,24 +106,28 @@ namespace SAE.RougePG.Main.Driver
         {
             // Make sure the SpriteManager is looking in the correct direction
             Vector3 currentVelocity = this.rigidbody.velocity;
-            if (currentVelocity.x != 0 || currentVelocity.z != 0)
-            {
-                this.lastVelocity = currentVelocity;
-                this.lastVelocity.y = 0.0f;
-            }
 
-            Vector3 facingVector = spriteManager.rootTransform.forward;
-            facingVector.y = 0.0f;
-
-            float angle = Vector3.SignedAngle(this.lastVelocity, facingVector, new Vector3(0.0f, 1.0f, 0.0f));
-
-            if (angle < -MinimumFlipAngle)
+            if (currentVelocity.sqrMagnitude > MinimumFlipVelocity * MinimumFlipVelocity)
             {
-                spriteManager.FlipToDirection(true);
-            }
-            else if (angle > MinimumFlipAngle)
-            {
-                spriteManager.FlipToDirection(false);
+                if (currentVelocity.x != 0 || currentVelocity.z != 0)
+                {
+                    this.lastVelocity = currentVelocity;
+                    this.lastVelocity.y = 0.0f;
+                }
+
+                Vector3 facingVector = spriteManager.rootTransform.forward;
+                facingVector.y = 0.0f;
+
+                float angle = Vector3.SignedAngle(this.lastVelocity, facingVector, new Vector3(0.0f, 1.0f, 0.0f));
+
+                if (angle < -MinimumFlipAngle && angle > MinimumFlipAngle - 180.0f)
+                {
+                    spriteManager.FlipToDirection(true);
+                }
+                else if (angle > MinimumFlipAngle && angle < 180.0f - MinimumFlipAngle)
+                {
+                    spriteManager.FlipToDirection(false);
+                }
             }
         }
     }

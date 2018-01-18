@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SAE.RougePG.Exceptions
+namespace SAE.RoguePG.Exceptions
 {
     /// <summary>
     ///     Thrown when there are any issues with the setup of a <see cref="Main.EntityDriver"/> or similar components

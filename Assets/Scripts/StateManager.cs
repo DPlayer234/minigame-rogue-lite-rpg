@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SAE.RougePG
+namespace SAE.RoguePG
 {
     /// <summary>
     ///     Stores and manages general game state.
@@ -13,10 +13,6 @@ namespace SAE.RougePG
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
         [SerializeField]
         private Camera mainCamera;
-
-        /// <summary> The layer entities are on. </summary>
-        [SerializeField]
-        private int entitiesLayer;
 
         /// <summary>
         ///     The global instance of the <see cref="StateManager"/>.
@@ -45,16 +41,6 @@ namespace SAE.RougePG
 
             // Copy relevant set fields.
             MainCamera = mainCamera;
-
-            // Entities should ignore collisions with each other
-            if (entitiesLayer >= 0 && entitiesLayer <= 31)
-            {
-                Physics.IgnoreLayerCollision(entitiesLayer, entitiesLayer, true);
-            }
-            else
-            {
-                Debug.LogWarning("Physics Layers range from 0-31. Entities will collide until this is corrected.");
-            }
 
             // Add camera follow script to Main Camera
             if (MainCamera.gameObject.GetComponent<Main.CameraController>() == null)
