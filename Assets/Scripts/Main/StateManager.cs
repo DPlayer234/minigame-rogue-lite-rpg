@@ -36,9 +36,19 @@ namespace SAE.RoguePG.Main
         private static List<GameObject> deactivatedGameObjects;
 
         /// <summary>
+        ///     All Players currently fighting
+        /// </summary>
+        private static GameObject[] fightingPlayerObjects;
+
+        /// <summary>
+        ///     All Enemies currently fighting
+        /// </summary>
+        private static GameObject[] fightingEnemyObjects;
+
+        /// <summary>
         ///     The main camera in the scene.
         /// </summary>
-        public static Camera MainCamera { private set; get; }
+        public static Camera MainCamera { get; private set; }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="StateManager"/> whether it is or is not active.
@@ -127,29 +137,19 @@ namespace SAE.RoguePG.Main
         {
             foreach (GameObject gameObject in gameObjects)
             {
-                // Battle Driver
-                AddOrRemoveComponent<BattleDriver.EntityBattleDriver>(gameObject, start);
+                var entityDriver = gameObject.GetComponent<Driver.EntityDriver>();
+                var battleDriver = gameObject.GetComponent<BattleDriver.EntityBattleDriver>();
 
-                gameObject.GetComponent<Driver.EntityDriver>().enabled = !start;
+                entityDriver.enabled = !start;
+                battleDriver.enabled = start;
 
-                // Is Player
-                var playerDriver = gameObject.GetComponent<Driver.PlayerDriver>();
-                if (playerDriver != null)
+                if (battleDriver is BattleDriver.PlayerBattleDriver)
                 {
-                    AddOrRemoveComponent<BattleDriver.PlayerBattleDriver>(gameObject, start);
-
-                    playerDriver.enabled = !start;
-                    continue;
+                    battleDriver.SetAlliesAndOpponents(fightingPlayerObjects, fightingEnemyObjects);
                 }
-
-                // Is Enemy
-                var enemyDriver = gameObject.GetComponent<Driver.EnemyDriver>();
-                if (enemyDriver != null)
+                else if (battleDriver is BattleDriver.EnemyBattleDriver)
                 {
-                    AddOrRemoveComponent<BattleDriver.EnemyBattleDriver>(gameObject, start);
-
-                    enemyDriver.enabled = !start;
-                    continue;
+                    battleDriver.SetAlliesAndOpponents(fightingEnemyObjects, fightingPlayerObjects);
                 }
             }
         }
@@ -162,13 +162,14 @@ namespace SAE.RoguePG.Main
             fightingGameObjects = new List<GameObject>();
             deactivatedGameObjects = new List<GameObject>();
 
-            GameObject[] allPlayers = GameObject.FindGameObjectsWithTag(PlayerEntityTag);
+            fightingPlayerObjects = GameObject.FindGameObjectsWithTag(PlayerEntityTag);
             GameObject[] allEnemies = GameObject.FindGameObjectsWithTag(EnemyEntityTag);
+            fightingEnemyObjects = new GameObject[] { leaderEnemy };
 
-            ArrangeEntities(leaderPlayer, allPlayers);
+            ArrangeEntities(leaderPlayer, fightingPlayerObjects);
             //ArrangeEntities(leaderEnemy, allEnemies); // Incorrect... for now
 
-            fightingGameObjects.AddRange(allPlayers);
+            fightingGameObjects.AddRange(fightingPlayerObjects);
             fightingGameObjects.Add(leaderEnemy);
 
             SetupEntities(fightingGameObjects, true);

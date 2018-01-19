@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SAE.RoguePG.Main.Sprite3D;
+using SAE.RoguePG.Main.BattleDriver;
 
 namespace SAE.RoguePG.Main.Driver
 {
@@ -22,11 +23,15 @@ namespace SAE.RoguePG.Main.Driver
         [HideInInspector]
         public SpriteAnimator spriteAnimator;
 
+        /// <summary> The <seealso cref="EntityBattleDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
+        [HideInInspector]
+        public EntityBattleDriver battleDriver;
+
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
-        new private Rigidbody rigidbody;
+        new protected Rigidbody rigidbody;
 
         /// <summary> Velocity during the last frame </summary>
-        private Vector3 lastVelocity;
+        protected Vector3 lastVelocity;
 
         /// <summary> Minimum angle in degrees between movement velocity and forward vector required to flip </summary>
         private const float MinimumFlipAngle = 5.0f;
@@ -82,19 +87,22 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> whether it is or is not active.
         /// </summary>
-        private void Awake()
+        protected void Awake()
         {
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
+            this.battleDriver = this.GetComponent<EntityBattleDriver>();
             this.rigidbody = this.GetComponent<Rigidbody>();
 
             this.lastVelocity = this.transform.forward;
+
+            this.battleDriver.enabled = false;
         }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> when it first becomes active
         /// </summary>
-        private void Start()
+        protected void Start()
         {
             this.spriteAnimator.Animation = this.IdleAnimation;
         }
@@ -102,7 +110,7 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity for every physics update to update the <see cref="EntityDriver"/>
         /// </summary>
-        private void FixedUpdate()
+        protected void FixedUpdate()
         {
             // Make sure the SpriteManager is looking in the correct direction
             Vector3 currentVelocity = this.rigidbody.velocity;

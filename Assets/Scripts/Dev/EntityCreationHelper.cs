@@ -9,10 +9,9 @@ namespace SAE.RoguePG.Dev
     /// <summary>
     ///     Used to help assigning data to GameObjects.
     /// </summary>
-    [RequireComponent(typeof(EntityDriver))]
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
-    class EntityCreationHelper : MonoBehaviour
+    public class EntityCreationHelper : MonoBehaviour
     {
         /// <summary> List of sprites to assign. Sprite name and GameObject names have to match. </summary>
         public Sprite[] sprites = null;

@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SAE.RoguePG.Main.Sprite3D;
+using SAE.RoguePG.Main.BattleDriver;
 
 namespace SAE.RoguePG.Main.Driver
 {
     /// <summary>
     ///     Makes Players work.
     /// </summary>
-    [RequireComponent(typeof(EntityDriver))]
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(PlayerBattleDriver))]
     [DisallowMultipleComponent]
-    public class PlayerDriver : MonoBehaviour
+    public class PlayerDriver : EntityDriver
     {
         /// <summary>
         ///     Player Movement Speed
@@ -34,12 +34,6 @@ namespace SAE.RoguePG.Main.Driver
         ///     Is set to the one of <see cref="StateManager.MainCamera"/>.
         /// </summary>
         private CameraController mainCameraController;
-
-        /// <summary> The <seealso cref="EntityDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private EntityDriver entityDriver;
-
-        /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
-        new private Rigidbody rigidbody;
 
         /// <summary>
         ///     Minimum distance needed to walk towards <see cref="following"/>
@@ -66,17 +60,17 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="PlayerDriver"/> whether it is or is not active.
         /// </summary>
-        private void Awake()
+        new private void Awake()
         {
-            this.entityDriver = this.GetComponent<EntityDriver>();
-            this.rigidbody = this.GetComponent<Rigidbody>();
+            base.Awake();
         }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="PlayerDriver"/> when it first becomes active
         /// </summary>
-        private void Start()
+        new private void Start()
         {
+            base.Start();
             this.mainCameraController = StateManager.MainCamera.GetComponent<CameraController>();
         }
 
@@ -91,7 +85,7 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity for every physics update to update the <see cref="EntityDriver"/>
         /// </summary>
-        private void FixedUpdate()
+        new private void FixedUpdate()
         {
             Vector2 movement = (
                 // Leading and not following
@@ -114,10 +108,12 @@ namespace SAE.RoguePG.Main.Driver
                 velocity.y,
                 VariousCommon.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
 
-            if (this.leader == null && this.mainCameraController.following != this.entityDriver.spriteManager.rootTransform)
+            if (this.leader == null && this.mainCameraController.following != this.spriteManager.rootTransform)
             {
-                this.mainCameraController.following = this.entityDriver.spriteManager.rootTransform;
+                this.mainCameraController.following = this.spriteManager.rootTransform;
             }
+
+            base.FixedUpdate();
         }
     }
 }

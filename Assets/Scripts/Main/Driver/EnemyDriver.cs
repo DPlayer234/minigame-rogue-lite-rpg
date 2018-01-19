@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SAE.RoguePG.Main.Sprite3D;
+using SAE.RoguePG.Main.BattleDriver;
 
 namespace SAE.RoguePG.Main.Driver
 {
     /// <summary>
     ///     Makes Enemies work.
     /// </summary>
-    [RequireComponent(typeof(EntityDriver))]
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(EntityBattleDriver))]
     [DisallowMultipleComponent]
-    public class EnemyDriver : MonoBehaviour
+    public class EnemyDriver : EntityDriver
     {
         /// <summary> How fast the enemy can move </summary>
         public float movementSpeed = 1.0f;
@@ -22,12 +22,6 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary> Whether this enemy was defeated </summary>
         [HideInInspector]
         public bool defeated;
-
-        /// <summary> The <seealso cref="EntityDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private EntityDriver entityDriver;
-
-        /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
-        new private Rigidbody rigidbody;
 
         /// <summary> The player this enemy is currently chasing. If null, just walks around aimlessly. </summary>
         private PlayerDriver targetPlayer;
@@ -88,7 +82,7 @@ namespace SAE.RoguePG.Main.Driver
                 {
                     if (Random.value < 0.2f)
                     {
-                        this.entityDriver.spriteManager.FlipToDirection(!this.entityDriver.spriteManager.IsFacingRight);
+                        this.spriteManager.FlipToDirection(!this.spriteManager.IsFacingRight);
                     }
 
                     this.LookForTarget();
@@ -105,26 +99,27 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> whether it is or is not active.
         /// </summary>
-        private void Awake()
+        new private void Awake()
         {
-            this.defeated = false;
+            base.Awake();
 
-            this.entityDriver = this.GetComponent<EntityDriver>();
-            this.rigidbody = this.GetComponent<Rigidbody>();
+            this.defeated = false;
         }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> when it first becomes active
         /// </summary>
-        private void Start()
+        new private void Start()
         {
+            base.Start();
+
             StartCoroutine(this.UpdateTarget());
         }
 
         /// <summary>
         ///     Called by Unity for every physics update to update the <see cref="EnemyDriver"/>
         /// </summary>
-        private void FixedUpdate()
+        new private void FixedUpdate()
         {
             Vector2 movement = (
                 // Has target
@@ -148,6 +143,8 @@ namespace SAE.RoguePG.Main.Driver
             {
                 StateManager.StartBattleMode(this.targetPlayer.gameObject, this.gameObject);
             }
+
+            base.FixedUpdate();
         }
     }
 }

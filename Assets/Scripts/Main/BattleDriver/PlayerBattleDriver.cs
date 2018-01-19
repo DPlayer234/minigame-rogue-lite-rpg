@@ -1,25 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SAE.RoguePG.Main.Driver;
 
 namespace SAE.RoguePG.Main.BattleDriver
 {
     /// <summary>
-    ///     Makes battles work. Do not add from editor!
+    ///     Makes battles work.
     /// </summary>
-    [RequireComponent(typeof(EntityBattleDriver))]
     [DisallowMultipleComponent]
-    public class PlayerBattleDriver : MonoBehaviour
+    public class PlayerBattleDriver : EntityBattleDriver
     {
-        /// <summary> The <seealso cref="EntityBattleDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private EntityBattleDriver battleDriver;
+        /// <summary> The <seealso cref="PlayerDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
+        private PlayerDriver playerDriver;
+
+        /// <summary>
+        ///     Sets up everything needed for the Player's turn
+        /// </summary>
+        protected override void StartTurn()
+        {
+
+        }
+
+        /// <summary>
+        ///     Ends the Player's turn
+        /// </summary>
+        protected override void EndTurn()
+        {
+
+        }
+
+        /// <summary>
+        ///     Updates the Player's turn once a frame
+        /// </summary>
+        protected override void UpdateTurn()
+        {
+
+        }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="PlayerBattleDriver"/> whether it is or is not active.
         /// </summary>
-        private void Awake()
+        new private void Awake()
         {
-            this.battleDriver = this.GetComponent<EntityBattleDriver>();
+            base.Awake();
+
+            this.playerDriver = this.GetComponent<PlayerDriver>();
         }
 
         /// <summary>
@@ -28,6 +54,14 @@ namespace SAE.RoguePG.Main.BattleDriver
         private void Start()
         {
 
+        }
+
+        /// <summary>
+        ///     Called by Unity every frame to update the <see cref="PlayerBattleDriver"/>
+        /// </summary>
+        new private void Update()
+        {
+            base.Update();
         }
     }
 }

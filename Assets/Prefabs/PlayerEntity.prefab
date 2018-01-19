@@ -38,8 +38,8 @@ GameObject:
   - component: {fileID: 54053833273385040}
   - component: {fileID: 114728932323654356}
   - component: {fileID: 114092116018126648}
-  - component: {fileID: 114495766088183262}
-  - component: {fileID: 114200161542878880}
+  - component: {fileID: 114320421902846042}
+  - component: {fileID: 114980774361346796}
   - component: {fileID: 210270448745800344}
   - component: {fileID: 114736629462145688}
   m_Layer: 8
@@ -378,7 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aafaaadbfe3c56c428211964be1b04d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114200161542878880
+--- !u!114 &114320421902846042
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -389,23 +389,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cd60d8a7dd34d24cba4a18fdd95d24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 1.5
-  jumpSpeed: 3
-  leader: {fileID: 0}
-  following: {fileID: 0}
---- !u!114 &114495766088183262
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1370353553739914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6aa78b114079ad40b853547d0525793, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
+  battleDriver: {fileID: 0}
+  movementSpeed: 1.5
+  leader: {fileID: 0}
+  following: {fileID: 0}
 --- !u!114 &114728932323654356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -446,6 +435,26 @@ MonoBehaviour:
   - {fileID: 21300002, guid: d97d1b66614f1954e912a6b03effaf9f, type: 3}
   - {fileID: 21300004, guid: d97d1b66614f1954e912a6b03effaf9f, type: 3}
   material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  update: 0
+--- !u!114 &114980774361346796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1370353553739914}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869b876af809cf042b916fcae23cd81f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBase: 10
+  physicalBase: 10
+  magicalBase: 10
+  defenseBase: 10
+  speedBase: 10
+  spriteManager: {fileID: 0}
+  spriteAnimator: {fileID: 0}
+  entityDriver: {fileID: 0}
 --- !u!136 &136678512351905584
 CapsuleCollider:
   m_ObjectHideFlags: 1

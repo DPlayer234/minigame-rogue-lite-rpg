@@ -23,8 +23,8 @@ GameObject:
   - component: {fileID: 54850681815785668}
   - component: {fileID: 114499467261174850}
   - component: {fileID: 114632991243124272}
-  - component: {fileID: 114533717628147206}
-  - component: {fileID: 114828242316227086}
+  - component: {fileID: 114790012257334448}
+  - component: {fileID: 114740720695601320}
   - component: {fileID: 210065863280938794}
   - component: {fileID: 114437875073185250}
   m_Layer: 8
@@ -408,19 +408,6 @@ MonoBehaviour:
   - {fileID: 4803594641301234}
   rootTransform: {fileID: 4499482094615080}
   bodyTransform: {fileID: 4677864486684154}
---- !u!114 &114533717628147206
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1210841631718850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6aa78b114079ad40b853547d0525793, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteManager: {fileID: 0}
-  spriteAnimator: {fileID: 0}
 --- !u!114 &114632991243124272
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -432,7 +419,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aafaaadbfe3c56c428211964be1b04d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114828242316227086
+--- !u!114 &114740720695601320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1210841631718850}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67f11dec0913ceb4e96d96fa74ca0901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBase: 10
+  physicalBase: 10
+  magicalBase: 10
+  defenseBase: 10
+  speedBase: 10
+  spriteManager: {fileID: 0}
+  spriteAnimator: {fileID: 0}
+  entityDriver: {fileID: 0}
+--- !u!114 &114790012257334448
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -443,6 +449,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 951310f39700a984a8792c26383753d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteManager: {fileID: 0}
+  spriteAnimator: {fileID: 0}
+  battleDriver: {fileID: 0}
   movementSpeed: 1
   targetRange: 4
   defeated: 0
