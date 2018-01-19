@@ -57,7 +57,7 @@ namespace SAE.RoguePG.Main
                 newPosition.y = this.following.position.y + preferredHeight;
                 this.transform.position = newPosition;
 
-                this.transform.eulerAngles = VariousCommon.ExponentialLerp(
+                this.transform.eulerAngles = VariousCommon.ExponentialLerpRotation(
                     currentRotation,
                     targetRotation,
                     this.rotationSpeedBase,

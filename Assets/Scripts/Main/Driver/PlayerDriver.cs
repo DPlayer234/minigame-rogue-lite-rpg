@@ -19,11 +19,6 @@ namespace SAE.RoguePG.Main.Driver
         public float movementSpeed = 1.5f;
 
         /// <summary>
-        ///     Player Jump Speed
-        /// </summary>
-        public float jumpSpeed;
-
-        /// <summary>
         ///     The <seealso cref="PlayerDriver"/> leading the group (Main Player).
         ///     If 'null', this is the leader.
         /// </summary>
@@ -50,6 +45,9 @@ namespace SAE.RoguePG.Main.Driver
         ///     Minimum distance needed to walk towards <see cref="following"/>
         /// </summary>
         private const float MinimumFollowDistance = 1.0f;
+
+        /// <summary> Returns whether this <see cref="PlayerDriver"/> is the leader </summary>
+        public bool IsLeader { get { return this.leader == null && this.following == null; } }
 
         /// <summary>
         ///     Calculates and returns the top-down movement vector.
@@ -97,7 +95,7 @@ namespace SAE.RoguePG.Main.Driver
         {
             Vector2 movement = (
                 // Leading and not following
-                this.leader == null && this.following == null ?
+                this.IsLeader ?
                 this.GetMovementInput() :
 
                 // Following and not impeding personal space
@@ -107,7 +105,7 @@ namespace SAE.RoguePG.Main.Driver
                     this.following.transform.position.z - this.transform.position.z) :
                 
                 // Not walking
-                Vector2.zero).normalized * movementSpeed;
+                Vector2.zero).normalized * this.movementSpeed;
 
             Vector3 velocity = this.rigidbody.velocity;
 

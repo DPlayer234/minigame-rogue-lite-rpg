@@ -36,6 +36,9 @@ namespace SAE.RoguePG.Main.Sprite3D
         /// <summary> How fast the flip animation is played. </summary>
         private const float FlipSpeed = 10.0f;
 
+        /// <summary> Whether the Sprite is facing right </summary>
+        public bool IsFacingRight { get { return this.isFacingRight; } }
+
         /// <summary>
         ///     Starts the flipping animation.
         /// </summary>

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using SAE.RoguePG.Main;
 using SAE.RoguePG.Main.Driver;
 using SAE.RoguePG.Main.Sprite3D;
 
@@ -24,12 +26,12 @@ namespace SAE.RoguePG.Dev
 
         /// <summary> Information to be set with a <seealso cref="PlayerDriver"/> </summary>
         private static readonly EntityInformation playerInformation = new EntityInformation(
-            tag: "PlayerEntity",
+            tag: StateManager.PlayerEntityTag,
             lightColor: new Color(0.0f, 1.0f, 0.6f));
 
         /// <summary> Information to be set with a <seealso cref="EnemyDriver"/> </summary>
         private static readonly EntityInformation enemyInformation = new EntityInformation(
-            tag: "EnemyEntity",
+            tag: StateManager.EnemyEntityTag,
             lightColor: new Color(1.0f, 0.3f, 0.3f));
 
         /// <summary>
