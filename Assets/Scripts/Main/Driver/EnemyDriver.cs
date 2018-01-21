@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SAE.RoguePG.Dev;
 using SAE.RoguePG.Main.Sprite3D;
 using SAE.RoguePG.Main.BattleDriver;
 
@@ -9,9 +10,9 @@ namespace SAE.RoguePG.Main.Driver
     /// <summary>
     ///     Makes Enemies work.
     /// </summary>
-    [RequireComponent(typeof(EntityBattleDriver))]
+    [RequireComponent(typeof(EnemyBattleDriver))]
     [DisallowMultipleComponent]
-    public class EnemyDriver : EntityDriver
+    public class EnemyDriver : BaseDriver
     {
         /// <summary> How fast the enemy can move </summary>
         public float movementSpeed = 1.0f;
@@ -141,7 +142,10 @@ namespace SAE.RoguePG.Main.Driver
             // Start a battle if close enough
             if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
             {
-                StateManager.StartBattleMode(this.targetPlayer.gameObject, this.gameObject);
+                this.LogThisAndFormat("{0}; {1}", this.targetPlayer.battleDriver, this.targetPlayer.battleDriver as PlayerBattleDriver);
+                this.LogThisAndFormat("{0}; {1}", this.battleDriver, this.battleDriver as EnemyBattleDriver);
+
+                StateManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
             }
 
             base.FixedUpdate();

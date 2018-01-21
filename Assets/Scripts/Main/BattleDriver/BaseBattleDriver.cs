@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SAE.RoguePG.Main.Driver;
 using SAE.RoguePG.Main.Sprite3D;
+using SAE.RoguePG.Dev;
 
 namespace SAE.RoguePG.Main.BattleDriver
 {
@@ -10,7 +11,7 @@ namespace SAE.RoguePG.Main.BattleDriver
     ///     Makes battles work.
     /// </summary>
     [DisallowMultipleComponent]
-    public class EntityBattleDriver : MonoBehaviour
+    public class BaseBattleDriver : MonoBehaviour
     {
         /// <summary> The base value for the <seealso cref="MaximumHealth"/> stat</summary>
         public float healthBase = 10.0f;
@@ -35,21 +36,24 @@ namespace SAE.RoguePG.Main.BattleDriver
         [HideInInspector]
         public SpriteAnimator spriteAnimator;
 
-        /// <summary> The <seealso cref="EntityDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
+        /// <summary> The <seealso cref="BaseDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         [HideInInspector]
-        public EntityDriver entityDriver;
+        public BaseDriver entityDriver;
+
+        /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
+        public const float MaximumAttackPoints = 10.0f;
 
         /// <summary> All of its allies, including itself </summary>
-        protected GameObject[] allies;
+        protected BaseBattleDriver[] allies;
 
         /// <summary> All of its opponents </summary>
-        protected GameObject[] opponents;
+        protected BaseBattleDriver[] opponents;
 
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
 
         /// <summary> Current level; use the property <seealso cref="Level"/> instead </summary>
-        private int level;
+        private int level = 1;
 
         /// <summary> Maximum Health; use the property <seealso cref="MaximumHealth"/> instead </summary>
         private int maximumHealth;
@@ -75,7 +79,7 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// <summary> Whether they are knocked out </summary>
         public bool KnockedOut { get { return !this.CanStillFight; } }
 
-        /// <summary> Whether it's this thing's turn; updating this value will call <seealso cref="StartTurn"/> or <seealso cref="EndTurn"/> </summary>
+        /// <summary> Whether it's this thing's turn; updating this value will call <seealso cref="StartTurn"/> (true) or <seealso cref="EndTurn"/> (false) </summary>
         public bool TakingTurn
         {
             get
@@ -85,16 +89,13 @@ namespace SAE.RoguePG.Main.BattleDriver
 
             set
             {
-                if (this.takingTurn != value)
+                if (value)
                 {
-                    if (value)
-                    {
-                        this.StartTurn();
-                    }
-                    else
-                    {
-                        this.EndTurn();
-                    }
+                    this.StartTurn();
+                }
+                else
+                {
+                    this.EndTurn();
                 }
 
                 this.takingTurn = value;
@@ -111,7 +112,7 @@ namespace SAE.RoguePG.Main.BattleDriver
 
             set
             {
-                this.level = value;
+                this.level = Mathf.Max(1, value);
                 this.RecalculateStats();
             }
         }
@@ -145,6 +146,12 @@ namespace SAE.RoguePG.Main.BattleDriver
         public float TurnSpeed { get { return this.turnSpeed; } private set { this.turnSpeed = value; } }
 
         /// <summary>
+        ///     Represents the cost that attacks for the current turn can still take.
+        ///     They will regenerate during other turns and, once they reach <seealso cref="MaximumAttackPoints"/>, it will be this's turns.
+        /// </summary>
+        public float AttackPoints { get; set; }
+
+        /// <summary>
         ///     Recalculates all stats (Health, Physical Damage, etc...)
         /// </summary>
         public void RecalculateStats()
@@ -164,40 +171,70 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         /// <param name="allies">All allies</param>
         /// <param name="opponents">All opponents</param>
-        public void SetAlliesAndOpponents(GameObject[] allies, GameObject[] opponents)
+        public void SetAlliesAndOpponents(BaseBattleDriver[] allies, BaseBattleDriver[] opponents)
         {
             this.allies = allies;
             this.opponents = opponents;
         }
 
         /// <summary>
+        ///     To be called when a battle starts
+        /// </summary>
+        public virtual void OnBattleStart()
+        {
+            this.RecalculateStats();
+            this.AttackPoints = MaximumAttackPoints;
+        }
+
+        /// <summary>
+        ///     To be called when a battle ends
+        /// </summary>
+        public virtual void OnBattleEnd()
+        {
+
+        }
+
+        /// <summary>
         ///     Sets up everything needed for the Entity's turn
         /// </summary>
-        protected virtual void StartTurn()
+        public virtual void StartTurn()
         {
-            Debug.LogWarning("Attempting to Start the turn of a EntityBattleDriver. Use a PlayerBattleDriver or EntityBattleDriver instead.");
+            this.LogThisAndFormat("Start Turn!");
         }
 
         /// <summary>
         ///     Ends the Entity's turn
         /// </summary>
-        protected virtual void EndTurn()
+        public virtual void EndTurn()
         {
-            Debug.LogWarning("Attempting to End the turn of a EntityBattleDriver. Use a PlayerBattleDriver or EntityBattleDriver instead.");
+            this.LogThisAndFormat("End Turn!");
         }
 
         /// <summary>
         ///     Updates the Entity's turn once a frame
         /// </summary>
-        protected virtual void UpdateTurn()
+        public virtual void UpdateTurn()
         {
-            Debug.LogWarning("Attempting to Update the turn of a EntityBattleDriver. Use a PlayerBattleDriver or EntityBattleDriver instead.");
+            this.AttackPoints -= Time.deltaTime;
+
+            if (this.AttackPoints < 5.0f)
+            {
+                this.TakingTurn = false;
+            }
+        }
+
+        /// <summary>
+        ///     Updates the Entity once a frame while nothing is taking a turn
+        /// </summary>
+        public virtual void UpdateIdle()
+        {
+            this.AttackPoints += this.turnSpeed * Time.deltaTime;
         }
 
         /// <summary>
         ///     Called by Unity when the Behaviour is enabled
         /// </summary>
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             // Reset velocity.
             Rigidbody rigidbody = this.GetComponent<Rigidbody>();
@@ -209,24 +246,21 @@ namespace SAE.RoguePG.Main.BattleDriver
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EntityBattleDriver"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="BaseBattleDriver"/> whether it is or is not active.
         /// </summary>
-        protected void Awake()
+        protected virtual void Awake()
         {
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
-            this.entityDriver = this.GetComponent<EntityDriver>();
+            this.entityDriver = this.GetComponent<BaseDriver>();
         }
         
         /// <summary>
-        ///     Called by Unity every frame to update the <see cref="EntityBattleDriver"/>
+        ///     Called by Unity every frame to update the <see cref="BaseBattleDriver"/>
         /// </summary>
-        protected void Update()
+        protected virtual void Update()
         {
-            if (this.TakingTurn)
-            {
-                this.UpdateTurn();
-            }
+
         }
     }
 }

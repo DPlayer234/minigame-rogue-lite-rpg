@@ -61,10 +61,10 @@ namespace SAE.RoguePG.Main.Sprite3D
             this.progress = 0.0f;
             this.endStatus = status;
 
-            Vector3[] currentRotations = new Vector3[this.spriteManager.animatedTransforms.Length];
+            float[] currentRotations = new float[this.spriteManager.animatedTransforms.Length];
             for (int i = 0; i < this.spriteManager.animatedTransforms.Length; i++)
             {
-                currentRotations[i] = VariousCommon.WrapDegrees(this.spriteManager.animatedTransforms[i].localEulerAngles);
+                currentRotations[i] = VariousCommon.WrapDegrees(this.spriteManager.animatedTransforms[i].localEulerAngles.z);
             }
 
             this.startStatus = new SpriteAnimationStatus(
@@ -117,10 +117,15 @@ namespace SAE.RoguePG.Main.Sprite3D
 
                 // Rotate Absolutely Everything Else
                 int length = Mathf.Min(this.endStatus.rotations.Length, this.startStatus.rotations.Length);
+                Vector3 localEulerAngles;
                 for (int i = 0; i < length; i++)
                 {
-                    this.spriteManager.animatedTransforms[i].localEulerAngles =
-                        VariousCommon.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress);
+                    localEulerAngles = this.spriteManager.animatedTransforms[i].localEulerAngles;
+
+                    this.spriteManager.animatedTransforms[i].localEulerAngles = new Vector3(
+                        localEulerAngles.x,
+                        localEulerAngles.y,
+                        VariousCommon.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress));
                 }
             }
         }

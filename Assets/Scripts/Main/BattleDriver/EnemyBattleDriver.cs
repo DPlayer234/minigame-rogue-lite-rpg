@@ -9,43 +9,77 @@ namespace SAE.RoguePG.Main.BattleDriver
     ///     Makes battles work.
     /// </summary>
     [DisallowMultipleComponent]
-    public class EnemyBattleDriver : EntityBattleDriver
+    public class EnemyBattleDriver : BaseBattleDriver
     {
         /// <summary> The <seealso cref="EnemyDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         private EnemyDriver enemyDriver;
 
         /// <summary>
+        ///     To be called when a battle starts
+        /// </summary>
+        public override void OnBattleStart()
+        {
+            this.Level = this.enemyDriver.level;
+
+            base.OnBattleStart();
+        }
+
+        /// <summary>
+        ///     To be called when a battle ends
+        /// </summary>
+        public override void OnBattleEnd()
+        {
+            base.OnBattleEnd();
+        }
+
+        /// <summary>
         ///     Sets up everything needed for the Enemy's turn
         /// </summary>
-        protected override void StartTurn()
+        public override void StartTurn()
         {
-
+            base.StartTurn();
         }
 
         /// <summary>
         ///     Ends the Enemy's turn
         /// </summary>
-        protected override void EndTurn()
+        public override void EndTurn()
         {
-
+            base.EndTurn();
         }
 
         /// <summary>
         ///     Updates the Enemy's turn once a frame
         /// </summary>
-        protected override void UpdateTurn()
+        public override void UpdateTurn()
         {
+            base.UpdateTurn();
+        }
 
+        /// <summary>
+        ///     Updates the Enemy once a frame while nothing is taking a turn
+        /// </summary>
+        public override void UpdateIdle()
+        {
+            base.UpdateIdle();
         }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EnemyBattleDriver"/> whether it is or is not active.
         /// </summary>
-        new private void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
             this.enemyDriver = this.GetComponent<EnemyDriver>();
+        }
+
+        /// <summary>
+        ///     Called by Unity every frame to update the <see cref="BaseBattleDriver"/>
+        /// </summary>
+        protected override void Update()
+        {
+            base.Update();
         }
 
         /// <summary>
@@ -54,14 +88,6 @@ namespace SAE.RoguePG.Main.BattleDriver
         private void Start()
         {
 
-        }
-
-        /// <summary>
-        ///     Called by Unity every frame to update the <see cref="EntityBattleDriver"/>
-        /// </summary>
-        new private void Update()
-        {
-            base.Update();
         }
     }
 }

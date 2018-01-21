@@ -11,7 +11,7 @@ namespace SAE.RoguePG.Main.Driver
     /// </summary>
     [RequireComponent(typeof(PlayerBattleDriver))]
     [DisallowMultipleComponent]
-    public class PlayerDriver : EntityDriver
+    public class PlayerDriver : BaseDriver
     {
         /// <summary>
         ///     Player Movement Speed
@@ -28,6 +28,10 @@ namespace SAE.RoguePG.Main.Driver
         ///     The <seealso cref="PlayerDriver"/> this one is directly following.
         /// </summary>
         public PlayerDriver following;
+
+        /// <summary> Current Health value. If less than 0: Full health. </summary>
+        [HideInInspector]
+        public int currentHealth = -1;
 
         /// <summary>
         ///     The <seealso cref="CameraController"/> whose <seealso cref="Camera"/> needs to follow the leading <see cref="PlayerDriver"/>.
@@ -83,7 +87,7 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
-        ///     Called by Unity for every physics update to update the <see cref="EntityDriver"/>
+        ///     Called by Unity for every physics update to update the <see cref="BaseDriver"/>
         /// </summary>
         new private void FixedUpdate()
         {

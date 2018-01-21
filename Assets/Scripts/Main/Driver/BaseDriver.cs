@@ -13,7 +13,7 @@ namespace SAE.RoguePG.Main.Driver
     [RequireComponent(typeof(SpriteManager))]
     [RequireComponent(typeof(SpriteAnimator))]
     [DisallowMultipleComponent]
-    public class EntityDriver : MonoBehaviour
+    public class BaseDriver : MonoBehaviour
     {
         /// <summary> The <seealso cref="SpriteManager"/> also attached to this <seealso cref="GameObject"/> </summary>
         [HideInInspector]
@@ -23,9 +23,12 @@ namespace SAE.RoguePG.Main.Driver
         [HideInInspector]
         public SpriteAnimator spriteAnimator;
 
-        /// <summary> The <seealso cref="EntityBattleDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
+        /// <summary> The <seealso cref="BaseBattleDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         [HideInInspector]
-        public EntityBattleDriver battleDriver;
+        public BaseBattleDriver battleDriver;
+
+        /// <summary> Current level. </summary>
+        public int level = 1;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
         new protected Rigidbody rigidbody;
@@ -52,12 +55,13 @@ namespace SAE.RoguePG.Main.Driver
                 // position
                 new Vector3(0.0f, -0.025f, 0.0f),
                 // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
-                new Vector3(0.0f, 0.0f, -3.5f),
-                new Vector3(0.0f, 0.0f, -5.5f),
-                new Vector3(0.0f, 0.0f, 20.0f),
-                new Vector3(0.0f, 0.0f, 10.0f),
-                new Vector3(0.0f, 0.0f, -20.0f),
-                new Vector3(0.0f, 0.0f, -10.0f));
+                1.0f,
+                -3.5f,
+                -5.5f,
+                20.0f,
+                10.0f,
+                -20.0f,
+                -10.0f);
 
             var highState = new SpriteAnimationStatus(
                 // importance
@@ -65,12 +69,13 @@ namespace SAE.RoguePG.Main.Driver
                 // position
                 new Vector3(0.0f, 0.025f, 0.0f),
                 // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
-                new Vector3(0.0f, 0.0f, 3.5f),
-                new Vector3(0.0f, 0.0f, 5.5f),
-                new Vector3(0.0f, 0.0f, 5.0f),
-                new Vector3(0.0f, 0.0f, 1.0f),
-                new Vector3(0.0f, 0.0f, 20.0f),
-                new Vector3(0.0f, 0.0f, -1.0f));
+                -1.0f,
+                3.5f,
+                5.5f,
+                5.0f,
+                1.0f,
+                20.0f,
+                -1.0f);
 
             while (true)
             {
@@ -85,13 +90,13 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="BaseDriver"/> whether it is or is not active.
         /// </summary>
         protected void Awake()
         {
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
-            this.battleDriver = this.GetComponent<EntityBattleDriver>();
+            this.battleDriver = this.GetComponent<BaseBattleDriver>();
             this.rigidbody = this.GetComponent<Rigidbody>();
 
             this.lastVelocity = this.transform.forward;
@@ -100,7 +105,7 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EntityDriver"/> when it first becomes active
+        ///     Called by Unity to initialize the <seealso cref="BaseDriver"/> when it first becomes active
         /// </summary>
         protected void Start()
         {
@@ -108,7 +113,7 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
-        ///     Called by Unity for every physics update to update the <see cref="EntityDriver"/>
+        ///     Called by Unity for every physics update to update the <see cref="BaseDriver"/>
         /// </summary>
         protected void FixedUpdate()
         {

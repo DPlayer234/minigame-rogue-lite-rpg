@@ -127,10 +127,8 @@ namespace SAE.RoguePG.Main.Sprite3D
                 }
             }
             if (this.bodyTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
-
-            List<Transform> transformList = new List<Transform>(this.bodyTransform.GetComponentsInChildren<Transform>());
-            transformList.Remove(this.bodyTransform);
-            this.animatedTransforms = transformList.ToArray();
+            
+            this.animatedTransforms = this.bodyTransform.GetComponentsInChildren<Transform>();
         }
 
         /// <summary>
