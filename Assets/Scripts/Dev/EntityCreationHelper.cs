@@ -25,12 +25,12 @@ namespace SAE.RoguePG.Dev
 
         /// <summary> Information to be set with a <seealso cref="PlayerDriver"/> </summary>
         private static readonly EntityInformation playerInformation = new EntityInformation(
-            tag: StateManager.PlayerEntityTag,
+            tag: MainManager.PlayerEntityTag,
             lightColor: new Color(0.0f, 1.0f, 0.6f));
 
         /// <summary> Information to be set with a <seealso cref="EnemyDriver"/> </summary>
         private static readonly EntityInformation enemyInformation = new EntityInformation(
-            tag: StateManager.EnemyEntityTag,
+            tag: MainManager.EnemyEntityTag,
             lightColor: new Color(1.0f, 0.3f, 0.3f));
 
         /// <summary>

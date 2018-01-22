@@ -4,13 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - StateManager
   - Ground
   - Entity
   - PlayerEntity
   - EnemyEntity
   - SpriteRoot
   - SpriteBody
+  - MainManager
+  - BattleHud
+  - ExploreHud
   layers:
   - Default
   - TransparentFX

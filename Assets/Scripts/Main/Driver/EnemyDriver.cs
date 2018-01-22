@@ -38,7 +38,7 @@ namespace SAE.RoguePG.Main.Driver
         /// </summary>
         private void LookForTarget()
         {
-            GameObject[] players = GameObject.FindGameObjectsWithTag(StateManager.PlayerEntityTag);
+            GameObject[] players = GameObject.FindGameObjectsWithTag(MainManager.PlayerEntityTag);
 
             foreach (GameObject player in players)
             {
@@ -142,10 +142,7 @@ namespace SAE.RoguePG.Main.Driver
             // Start a battle if close enough
             if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
             {
-                this.LogThisAndFormat("{0}; {1}", this.targetPlayer.battleDriver, this.targetPlayer.battleDriver as PlayerBattleDriver);
-                this.LogThisAndFormat("{0}; {1}", this.battleDriver, this.battleDriver as EnemyBattleDriver);
-
-                StateManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
+                MainManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
             }
 
             base.FixedUpdate();

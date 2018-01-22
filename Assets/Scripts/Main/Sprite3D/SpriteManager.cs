@@ -24,6 +24,12 @@ namespace SAE.RoguePG.Main.Sprite3D
         /// <summary> Transform of the Sprite body </summary>
         public Transform bodyTransform;
 
+        /// <summary> The tag used by the sprite root </summary>
+        public const string SpriteRootTag = "SpriteRoot";
+
+        /// <summary> The tag used by the sprite body </summary>
+        public const string SpriteBodyTag = "SpriteBody";
+
         /// <summary> Whether it's facing right. </summary>
         private bool isFacingRight;
 
@@ -109,7 +115,7 @@ namespace SAE.RoguePG.Main.Sprite3D
             for (int i = 0; i < this.transform.childCount; i++)
             {
                 Transform transform = this.transform.GetChild(i);
-                if (transform.CompareTag("SpriteRoot"))
+                if (transform.CompareTag(SpriteRootTag))
                 {
                     this.rootTransform = transform;
                     break;
@@ -120,7 +126,7 @@ namespace SAE.RoguePG.Main.Sprite3D
             for (int i = 0; i < this.rootTransform.childCount; i++)
             {
                 Transform transform = this.rootTransform.GetChild(i);
-                if (transform.CompareTag("SpriteBody"))
+                if (transform.CompareTag(SpriteBodyTag))
                 {
                     this.bodyTransform = transform;
                     break;
@@ -137,7 +143,7 @@ namespace SAE.RoguePG.Main.Sprite3D
         private void LateUpdate()
         {
             // Face Camera
-            this.rootTransform.rotation = Quaternion.Euler(0.0f, StateManager.MainCamera.transform.rotation.eulerAngles.y, 0.0f);
+            this.rootTransform.rotation = Quaternion.Euler(0.0f, MainManager.MainCamera.transform.rotation.eulerAngles.y, 0.0f);
         }
     }
 }

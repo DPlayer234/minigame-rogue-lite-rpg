@@ -422,6 +422,7 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
+  level: 1
   movementSpeed: 1
   targetRange: 4
   defeated: 0
@@ -442,11 +443,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1210841631718850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8626dce526854344498c1e0a18ebf2c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionClasses: 0000000001000000
   healthBase: 10
   physicalBase: 10
   magicalBase: 10

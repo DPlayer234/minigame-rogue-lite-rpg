@@ -4,6 +4,7 @@ using UnityEngine;
 using SAE.RoguePG.Main.Driver;
 using SAE.RoguePG.Main.Sprite3D;
 using SAE.RoguePG.Dev;
+using SAE.RoguePG.Main.BattleActions;
 
 namespace SAE.RoguePG.Main.BattleDriver
 {
@@ -13,6 +14,9 @@ namespace SAE.RoguePG.Main.BattleDriver
     [DisallowMultipleComponent]
     public class BaseBattleDriver : MonoBehaviour
     {
+        /// <summary> An array of <seealso cref="BattleAction.ActionClass"/>es </summary>
+        public BattleAction.ActionClass[] actionClasses;
+
         /// <summary> The base value for the <seealso cref="MaximumHealth"/> stat</summary>
         public float healthBase = 10.0f;
 
@@ -43,11 +47,8 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
         public const float MaximumAttackPoints = 10.0f;
 
-        /// <summary> All of its allies, including itself </summary>
-        protected BaseBattleDriver[] allies;
-
-        /// <summary> All of its opponents </summary>
-        protected BaseBattleDriver[] opponents;
+        /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
+        private BattleAction[] actions;
 
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
@@ -72,6 +73,38 @@ namespace SAE.RoguePG.Main.BattleDriver
 
         /// <summary> How fast and often can they take a turn; use the property <seealso cref="TurnSpeed"/> instead </summary>
         private float turnSpeed;
+
+        /// <summary> All of its allies, including itself </summary>
+        public BaseBattleDriver[] Allies { get; set; }
+
+        /// <summary> All of its opponents </summary>
+        public BaseBattleDriver[] Opponents { get; set; }
+
+        /// <summary>
+        ///     All of its allies and opponents.
+        ///     This is potentially slow if called repeatedly as it creates a new array everytime.
+        /// </summary>
+        public BaseBattleDriver[] AlliesAndOpponents
+        {
+            get
+            {
+                var alliesAndOpponents = new BaseBattleDriver[this.Allies.Length + this.Opponents.Length];
+
+                int i = 0;
+
+                foreach (BaseBattleDriver ally in this.Allies)
+                {
+                    alliesAndOpponents[i++] = ally;
+                }
+
+                foreach (BaseBattleDriver opponent in this.Opponents)
+                {
+                    alliesAndOpponents[i++] = opponent;
+                }
+
+                return alliesAndOpponents;
+            }
+        }
 
         /// <summary> Whether they can still fight </summary>
         public bool CanStillFight { get { return this.CurrentHealth > 0; } }
@@ -147,7 +180,7 @@ namespace SAE.RoguePG.Main.BattleDriver
 
         /// <summary>
         ///     Represents the cost that attacks for the current turn can still take.
-        ///     They will regenerate during other turns and, once they reach <seealso cref="MaximumAttackPoints"/>, it will be this's turns.
+        ///     They will regenerate during the idle phase and, once they reach <seealso cref="MaximumAttackPoints"/>, it will be this Entity's turn.
         /// </summary>
         public float AttackPoints { get; set; }
 
@@ -167,14 +200,16 @@ namespace SAE.RoguePG.Main.BattleDriver
         }
 
         /// <summary>
-        ///     Sets the array of allies and opponents.
+        ///     Regenerates (updates) the <seealso cref="actions"/> from <seealso cref="actionClasses"/>
         /// </summary>
-        /// <param name="allies">All allies</param>
-        /// <param name="opponents">All opponents</param>
-        public void SetAlliesAndOpponents(BaseBattleDriver[] allies, BaseBattleDriver[] opponents)
+        public void RegenerateActions()
         {
-            this.allies = allies;
-            this.opponents = opponents;
+            this.actions = new BattleAction[this.actionClasses.Length];
+
+            for (int i = 0; i < this.actionClasses.Length; i++)
+            {
+                this.actions[i] = BattleAction.GetBattleAction(this.actionClasses[i], this);
+            }
         }
 
         /// <summary>
@@ -182,6 +217,7 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         public virtual void OnBattleStart()
         {
+            this.RegenerateActions();
             this.RecalculateStats();
             this.AttackPoints = MaximumAttackPoints;
         }
@@ -215,9 +251,16 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         public virtual void UpdateTurn()
         {
-            this.AttackPoints -= Time.deltaTime;
+            // Random moves for now
+            if (this.AttackPoints > 0.0f)
+            {
+                var action = this.actions[Random.Range(0, this.actions.Length - 1)];
 
-            if (this.AttackPoints < 5.0f)
+                var targets = action.GetTargets();
+
+                action.Use(targets[Random.Range(0, targets.Length - 1)]);
+            }
+            else
             {
                 this.TakingTurn = false;
             }

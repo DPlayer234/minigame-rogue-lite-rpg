@@ -35,7 +35,7 @@ namespace SAE.RoguePG.Main.Driver
 
         /// <summary>
         ///     The <seealso cref="CameraController"/> whose <seealso cref="Camera"/> needs to follow the leading <see cref="PlayerDriver"/>.
-        ///     Is set to the one of <see cref="StateManager.MainCamera"/>.
+        ///     Is set to the one of <see cref="MainManager.MainCamera"/>.
         /// </summary>
         private CameraController mainCameraController;
 
@@ -57,7 +57,7 @@ namespace SAE.RoguePG.Main.Driver
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
-            Vector3 rawMovement = StateManager.MainCamera.transform.forward * vertical + StateManager.MainCamera.transform.right * horizontal;
+            Vector3 rawMovement = MainManager.MainCamera.transform.forward * vertical + MainManager.MainCamera.transform.right * horizontal;
             return new Vector2(rawMovement.x, rawMovement.z).normalized;
         }
 
@@ -75,7 +75,7 @@ namespace SAE.RoguePG.Main.Driver
         new private void Start()
         {
             base.Start();
-            this.mainCameraController = StateManager.MainCamera.GetComponent<CameraController>();
+            this.mainCameraController = MainManager.MainCamera.GetComponent<CameraController>();
         }
 
         /// <summary>

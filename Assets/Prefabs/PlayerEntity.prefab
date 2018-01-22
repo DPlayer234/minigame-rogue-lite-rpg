@@ -392,9 +392,11 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
+  level: 1
   movementSpeed: 1.5
   leader: {fileID: 0}
   following: {fileID: 0}
+  currentHealth: -1
 --- !u!114 &114728932323654356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -447,6 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869b876af809cf042b916fcae23cd81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionClasses: 0000000001000000
   healthBase: 10
   physicalBase: 10
   magicalBase: 10

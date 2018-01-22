@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SAE.RoguePG.Main.Driver;
+using SAE.RoguePG.Main.BattleActions;
 
 namespace SAE.RoguePG.Main.BattleDriver
 {
@@ -20,7 +21,7 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void OnBattleStart()
         {
             this.Level = this.playerDriver.level;
-            this.CurrentHealth = this.playerDriver.currentHealth;
+            this.CurrentHealth = this.playerDriver.currentHealth < 0 ? this.MaximumHealth : this.playerDriver.currentHealth;
 
             base.OnBattleStart();
         }

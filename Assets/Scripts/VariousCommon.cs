@@ -165,5 +165,46 @@ namespace SAE.RoguePG
         {
             return (value + Mathf.PI) % (Mathf.PI * 2) - Mathf.PI;
         }
+
+        /// <summary>
+        ///     Returns an array of all components in a given collection of <seealso cref="GameObject"/>s
+        /// </summary>
+        /// <typeparam name="T">The type of component to get</typeparam>
+        /// <param name="gameObjects">The collection of <seealso cref="GameObject"/>s</param>
+        /// <returns>An array of all components</returns>
+        public static T[] GetComponentsInCollection<T>(ICollection<GameObject> gameObjects)
+        {
+            T[] components = new T[gameObjects.Count];
+
+            int i = 0;
+            foreach (GameObject gameObject in gameObjects)
+            {
+                components[i++] = gameObject.GetComponent<T>();
+            }
+
+            return components;
+        }
+
+        /// <summary>
+        ///     Splits the original array into an array of equal lenght with each element being another array,
+        ///     containing solely one item of the original array.
+        /// </summary>
+        /// <typeparam name="T">The type of items of the original array</typeparam>
+        /// <param name="originalArray">The original array</param>
+        /// <returns>A new array</returns>
+        public static T[][] SplitIntoArrayOfLenghtOneArrays<T>(T[] originalArray)
+        {
+            T[][] newArray = new T[originalArray.Length][];
+
+            for (int i = 0; i < originalArray.Length; i++)
+            {
+                newArray[i] = new T[]
+                {
+                    originalArray[i]
+                };
+            }
+
+            return newArray;
+        }
     }
 }
