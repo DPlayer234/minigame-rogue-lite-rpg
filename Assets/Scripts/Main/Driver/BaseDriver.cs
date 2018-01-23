@@ -13,7 +13,7 @@ namespace SAE.RoguePG.Main.Driver
     [RequireComponent(typeof(SpriteManager))]
     [RequireComponent(typeof(SpriteAnimator))]
     [DisallowMultipleComponent]
-    public class BaseDriver : MonoBehaviour
+    public abstract class BaseDriver : MonoBehaviour
     {
         /// <summary> The <seealso cref="SpriteManager"/> also attached to this <seealso cref="GameObject"/> </summary>
         [HideInInspector]
@@ -27,8 +27,20 @@ namespace SAE.RoguePG.Main.Driver
         [HideInInspector]
         public BaseBattleDriver battleDriver;
 
-        /// <summary> Current level. </summary>
-        public int level = 1;
+        /// <summary>
+        ///     Movement Speed
+        /// </summary>
+        public float movementSpeed = 1.0f;
+
+        /// <summary>
+        ///     The <seealso cref="BaseDriver"/> leading the group.
+        /// </summary>
+        public BaseDriver leader;
+
+        /// <summary>
+        ///     The <seealso cref="BaseDriver"/> this one is directly following.
+        /// </summary>
+        public BaseDriver following;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
         new protected Rigidbody rigidbody;
@@ -41,6 +53,14 @@ namespace SAE.RoguePG.Main.Driver
 
         /// <summary> Minimum velocity needed to flip </summary>
         private const float MinimumFlipVelocity = 0.1f;
+
+        /// <summary>
+        ///     Minimum distance needed to walk towards <see cref="following"/>
+        /// </summary>
+        private const float MinimumFollowDistance = 1.0f;
+
+        /// <summary> Returns whether this <see cref="BaseDriver"/> is the leader </summary>
+        public bool IsLeader { get { return this.leader == null && this.following == null; } }
 
         /// <summary>
         ///     Generic idle animation! Yay!
@@ -90,9 +110,16 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
+        ///     Calculates and returns the top-down movement vector.
+        ///     The axes are mapped X: X, Y: Z.
+        /// </summary>
+        /// <returns>Target Top-Down Movement Vector</returns>
+        protected abstract Vector2 GetLeaderMovement();
+
+        /// <summary>
         ///     Called by Unity to initialize the <seealso cref="BaseDriver"/> whether it is or is not active.
         /// </summary>
-        protected void Awake()
+        protected virtual void Awake()
         {
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
@@ -107,7 +134,7 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="BaseDriver"/> when it first becomes active
         /// </summary>
-        protected void Start()
+        protected virtual void Start()
         {
             this.spriteAnimator.Animation = this.IdleAnimation;
         }
@@ -115,9 +142,30 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity for every physics update to update the <see cref="BaseDriver"/>
         /// </summary>
-        protected void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
-            // Make sure the SpriteManager is looking in the correct direction
+            Vector2 movement = (
+                // Leading and not following
+                this.IsLeader ?
+                this.GetLeaderMovement() :
+
+                // Following and not impeding personal space
+                this.following != null && (this.following.transform.position - this.transform.position).sqrMagnitude > MinimumFollowDistance ?
+                new Vector2(
+                    this.following.transform.position.x - this.transform.position.x,
+                    this.following.transform.position.z - this.transform.position.z) :
+
+                // Not walking
+                Vector2.zero).normalized * this.movementSpeed;
+
+            Vector3 velocity = this.rigidbody.velocity;
+
+            this.rigidbody.velocity = new Vector3(
+                VariousCommon.ExponentialLerp(velocity.x, movement.x, 0.01f, Time.deltaTime),
+                velocity.y,
+                VariousCommon.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
+
+            // Make sure the SpriteManager is looking in the correct direction (left/right)
             Vector3 currentVelocity = this.rigidbody.velocity;
 
             if (currentVelocity.sqrMagnitude > MinimumFlipVelocity * MinimumFlipVelocity)

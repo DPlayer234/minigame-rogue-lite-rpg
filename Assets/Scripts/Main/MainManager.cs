@@ -15,6 +15,8 @@ namespace SAE.RoguePG.Main
 
         public GameObject enemyHealthBarPrefab;
 
+        public GameObject genericPanelPrefab;
+
         /// <summary> Tag used by Player Entities </summary>
         public const string PlayerEntityTag = "PlayerEntity";
 
@@ -76,6 +78,11 @@ namespace SAE.RoguePG.Main
         ///     The parent object for the battle HUD.
         /// </summary>
         public static GameObject BattleHud { get { return Instance.battleHud; } }
+
+        /// <summary>
+        ///     Prefab for any UI panel.
+        /// </summary>
+        public static GameObject GenericPanelPrefab { get { return Instance.genericPanelPrefab; } }
 
         /// <summary>
         ///     Whether there is currently a battle
@@ -178,9 +185,16 @@ namespace SAE.RoguePG.Main
             // Update drivers
             foreach (BaseBattleDriver battleDriver in this.fightingEntities)
             {
-                battleDriver.UpdateIdle();
+                if (battleDriver.CanStillFight)
+                {
+                    battleDriver.UpdateIdle();
 
-                overflow = Mathf.Max(overflow, battleDriver.AttackPoints - BaseBattleDriver.MaximumAttackPoints);
+                    overflow = Mathf.Max(overflow, battleDriver.AttackPoints - BaseBattleDriver.MaximumAttackPoints);
+                }
+                else
+                {
+                    battleDriver.AttackPoints = 0.0f;
+                }
             }
 
             // Something went over the maximum attack points
@@ -221,11 +235,65 @@ namespace SAE.RoguePG.Main
                 if (!this.currentTurnOf.TakingTurn)
                 {
                     this.currentTurnOf = null;
+
+                    this.CheckAndUpdateBattleStatus();
                 }
             }
             else
             {
                 Debug.LogError("Cannot update the battle turn for value 'null'.");
+            }
+        }
+
+        /// <summary>
+        ///     Checks and updates battle status. (Triggers game overs or battle ends when appropriate)
+        /// </summary>
+        private void CheckAndUpdateBattleStatus()
+        {
+            bool playersAlive = false;
+            foreach (var playerEntity in this.fightingPlayers)
+            {
+                playersAlive |= playerEntity.CanStillFight;
+            }
+
+            bool enemiesAlive = false;
+            foreach (var enemyEntity in this.fightingEnemies)
+            {
+                enemiesAlive |= enemyEntity.CanStillFight;
+            }
+
+            if (playersAlive != enemiesAlive)
+            {
+                EndBattleMode();
+
+                if (playersAlive)
+                {
+                    foreach (var enemyEntity in this.fightingEnemies)
+                    {
+                        Destroy(enemyEntity.gameObject);
+                    }
+                }
+                else
+                {
+                    this.DoGameOver();
+                }
+            }
+            else
+            {
+                if (!playersAlive)
+                {
+                    this.DoGameOver();
+                }
+            }
+        }
+
+        private void DoGameOver()
+        {
+            Debug.LogError("<b>!! GAME OVER !!</b>");
+
+            foreach (var playerEntity in this.fightingPlayers)
+            {
+                Destroy(playerEntity.gameObject);
             }
         }
 
@@ -238,40 +306,80 @@ namespace SAE.RoguePG.Main
             {
                 this.fightingEntities = new List<BaseBattleDriver>();
                 this.deactivatedGameObjects = new List<GameObject>();
+                
+                // Deactivate irrelevant GameObjects and get fighting enemies
+                {
+                    GameObject[] allEnemies = GameObject.FindGameObjectsWithTag(EnemyEntityTag);
 
-                this.fightingPlayers = VariousCommon.GetComponentsInCollection<PlayerBattleDriver>(GameObject.FindGameObjectsWithTag(PlayerEntityTag));
-                GameObject[] allEnemies = GameObject.FindGameObjectsWithTag(EnemyEntityTag);
+                    List<EnemyBattleDriver> listOfFightingEnemies = new List<EnemyBattleDriver>();
 
-                this.fightingEnemies = new EnemyBattleDriver[] { leaderEnemy };
+                    Driver.EnemyDriver leaderEnemyDriver = leaderEnemy.GetComponent<Driver.EnemyDriver>();
 
-                this.ArrangeEntities(leaderPlayer, this.fightingPlayers);
-                //ArrangeEntities(leaderEnemy, allEnemies); // Incorrect... for now
+                    foreach (GameObject enemy in allEnemies)
+                    {
+                        Driver.EnemyDriver enemyDriver = enemy.GetComponent<Driver.EnemyDriver>();
 
+                        if (enemyDriver != null && (enemyDriver.leader == leaderEnemyDriver || enemyDriver == leaderEnemyDriver))
+                        {
+                            // Required component; cannot be missing unless extremely messed with
+                            listOfFightingEnemies.Add(enemy.GetComponent<EnemyBattleDriver>());
+                        }
+                        else
+                        {
+                            enemy.SetActive(false);
+                            this.deactivatedGameObjects.Add(enemy);
+                        }
+                    }
+
+                    this.fightingPlayers = VariousCommon.GetComponentsInCollection<PlayerBattleDriver>(GameObject.FindGameObjectsWithTag(PlayerEntityTag));
+                    this.fightingEnemies = listOfFightingEnemies.ToArray();
+                }
+
+                // Adjust positions and rotations
+                {
+                    Vector3 enemyToPlayer = (leaderPlayer.transform.position - leaderEnemy.transform.position).normalized;
+                    this.transform.position = (leaderPlayer.transform.position + leaderEnemy.transform.position) * 0.5f;
+                    this.transform.right = -enemyToPlayer;
+
+                    leaderPlayer.transform.position = this.transform.position + enemyToPlayer;
+                    leaderEnemy.transform.position = this.transform.position - enemyToPlayer;
+
+                    CameraController cameraController = MainCamera.GetComponent<CameraController>();
+                    cameraController.following = this.transform;
+                    cameraController.transform.position = this.transform.position - this.transform.forward * cameraController.preferredDistance;
+                    cameraController.transform.forward = this.transform.forward;
+
+                    this.ArrangeEntities(leaderPlayer, this.fightingPlayers, this.transform.forward);
+                    this.ArrangeEntities(leaderEnemy, this.fightingEnemies, this.transform.forward);
+                }
+
+                // Setup for battle
                 this.fightingEntities.AddRange(this.fightingPlayers);
-                this.fightingEntities.Add(leaderEnemy);
+                this.fightingEntities.AddRange(this.fightingEnemies);
 
                 this.SetupEntities(this.fightingEntities, true);
 
-                // Deactivate irrelevant GameObjects
-                foreach (GameObject enemy in allEnemies)
-                {
-                    if (enemy != leaderEnemy.gameObject)
-                    {
-                        enemy.SetActive(false);
-                        this.deactivatedGameObjects.Add(enemy);
-                    }
-                }
-
+                // HUD
                 ExploreHud.SetActive(false);
                 BattleHud.SetActive(true);
+
+                int playerHealthBarCount = 0;
+                int enemyHealthBarCount = 0;
 
                 foreach (BaseBattleDriver battleDriver in this.fightingEntities)
                 {
                     battleDriver.OnBattleStart();
 
-                    Instantiate(
+                    GameObject healthBar = Instantiate(
                         battleDriver is PlayerBattleDriver ? this.playerHealthBarPrefab : this.enemyHealthBarPrefab,
-                        BattleHud.transform).GetComponent<UI.HealthController>().battleDriver = battleDriver;
+                        BattleHud.transform);
+
+                    healthBar.GetComponent<UI.HealthController>().battleDriver = battleDriver;
+
+                    healthBar.transform.localPosition += new Vector3(
+                        0.0f,
+                        (battleDriver is PlayerBattleDriver ? playerHealthBarCount++ : enemyHealthBarCount++) * -30,
+                        0.0f);
                 }
 
                 this.isBattleActive = true;
@@ -287,11 +395,12 @@ namespace SAE.RoguePG.Main
             {
                 if (this.fightingEntities != null)
                 {
-                    this.SetupEntities(this.fightingEntities, false);
+                    foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+                    {
+                        battleDriver.OnBattleEnd();
+                    }
 
-                    this.fightingPlayers = null;
-                    this.fightingEnemies = null;
-                    this.fightingEntities = null;
+                    this.SetupEntities(this.fightingEntities, false);
                 }
 
                 if (this.deactivatedGameObjects != null)
@@ -307,11 +416,6 @@ namespace SAE.RoguePG.Main
 
                 ExploreHud.SetActive(true);
                 BattleHud.SetActive(false);
-
-                foreach (BaseBattleDriver battleDriver in this.fightingEntities)
-                {
-                    battleDriver.OnBattleEnd();
-                }
 
                 for (int i = 0; i < BattleHud.transform.childCount; i++)
                 {
@@ -332,19 +436,33 @@ namespace SAE.RoguePG.Main
         /// </summary>
         /// <param name="leader">The leader</param>
         /// <param name="group">The entire group (may or may not include leader)</param>
-        private void ArrangeEntities(Component leader, params Component[] group)
+        private void ArrangeEntities(Component leader, Component[] group, Vector3 entityForward)
         {
             Vector3 flatCameraForward = MainCamera.transform.forward;
             flatCameraForward.y = 0.0f;
             flatCameraForward.Normalize();
 
-            int placementOffset = 0;
-            bool arrangeAbove = false;
+            bool faceRight = Vector3.SignedAngle(flatCameraForward, entityForward, new Vector3(0.0f, 1.0f, 0.0f)) > 0.0f;
+
+            {
+                leader.transform.forward = entityForward;
+
+                Sprite3D.SpriteManager spriteManager = leader.GetComponent<Sprite3D.SpriteManager>();
+                if (spriteManager) spriteManager.SetDirection(faceRight);
+            }
+
+            int placementOffset = 1;
+            bool arrangeAbove = true;
             foreach (Component member in group)
             {
                 if (member != leader)
                 {
+                    member.transform.forward = entityForward;
+
                     member.transform.position = leader.transform.position + flatCameraForward * placementOffset * (arrangeAbove ? 1.0f : -1.0f);
+
+                    Sprite3D.SpriteManager spriteManager = member.GetComponent<Sprite3D.SpriteManager>();
+                    if (spriteManager) spriteManager.SetDirection(faceRight);
 
                     arrangeAbove = !arrangeAbove;
                     if (arrangeAbove) placementOffset++;

@@ -20,9 +20,6 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         public override void OnBattleStart()
         {
-            this.Level = this.enemyDriver.level;
-            this.CurrentHealth = this.MaximumHealth;
-
             base.OnBattleStart();
         }
 
@@ -56,6 +53,25 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void UpdateTurn()
         {
             base.UpdateTurn();
+
+            if (!this.waitingForAnimation)
+            {
+                // Random moves for now
+                if (this.AttackPoints > 0.0f)
+                {
+                    var action = this.actions[Random.Range(0, this.actions.Length)];
+
+                    var targets = action.GetTargets();
+
+                    action.Use(targets[Random.Range(0, targets.Length)]);
+
+                    StartCoroutine(this.JumpForward());
+                }
+                else
+                {
+                    this.TakingTurn = false;
+                }
+            }
         }
 
         /// <summary>

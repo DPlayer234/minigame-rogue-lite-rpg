@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using SAE.RoguePG.Main.Driver;
 using SAE.RoguePG.Main.BattleActions;
 
@@ -12,6 +13,13 @@ namespace SAE.RoguePG.Main.BattleDriver
     [DisallowMultipleComponent]
     public class PlayerBattleDriver : BaseBattleDriver
     {
+        /// <summary> Prefab for action buttons </summary>
+        [SerializeField]
+        private Button actionButtonPrefab;
+
+        private GameObject actionButtonHolder;
+        private GameObject targetButtonHolder;
+
         /// <summary> The <seealso cref="PlayerDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         private PlayerDriver playerDriver;
 
@@ -20,9 +28,6 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         public override void OnBattleStart()
         {
-            this.Level = this.playerDriver.level;
-            this.CurrentHealth = this.playerDriver.currentHealth < 0 ? this.MaximumHealth : this.playerDriver.currentHealth;
-
             base.OnBattleStart();
         }
 
@@ -32,9 +37,6 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void OnBattleEnd()
         {
             base.OnBattleEnd();
-
-            this.playerDriver.level = this.Level;
-            this.playerDriver.currentHealth = this.CurrentHealth;
         }
 
         /// <summary>
@@ -43,6 +45,58 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void StartTurn()
         {
             base.StartTurn();
+            
+            // TODO: Make this prettier, split it up
+            actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+
+            for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
+            {
+                BattleAction action = this.actions[actionIndex];
+
+                Button actionButton = Instantiate(actionButtonPrefab, actionButtonHolder.transform);
+                actionButton.GetComponentInChildren<Text>().text = string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost);
+                actionButton.transform.localPosition += new Vector3(
+                    0.0f,
+                    actionIndex * 30,
+                    0.0f);
+
+                // Action Selection
+                actionButton.onClick.AddListener(delegate ()
+                {
+                    if (targetButtonHolder != null) Destroy(targetButtonHolder);
+
+                    targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+
+                    BaseBattleDriver[][] targetChoices = action.GetTargets();
+
+                    for (int targetIndex = 0; targetIndex < targetChoices.Length; targetIndex++)
+                    {
+                        BaseBattleDriver[] targetChoice = targetChoices[targetIndex];
+
+                        string label = "> ";
+                        foreach (BaseBattleDriver target in targetChoice)
+                        {
+                            label += target.name + " ";
+                        }
+
+                        Button targetButton = Instantiate(actionButtonPrefab, targetButtonHolder.transform);
+                        targetButton.GetComponentInChildren<Text>().text = label;
+                        targetButton.transform.localPosition += new Vector3(
+                            250.0f,
+                            targetIndex * 30,
+                            0.0f);
+
+                        // Target Selection
+                        targetButton.onClick.AddListener(delegate ()
+                        {
+                            Destroy(targetButtonHolder);
+
+                            action.Use(targetChoice);
+                            StartCoroutine(this.JumpForward());
+                        });
+                    }
+                });
+            }
         }
 
         /// <summary>
@@ -51,6 +105,9 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void EndTurn()
         {
             base.EndTurn();
+
+            if (actionButtonHolder != null) Destroy(actionButtonHolder);
+            if (targetButtonHolder != null) Destroy(targetButtonHolder);
         }
 
         /// <summary>
@@ -59,6 +116,14 @@ namespace SAE.RoguePG.Main.BattleDriver
         public override void UpdateTurn()
         {
             base.UpdateTurn();
+
+            if (this.AttackPoints <= 0)
+            {
+                if (actionButtonHolder != null) Destroy(actionButtonHolder);
+                if (targetButtonHolder != null) Destroy(targetButtonHolder);
+
+                this.TakingTurn = false;
+            }
         }
 
         /// <summary>

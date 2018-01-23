@@ -12,7 +12,7 @@ namespace SAE.RoguePG.Main.BattleDriver
     ///     Makes battles work.
     /// </summary>
     [DisallowMultipleComponent]
-    public class BaseBattleDriver : MonoBehaviour
+    public abstract class BaseBattleDriver : MonoBehaviour
     {
         /// <summary> An array of <seealso cref="BattleAction.ActionClass"/>es </summary>
         public BattleAction.ActionClass[] actionClasses;
@@ -48,19 +48,22 @@ namespace SAE.RoguePG.Main.BattleDriver
         public const float MaximumAttackPoints = 10.0f;
 
         /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
-        private BattleAction[] actions;
+        protected BattleAction[] actions;
+
+        protected bool waitingForAnimation;
 
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
 
         /// <summary> Current level; use the property <seealso cref="Level"/> instead </summary>
+        [SerializeField]
         private int level = 1;
 
         /// <summary> Maximum Health; use the property <seealso cref="MaximumHealth"/> instead </summary>
         private int maximumHealth;
 
         /// <summary> Current Health Value; use the property <seealso cref="CurrentHealth"/> instead </summary>
-        private int currentHealth;
+        private int currentHealth = int.MaxValue;
 
         /// <summary> Physical Damage value; use the property <seealso cref="PhysicalDamage"/> instead </summary>
         private float physicalDamage;
@@ -251,19 +254,7 @@ namespace SAE.RoguePG.Main.BattleDriver
         /// </summary>
         public virtual void UpdateTurn()
         {
-            // Random moves for now
-            if (this.AttackPoints > 0.0f)
-            {
-                var action = this.actions[Random.Range(0, this.actions.Length - 1)];
-
-                var targets = action.GetTargets();
-
-                action.Use(targets[Random.Range(0, targets.Length - 1)]);
-            }
-            else
-            {
-                this.TakingTurn = false;
-            }
+            
         }
 
         /// <summary>
@@ -304,6 +295,24 @@ namespace SAE.RoguePG.Main.BattleDriver
         protected virtual void Update()
         {
 
+        }
+
+        protected IEnumerator JumpForward()
+        {
+            if (this.waitingForAnimation) yield return new WaitWhile(delegate () { return this.waitingForAnimation; });
+
+            Vector3 position = this.transform.position;
+            waitingForAnimation = true;
+
+            for (float i = 0; i < 1.0f; i += Time.deltaTime * 4.0f)
+            {
+                this.transform.position = position + this.transform.right * i;
+                yield return null;
+            }
+
+            this.transform.position = position;
+
+            waitingForAnimation = false;
         }
     }
 }

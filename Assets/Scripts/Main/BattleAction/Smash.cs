@@ -22,8 +22,8 @@ namespace SAE.RoguePG.Main.BattleActions
         {
             this.name = ActionName;
 
-            this.attackPointCost = 2.0f;
-            this.attackPower = 3.0f;
+            this.attackPointCost = 4.0f;
+            this.attackPower = 1.5f;
             this.category = ActionCategory.PhysicalAttack;
             this.targetOption = ActionTargetOption.OneOpponent;
         }

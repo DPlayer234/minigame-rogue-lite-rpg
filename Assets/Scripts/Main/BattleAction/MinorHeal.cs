@@ -25,7 +25,7 @@ namespace SAE.RoguePG.Main.BattleActions
             // Storing heal-potential (fraction) in attack power.
             this.attackPower = 0.25f;
 
-            this.attackPointCost = 3.0f;
+            this.attackPointCost = 8.0f;
             this.category = ActionCategory.Support;
             this.targetOption = ActionTargetOption.OneAlly;
         }

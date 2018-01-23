@@ -14,9 +14,6 @@ namespace SAE.RoguePG.Main.Driver
     [DisallowMultipleComponent]
     public class EnemyDriver : BaseDriver
     {
-        /// <summary> How fast the enemy can move </summary>
-        public float movementSpeed = 1.0f;
-
         /// <summary> How far away it will detect a player </summary>
         public float targetRange = 4.0f;
 
@@ -26,6 +23,8 @@ namespace SAE.RoguePG.Main.Driver
 
         /// <summary> The player this enemy is currently chasing. If null, just walks around aimlessly. </summary>
         private PlayerDriver targetPlayer;
+
+        private Coroutine targetUpdater;
 
         /// <summary> The delay in seconds between checks for the target </summary>
         private const float TargetUpdateDelay = 0.2f;
@@ -98,9 +97,27 @@ namespace SAE.RoguePG.Main.Driver
         }
 
         /// <summary>
+        ///     Calculates and returns the top-down movement vector.
+        ///     The axes are mapped X: X, Y: Z.
+        /// </summary>
+        /// <returns>Target Top-Down Movement Vector</returns>
+        protected override Vector2 GetLeaderMovement()
+        {
+            return
+                // Has target
+                this.targetPlayer != null ?
+                new Vector2(
+                    this.targetPlayer.transform.position.x - this.transform.position.x,
+                    this.targetPlayer.transform.position.z - this.transform.position.z) :
+                
+                // Idling
+                Vector2.zero;
+        }
+
+        /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> whether it is or is not active.
         /// </summary>
-        new private void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
@@ -110,42 +127,39 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> when it first becomes active
         /// </summary>
-        new private void Start()
+        protected override void Start()
         {
             base.Start();
-
-            StartCoroutine(this.UpdateTarget());
         }
 
         /// <summary>
         ///     Called by Unity for every physics update to update the <see cref="EnemyDriver"/>
         /// </summary>
-        new private void FixedUpdate()
+        protected override void FixedUpdate()
         {
-            Vector2 movement = (
-                // Has target
-                this.targetPlayer != null ?
-                new Vector2(
-                    this.targetPlayer.transform.position.x - this.transform.position.x,
-                    this.targetPlayer.transform.position.z - this.transform.position.z) :
-
-                // Has no target
-                Vector2.zero).normalized * movementSpeed;
-
-            Vector3 velocity = this.rigidbody.velocity;
-
-            this.rigidbody.velocity = new Vector3(
-                VariousCommon.ExponentialLerp(velocity.x, movement.x, 0.01f, Time.deltaTime),
-                velocity.y,
-                VariousCommon.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
+            base.FixedUpdate();
 
             // Start a battle if close enough
             if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
             {
                 MainManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
             }
+        }
 
-            base.FixedUpdate();
+        /// <summary>
+        ///     Called by Unity when this Behaviour is enabled.
+        /// </summary>
+        private void OnEnable()
+        {
+            targetUpdater = StartCoroutine(this.UpdateTarget());
+        }
+
+        /// <summary>
+        ///     Called by Unity when this Behaviour is disabled.
+        /// </summary>
+        private void OnDisable()
+        {
+            if (targetUpdater != null) StopCoroutine(targetUpdater);
         }
     }
 }

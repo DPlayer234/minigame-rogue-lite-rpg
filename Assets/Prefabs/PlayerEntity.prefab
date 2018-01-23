@@ -392,11 +392,9 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  level: 1
   movementSpeed: 1.5
   leader: {fileID: 0}
   following: {fileID: 0}
-  currentHealth: -1
 --- !u!114 &114728932323654356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,6 +456,9 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  level: 1
+  actionButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
+    type: 2}
 --- !u!136 &136678512351905584
 CapsuleCollider:
   m_ObjectHideFlags: 1

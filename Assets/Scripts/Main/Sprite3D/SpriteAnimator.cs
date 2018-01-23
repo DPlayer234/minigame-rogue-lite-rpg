@@ -131,6 +131,22 @@ namespace SAE.RoguePG.Main.Sprite3D
         }
 
         /// <summary>
+        ///     Called by Unity when this Behaviour is enabled.
+        /// </summary>
+        private void OnEnable()
+        {
+            if (this.Animation != null) this.Animation = this.Animation;
+        }
+
+        /// <summary>
+        ///     Called by Unity when this Behaviour is disabled.
+        /// </summary>
+        private void OnDisable()
+        {
+            if (this.animationCoroutine != null) StopCoroutine(animationCoroutine);
+        }
+
+        /// <summary>
         ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus"/>.
         ///     It's run as a <see cref="Coroutine"/>, just in case the return type didn't make that obvious enough.
         /// </summary>
