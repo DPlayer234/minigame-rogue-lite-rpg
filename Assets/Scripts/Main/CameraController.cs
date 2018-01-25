@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SAE.RoguePG.Main
+﻿namespace SAE.RoguePG.Main
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Will make the Camera that this is attached to follow the referenced GameObject
     /// </summary>
@@ -50,11 +50,11 @@ namespace SAE.RoguePG.Main
 
                 Vector3 newPosition = VariousCommon.ExponentialLerp(
                     this.transform.position,
-                    this.following.position - thisToFollowing * preferredDistance,
+                    this.following.position - thisToFollowing * this.preferredDistance,
                     this.movementSpeedBase,
                     Time.fixedDeltaTime);
 
-                newPosition.y = this.following.position.y + preferredHeight;
+                newPosition.y = this.following.position.y + this.preferredHeight;
                 this.transform.position = newPosition;
 
                 this.transform.eulerAngles = VariousCommon.ExponentialLerpRotation(

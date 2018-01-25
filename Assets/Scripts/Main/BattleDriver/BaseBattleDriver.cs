@@ -1,19 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Main.Driver;
-using SAE.RoguePG.Main.Sprite3D;
-using SAE.RoguePG.Dev;
-using SAE.RoguePG.Main.BattleActions;
-
-namespace SAE.RoguePG.Main.BattleDriver
+﻿namespace SAE.RoguePG.Main.BattleDriver
 {
+    using SAE.RoguePG.Dev;
+    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.Driver;
+    using SAE.RoguePG.Main.Sprite3D;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Makes battles work.
     /// </summary>
     [DisallowMultipleComponent]
     public abstract class BaseBattleDriver : MonoBehaviour
     {
+        /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
+        public const float MaximumAttackPoints = 10.0f;
+
         /// <summary> An array of <seealso cref="BattleAction.ActionClass"/>es </summary>
         public BattleAction.ActionClass[] actionClasses;
 
@@ -44,12 +47,10 @@ namespace SAE.RoguePG.Main.BattleDriver
         [HideInInspector]
         public BaseDriver entityDriver;
 
-        /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
-        public const float MaximumAttackPoints = 10.0f;
-
         /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
         protected BattleAction[] actions;
 
+        /// <summary> Whether or not this is waiting for an animation to finish </summary>
         protected bool waitingForAnimation;
 
         /// <summary> Whether it's this thing's turn </summary>
@@ -157,7 +158,8 @@ namespace SAE.RoguePG.Main.BattleDriver
         public int MaximumHealth { get { return this.maximumHealth; } private set { this.maximumHealth = value; } }
 
         /// <summary> Current Health Value </summary>
-        public int CurrentHealth {
+        public int CurrentHealth
+        {
             get
             {
                 return this.currentHealth;
@@ -297,12 +299,16 @@ namespace SAE.RoguePG.Main.BattleDriver
 
         }
 
+        /// <summary>
+        ///     Does a little animation in which the entity shoots forward
+        /// </summary>
+        /// <returns>An iterator</returns>
         protected IEnumerator JumpForward()
         {
             if (this.waitingForAnimation) yield return new WaitWhile(delegate () { return this.waitingForAnimation; });
 
             Vector3 position = this.transform.position;
-            waitingForAnimation = true;
+            this.waitingForAnimation = true;
 
             for (float i = 0; i < 1.0f; i += Time.deltaTime * 4.0f)
             {
@@ -312,7 +318,7 @@ namespace SAE.RoguePG.Main.BattleDriver
 
             this.transform.position = position;
 
-            waitingForAnimation = false;
+            this.waitingForAnimation = false;
         }
     }
 }

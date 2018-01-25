@@ -90,6 +90,7 @@ namespace SAE.RoguePG.Dev
         /// <summary>
         ///     Initializes an instance of the <seealso cref="EntityInformation"/> class
         /// </summary>
+        /// <param name="tag">The tag to set</param>
         /// <param name="lightColor">Color of an attached light source</param>
         public EntityInformation(string tag, Color lightColor)
         {

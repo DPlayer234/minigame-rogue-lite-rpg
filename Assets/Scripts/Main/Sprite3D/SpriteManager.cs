@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Rendering;
-
-namespace SAE.RoguePG.Main.Sprite3D
+﻿namespace SAE.RoguePG.Main.Sprite3D
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Rendering;
+
     /// <summary>
     ///     Will make <seealso cref="Sprite"/>s rotate towards the set <seealso cref="Camera"/>.
     ///     Also makes sure that all Sprites have the correct order within the 3D space.
@@ -12,35 +12,35 @@ namespace SAE.RoguePG.Main.Sprite3D
     [RequireComponent(typeof(SortingGroup))]
     public class SpriteManager : MonoBehaviour
     {
-        [HideInInspector]
-        /// <summary> Contains all the associated <see cref="Transform"/>s usable in animations. </summary>
-        public Transform[] animatedTransforms;
-
-        [HideInInspector]
-        /// <summary> Transform of the Sprite root </summary>
-        public Transform rootTransform;
-
-        [HideInInspector]
-        /// <summary> Transform of the Sprite body </summary>
-        public Transform bodyTransform;
-
         /// <summary> The tag used by the sprite root </summary>
         public const string SpriteRootTag = "SpriteRoot";
 
         /// <summary> The tag used by the sprite body </summary>
         public const string SpriteBodyTag = "SpriteBody";
 
-        /// <summary> Whether it's facing right. </summary>
-        private bool isFacingRight;
-
-        /// <summary> -1.0..1.0; where the flipping animation currently is. </summary>
-        private float flipStatus;
-
         /// <summary> Multiplier for sorting order </summary>
         private const float SortingOrderMultiplier = 20.0f;
 
         /// <summary> How fast the flip animation is played. </summary>
         private const float FlipSpeed = 10.0f;
+
+        /// <summary> Contains all the associated <see cref="Transform"/>s usable in animations. </summary>
+        [HideInInspector]
+        public Transform[] animatedTransforms;
+
+        /// <summary> Transform of the Sprite root </summary>
+        [HideInInspector]
+        public Transform rootTransform;
+
+        /// <summary> Transform of the Sprite body </summary>
+        [HideInInspector]
+        public Transform bodyTransform;
+
+        /// <summary> Whether it's facing right. </summary>
+        private bool isFacingRight;
+
+        /// <summary> -1.0..1.0; where the flipping animation currently is. </summary>
+        private float flipStatus;
 
         /// <summary> Whether the Sprite is facing right </summary>
         public bool IsFacingRight { get { return this.isFacingRight; } }
@@ -73,6 +73,7 @@ namespace SAE.RoguePG.Main.Sprite3D
         /// <summary>
         ///     Coroutine to run the flipping animation.
         /// </summary>
+        /// <param name="faceRight">Whether to face right after the animation</param>
         /// <returns>A routine...</returns>
         private IEnumerator DoFlipAnimation(bool faceRight)
         {
@@ -109,9 +110,7 @@ namespace SAE.RoguePG.Main.Sprite3D
             this.isFacingRight = true;
             this.flipStatus = 1.0f;
 
-            //if (this.transform.childCount < 1) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
-            //this.rootTransform = this.transform.GetChild(0);
-
+            // Finding Sprite Root
             for (int i = 0; i < this.transform.childCount; i++)
             {
                 Transform transform = this.transform.GetChild(i);
@@ -121,8 +120,10 @@ namespace SAE.RoguePG.Main.Sprite3D
                     break;
                 }
             }
+
             if (this.rootTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
 
+            // Finding Sprite Body
             for (int i = 0; i < this.rootTransform.childCount; i++)
             {
                 Transform transform = this.rootTransform.GetChild(i);
@@ -132,6 +133,7 @@ namespace SAE.RoguePG.Main.Sprite3D
                     break;
                 }
             }
+
             if (this.bodyTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
             
             this.animatedTransforms = this.bodyTransform.GetComponentsInChildren<Transform>();

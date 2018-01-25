@@ -26,7 +26,21 @@ namespace SAE.RoguePG.Main.Sprite3D
         private Coroutine animationCoroutine;
 
         /// <summary> [ Use Field <see cref="Animation"/> ] </summary>
-        new private SpriteAnimation animation;
+        private new SpriteAnimation animation;
+
+        /// <summary>
+        ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus"/>.
+        ///     It's run as a <see cref="Coroutine"/>, just in case the return type didn't make that obvious enough.
+        /// </summary>
+        /// <param name="statusSetter">The function used to set the new animation status</param>
+        /// <returns>An iterator</returns>
+        public delegate IEnumerator SpriteAnimation(StatusSetter statusSetter);
+
+        /// <summary>
+        ///     Used to set information in a <see cref="SpriteAnimator"/>
+        /// </summary>
+        /// <param name="status">The new status to set</param>
+        public delegate void StatusSetter(SpriteAnimationStatus status);
 
         /// <summary> Set or get the Animation delegate </summary>
         public SpriteAnimation Animation
@@ -143,18 +157,7 @@ namespace SAE.RoguePG.Main.Sprite3D
         /// </summary>
         private void OnDisable()
         {
-            if (this.animationCoroutine != null) StopCoroutine(animationCoroutine);
+            if (this.animationCoroutine != null) StopCoroutine(this.animationCoroutine);
         }
-
-        /// <summary>
-        ///     Allows animating a sprite by calling the <seealso cref="StatusSetter"/> with the new <seealso cref="SpriteAnimationStatus"/>.
-        ///     It's run as a <see cref="Coroutine"/>, just in case the return type didn't make that obvious enough.
-        /// </summary>
-        public delegate IEnumerator SpriteAnimation(StatusSetter statusSetter);
-
-        /// <summary>
-        ///     Used to set information in a <see cref="SpriteAnimator"/>
-        /// </summary>
-        public delegate void StatusSetter(SpriteAnimationStatus status);
     }
 }

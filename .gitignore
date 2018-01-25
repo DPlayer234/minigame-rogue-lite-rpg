@@ -33,5 +33,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# StyleCop Cache
-StyleCop.Cache
+# StyleCop Files
+StyleCop.*
+*.StyleCop

@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Main.Driver;
-using SAE.RoguePG.Main.BattleActions;
-
-namespace SAE.RoguePG.Main.BattleDriver
+﻿namespace SAE.RoguePG.Main.BattleDriver
 {
+    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.Driver;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Makes battles work.
     /// </summary>

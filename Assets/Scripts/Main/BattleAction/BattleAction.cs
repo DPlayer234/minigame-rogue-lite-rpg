@@ -27,6 +27,61 @@ namespace SAE.RoguePG.Main.BattleActions
         /// <summary> See: <see cref="Category"/> </summary>
         protected ActionCategory category;
 
+        /// <summary>
+        ///     Initializes a new instance of the <seealso cref="BattleAction"/> class.
+        ///     Since this is an abstract class, it only serves as a base.
+        /// </summary>
+        /// <param name="user">The BattleDriver which will use this action</param>
+        public BattleAction(BaseBattleDriver user)
+        {
+            this.User = user;
+        }
+
+        /// <summary>
+        ///     Which options are there for using this action?
+        /// </summary>
+        public enum ActionTargetOption
+        {
+            /// <summary> Can only be used on one-self </summary>
+            Self,
+
+            /// <summary> Can be used on anybody </summary>
+            Anyone,
+
+            /// <summary> Can be used on a single ally </summary>
+            OneAlly,
+
+            /// <summary> Can be used on a single opponent </summary>
+            OneOpponent,
+
+            /// <summary> Will be used on everybody at once </summary>
+            Everybody,
+
+            /// <summary> Will be used on all allies at once </summary>
+            AllAllies,
+
+            /// <summary> Will be used on all opponents at once </summary>
+            AllOpponents,
+        }
+
+        /// <summary>
+        ///     Which Category does this action belong in?
+        /// </summary>
+        public enum ActionCategory
+        {
+            /// <summary> Physical attack. Uses <seealso cref="BaseBattleDriver.PhysicalDamage"/> for damage calculation. </summary>
+            PhysicalAttack,
+
+            /// <summary> Magical attack. Uses <seealso cref="BaseBattleDriver.MagicalDamage"/> for damage calculation. </summary>
+            MagicalAttack,
+
+            /// <summary> Support action, f.e. healing. </summary>
+            Support,
+
+            /// <summary> The action is not defined to be in any other category. </summary>
+            Undefined
+        }
+
         /// <summary> The name of this action </summary>
         public string Name { get { return this.name; } }
 
@@ -49,16 +104,6 @@ namespace SAE.RoguePG.Main.BattleActions
         public BaseBattleDriver User { get; private set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <seealso cref="BattleAction"/> class.
-        ///     Since this is an abstract class, it only serves as a base.
-        /// </summary>
-        /// <param name="user">The BattleDriver which will use this action</param>
-        public BattleAction(BaseBattleDriver user)
-        {
-            this.User = user;
-        }
-
-        /// <summary>
         ///     Use this action against a set list of targets
         /// </summary>
         /// <param name="targets">A list of targets</param>
@@ -68,7 +113,7 @@ namespace SAE.RoguePG.Main.BattleActions
 
             this.User.AttackPoints -= this.AttackPointCost;
 
-            foreach(BaseBattleDriver target in targets)
+            foreach (BaseBattleDriver target in targets)
             {
                 this.Use(target);
             }
@@ -152,50 +197,5 @@ namespace SAE.RoguePG.Main.BattleActions
         /// </summary>
         /// <param name="target">The target battle driver</param>
         protected abstract void Use(BaseBattleDriver target);
-
-        /// <summary>
-        ///     Which options are there for using this action?
-        /// </summary>
-        public enum ActionTargetOption
-        {
-            /// <summary> Can only be used on one-self </summary>
-            Self,
-
-            /// <summary> Can be used on anybody </summary>
-            Anyone,
-
-            /// <summary> Can be used on a single ally </summary>
-            OneAlly,
-
-            /// <summary> Can be used on a single opponent </summary>
-            OneOpponent,
-
-            /// <summary> Will be used on everybody at once </summary>
-            Everybody,
-
-            /// <summary> Will be used on all allies at once </summary>
-            AllAllies,
-
-            /// <summary> Will be used on all opponents at once </summary>
-            AllOpponents,
-        }
-
-        /// <summary>
-        ///     Which Category does this action belong in?
-        /// </summary>
-        public enum ActionCategory
-        {
-            /// <summary> Physical attack. Uses <seealso cref="BaseBattleDriver.PhysicalDamage"/> for damage calculation. </summary>
-            PhysicalAttack,
-
-            /// <summary> Magical attack. Uses <seealso cref="BaseBattleDriver.MagicalDamage"/> for damage calculation. </summary>
-            MagicalAttack,
-
-            /// <summary> Support action, f.e. healing. </summary>
-            Support,
-
-            /// <summary> The action is not defined to be in any other category. </summary>
-            Undefined
-        }
     }
 }

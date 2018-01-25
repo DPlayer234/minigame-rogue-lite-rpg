@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using SAE.RoguePG.Main.Driver;
-using SAE.RoguePG.Main.BattleActions;
-
-namespace SAE.RoguePG.Main.BattleDriver
+﻿namespace SAE.RoguePG.Main.BattleDriver
 {
+    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.Driver;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.UI;
+
     /// <summary>
     ///     Makes battles work.
     /// </summary>
@@ -17,7 +17,10 @@ namespace SAE.RoguePG.Main.BattleDriver
         [SerializeField]
         private Button actionButtonPrefab;
 
+        /// <summary> The parent object for action buttons </summary>
         private GameObject actionButtonHolder;
+
+        /// <summary> The parent object for target buttons </summary>
         private GameObject targetButtonHolder;
 
         /// <summary> The <seealso cref="PlayerDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
@@ -47,13 +50,13 @@ namespace SAE.RoguePG.Main.BattleDriver
             base.StartTurn();
             
             // TODO: Make this prettier, split it up
-            actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+            this.actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
 
             for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
             {
                 BattleAction action = this.actions[actionIndex];
 
-                Button actionButton = Instantiate(actionButtonPrefab, actionButtonHolder.transform);
+                Button actionButton = Instantiate(this.actionButtonPrefab, this.actionButtonHolder.transform);
                 actionButton.GetComponentInChildren<Text>().text = string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost);
                 actionButton.transform.localPosition += new Vector3(
                     0.0f,
@@ -63,9 +66,9 @@ namespace SAE.RoguePG.Main.BattleDriver
                 // Action Selection
                 actionButton.onClick.AddListener(delegate ()
                 {
-                    if (targetButtonHolder != null) Destroy(targetButtonHolder);
+                    if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
 
-                    targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+                    this.targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
 
                     BaseBattleDriver[][] targetChoices = action.GetTargets();
 
@@ -79,7 +82,7 @@ namespace SAE.RoguePG.Main.BattleDriver
                             label += target.name + " ";
                         }
 
-                        Button targetButton = Instantiate(actionButtonPrefab, targetButtonHolder.transform);
+                        Button targetButton = Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
                         targetButton.GetComponentInChildren<Text>().text = label;
                         targetButton.transform.localPosition += new Vector3(
                             250.0f,
@@ -89,7 +92,7 @@ namespace SAE.RoguePG.Main.BattleDriver
                         // Target Selection
                         targetButton.onClick.AddListener(delegate ()
                         {
-                            Destroy(targetButtonHolder);
+                            Destroy(this.targetButtonHolder);
 
                             action.Use(targetChoice);
                             StartCoroutine(this.JumpForward());
@@ -106,8 +109,8 @@ namespace SAE.RoguePG.Main.BattleDriver
         {
             base.EndTurn();
 
-            if (actionButtonHolder != null) Destroy(actionButtonHolder);
-            if (targetButtonHolder != null) Destroy(targetButtonHolder);
+            if (this.actionButtonHolder != null) Destroy(this.actionButtonHolder);
+            if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
         }
 
         /// <summary>
@@ -119,8 +122,8 @@ namespace SAE.RoguePG.Main.BattleDriver
 
             if (this.AttackPoints <= 0)
             {
-                if (actionButtonHolder != null) Destroy(actionButtonHolder);
-                if (targetButtonHolder != null) Destroy(targetButtonHolder);
+                if (this.actionButtonHolder != null) Destroy(this.actionButtonHolder);
+                if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
 
                 this.TakingTurn = false;
             }

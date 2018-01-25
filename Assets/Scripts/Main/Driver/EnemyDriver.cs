@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Dev;
-using SAE.RoguePG.Main.Sprite3D;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.Driver
+﻿namespace SAE.RoguePG.Main.Driver
 {
+    using SAE.RoguePG.Dev;
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Sprite3D;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Makes Enemies work.
     /// </summary>
@@ -14,6 +14,12 @@ namespace SAE.RoguePG.Main.Driver
     [DisallowMultipleComponent]
     public class EnemyDriver : BaseDriver
     {
+        /// <summary> The delay in seconds between checks for the target </summary>
+        private const float TargetUpdateDelay = 0.2f;
+
+        /// <summary> The maximum distance between a player and this entity to trigger a battle </summary>
+        private const float BattleTriggerRange = 0.5f;
+
         /// <summary> How far away it will detect a player </summary>
         public float targetRange = 4.0f;
 
@@ -24,13 +30,58 @@ namespace SAE.RoguePG.Main.Driver
         /// <summary> The player this enemy is currently chasing. If null, just walks around aimlessly. </summary>
         private PlayerDriver targetPlayer;
 
+        /// <summary> The coroutine which is running <seealso cref="UpdateTarget"/> </summary>
         private Coroutine targetUpdater;
 
-        /// <summary> The delay in seconds between checks for the target </summary>
-        private const float TargetUpdateDelay = 0.2f;
+        /// <summary>
+        ///     Calculates and returns the top-down movement vector.
+        ///     The axes are mapped X: X, Y: Z.
+        /// </summary>
+        /// <returns>Target Top-Down Movement Vector</returns>
+        protected override Vector2 GetLeaderMovement()
+        {
+            return
+                // Has target
+                this.targetPlayer != null ?
+                new Vector2(
+                    this.targetPlayer.transform.position.x - this.transform.position.x,
+                    this.targetPlayer.transform.position.z - this.transform.position.z) :
+                
+                // Idling
+                Vector2.zero;
+        }
 
-        /// <summary> The maximum distance between a player and this entity to trigger a battle </summary>
-        private const float BattleTriggerRange = 0.5f;
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> whether it is or is not active.
+        /// </summary>
+        protected override void Awake()
+        {
+            base.Awake();
+
+            this.defeated = false;
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> when it first becomes active
+        /// </summary>
+        protected override void Start()
+        {
+            base.Start();
+        }
+
+        /// <summary>
+        ///     Called by Unity for every physics update to update the <see cref="EnemyDriver"/>
+        /// </summary>
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+
+            // Start a battle if close enough
+            if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
+            {
+                MainManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
+            }
+        }
 
         /// <summary>
         ///     Finds an appropriate target
@@ -93,57 +144,8 @@ namespace SAE.RoguePG.Main.Driver
                 }
 
                 yield return new WaitForSeconds(TargetUpdateDelay);
-            } while (!this.defeated);
-        }
-
-        /// <summary>
-        ///     Calculates and returns the top-down movement vector.
-        ///     The axes are mapped X: X, Y: Z.
-        /// </summary>
-        /// <returns>Target Top-Down Movement Vector</returns>
-        protected override Vector2 GetLeaderMovement()
-        {
-            return
-                // Has target
-                this.targetPlayer != null ?
-                new Vector2(
-                    this.targetPlayer.transform.position.x - this.transform.position.x,
-                    this.targetPlayer.transform.position.z - this.transform.position.z) :
-                
-                // Idling
-                Vector2.zero;
-        }
-
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> whether it is or is not active.
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-
-            this.defeated = false;
-        }
-
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EnemyDriver"/> when it first becomes active
-        /// </summary>
-        protected override void Start()
-        {
-            base.Start();
-        }
-
-        /// <summary>
-        ///     Called by Unity for every physics update to update the <see cref="EnemyDriver"/>
-        /// </summary>
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
-
-            // Start a battle if close enough
-            if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
-            {
-                MainManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
             }
+            while (!this.defeated);
         }
 
         /// <summary>
@@ -151,7 +153,7 @@ namespace SAE.RoguePG.Main.Driver
         /// </summary>
         private void OnEnable()
         {
-            targetUpdater = StartCoroutine(this.UpdateTarget());
+            this.targetUpdater = StartCoroutine(this.UpdateTarget());
         }
 
         /// <summary>
@@ -159,7 +161,7 @@ namespace SAE.RoguePG.Main.Driver
         /// </summary>
         private void OnDisable()
         {
-            if (targetUpdater != null) StopCoroutine(targetUpdater);
+            if (this.targetUpdater != null) StopCoroutine(this.targetUpdater);
         }
     }
 }

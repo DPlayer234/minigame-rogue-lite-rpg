@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleActions
 {
+    using SAE.RoguePG.Main.BattleDriver;
+    using UnityEngine;
+
     /// <summary>
     ///     Base class for any action that can be taken during a turn.
     /// </summary>
     public abstract partial class BattleAction
     {
         // Additional things related to BattleActions
+
+        /// <summary>
+        ///     Pseudo-Pointer to action classes
+        /// </summary>
+        public enum ActionClass
+        {
+            Smash,
+            MinorHeal
+        }
 
         /// <summary>
         ///     Returns a new instance of a battle action class based on an enum
@@ -34,15 +39,6 @@ namespace SAE.RoguePG.Main.BattleActions
                     // Default to smash
                     return new Smash(user);
             }
-        }
-
-        /// <summary>
-        ///     Pseudo-Pointer to action classes
-        /// </summary>
-        public enum ActionClass
-        {
-            Smash,
-            MinorHeal
         }
     }
 }

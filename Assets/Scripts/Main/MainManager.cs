@@ -1,22 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main
+﻿namespace SAE.RoguePG.Main
 {
+    using SAE.RoguePG.Main.BattleDriver;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Stores and manages general game state of the Main scene.
     ///     Behaves like a singleton; any new instance will override the old one.
     /// </summary>
     public class MainManager : MonoBehaviour
     {
-        public GameObject playerHealthBarPrefab;
-
-        public GameObject enemyHealthBarPrefab;
-
-        public GameObject genericPanelPrefab;
-
         /// <summary> Tag used by Player Entities </summary>
         public const string PlayerEntityTag = "PlayerEntity";
 
@@ -28,6 +22,15 @@ namespace SAE.RoguePG.Main
 
         /// <summary> Tag used by the battle HUD root </summary>
         public const string BattleHudTag = "BattleHud";
+
+        /// <summary> Prefab for player health bars </summary>
+        public GameObject playerHealthBarPrefab;
+
+        /// <summary> Prefab for enemy health bars </summary>
+        public GameObject enemyHealthBarPrefab;
+
+        /// <summary> Prefab for an empty panel </summary>
+        public GameObject genericPanelPrefab;
 
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
         [SerializeField]
@@ -97,6 +100,8 @@ namespace SAE.RoguePG.Main
         /// <summary>
         ///     Starts a turn-based battle
         /// </summary>
+        /// <param name="leaderPlayer">The leading player</param>
+        /// <param name="leaderEnemy">The leading enemy</param>
         public static void StartBattleMode(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
             if (Instance == null) throw new Exceptions.MainManagerException("Cannot start battle mode without an Instance of MainManager!");
@@ -128,7 +133,7 @@ namespace SAE.RoguePG.Main
 
             this.isBattleActive = false;
             Instance = this;
-            // DontDestroyOnLoad(this);
+            //// DontDestroyOnLoad(this);
 
             if (MainCamera == null) throw new Exceptions.MainManagerException("There is no MainCamera set!");
             if (ExploreHud == null) throw new Exceptions.MainManagerException("There is no ExploreHud set!");
@@ -436,6 +441,7 @@ namespace SAE.RoguePG.Main
         /// </summary>
         /// <param name="leader">The leader</param>
         /// <param name="group">The entire group (may or may not include leader)</param>
+        /// <param name="entityForward">Forward vector for the entities</param>
         private void ArrangeEntities(Component leader, Component[] group, Vector3 entityForward)
         {
             Vector3 flatCameraForward = MainCamera.transform.forward;

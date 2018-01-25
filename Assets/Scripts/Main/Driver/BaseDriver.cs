@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Main.Sprite3D;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.Driver
+﻿namespace SAE.RoguePG.Main.Driver
 {
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Sprite3D;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Makes Entities work.
     /// </summary>
@@ -43,7 +43,7 @@ namespace SAE.RoguePG.Main.Driver
         public BaseDriver following;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
-        new protected Rigidbody rigidbody;
+        protected new Rigidbody rigidbody;
 
         /// <summary> Velocity during the last frame </summary>
         protected Vector3 lastVelocity;
@@ -190,6 +190,22 @@ namespace SAE.RoguePG.Main.Driver
                     spriteManager.FlipToDirection(false);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Removes this <seealso cref="BaseDriver"/> and the <seealso cref="BaseBattleDriver"/> also attached to this GameObject
+        ///     and adds a new component of type <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">The new type of component to add</typeparam>
+        /// <returns>The new component</returns>
+        private T Replace<T>() where T : Component
+        {
+            Destroy(this);
+
+            BaseBattleDriver battleDriver = this.GetComponent<BaseBattleDriver>();
+            if (battleDriver != null) Destroy(battleDriver);
+
+            return this.gameObject.AddComponent<T>();
         }
     }
 }
