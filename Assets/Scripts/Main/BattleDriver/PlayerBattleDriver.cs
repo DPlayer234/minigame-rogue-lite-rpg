@@ -48,6 +48,8 @@
         public override void StartTurn()
         {
             base.StartTurn();
+
+            if (!this.CanStillFight) return;
             
             // TODO: Make this prettier, split it up
             this.actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
@@ -135,6 +137,8 @@
         public override void UpdateIdle()
         {
             base.UpdateIdle();
+
+            if (!this.CanStillFight) return;
         }
 
         /// <summary>

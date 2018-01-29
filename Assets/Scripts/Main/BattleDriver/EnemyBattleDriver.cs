@@ -15,6 +15,9 @@
         /// <summary> The <seealso cref="EnemyDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         private EnemyDriver enemyDriver;
 
+        /// <summary> Whether this has already granted experience/levels </summary>
+        private bool grantedExperience = false;
+
         /// <summary>
         ///     To be called when a battle starts
         /// </summary>
@@ -29,6 +32,11 @@
         public override void OnBattleEnd()
         {
             base.OnBattleEnd();
+
+            if (!this.CanStillFight)
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         /// <summary>
@@ -79,7 +87,25 @@
         /// </summary>
         public override void UpdateIdle()
         {
-            base.UpdateIdle();
+            if (this.CanStillFight)
+            {
+                base.UpdateIdle();
+            }
+            else
+            {
+                // Grants XP/Levels upon defeat
+                if (!this.grantedExperience)
+                {
+                    this.gameObject.SetActive(false);
+
+                    foreach (BaseBattleDriver battleDriver in this.Opponents)
+                    {
+                        ++battleDriver.Level;
+                    }
+
+                    this.grantedExperience = true;
+                }
+            }
         }
 
         /// <summary>

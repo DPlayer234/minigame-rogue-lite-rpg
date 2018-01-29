@@ -113,9 +113,6 @@
         /// <summary> Whether they can still fight </summary>
         public bool CanStillFight { get { return this.CurrentHealth > 0; } }
 
-        /// <summary> Whether they are knocked out </summary>
-        public bool KnockedOut { get { return !this.CanStillFight; } }
-
         /// <summary> Whether it's this thing's turn; updating this value will call <seealso cref="StartTurn"/> (true) or <seealso cref="EndTurn"/> (false) </summary>
         public bool TakingTurn
         {
@@ -194,6 +191,8 @@
         /// </summary>
         public void RecalculateStats()
         {
+            int oldMaximumHealth = this.MaximumHealth;
+
             this.MaximumHealth = (int)(this.Level * this.healthBase * 5);
             this.PhysicalDamage = this.Level * this.physicalBase;
             this.MagicalDamage = this.Level * this.magicalBase;
@@ -201,7 +200,7 @@
             this.TurnSpeed = this.Level * this.speedBase;
 
             // Make sure the health value is valid
-            this.CurrentHealth = this.CurrentHealth;
+            this.CurrentHealth = Mathf.Max(1, this.CurrentHealth + this.MaximumHealth - oldMaximumHealth);
         }
 
         /// <summary>
@@ -224,6 +223,7 @@
         {
             this.RegenerateActions();
             this.RecalculateStats();
+
             this.AttackPoints = MaximumAttackPoints;
         }
 
@@ -264,7 +264,10 @@
         /// </summary>
         public virtual void UpdateIdle()
         {
-            this.AttackPoints += this.turnSpeed * Time.deltaTime;
+            if (this.CanStillFight)
+            {
+                this.AttackPoints += this.turnSpeed * Time.deltaTime;
+            }
         }
 
         /// <summary>

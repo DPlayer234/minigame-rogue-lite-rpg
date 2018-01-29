@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SAE.RoguePG
+﻿namespace SAE.RoguePG
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Contains various common functions.
     /// </summary>
-    /// "Magic Numbers" used in functions of this class don't really have any name; the functions don't correctly work with any other value.
+    /// "Magic Numbers" used in functions of this class don't really have any name;
+    /// the functions don't correctly work with any other value.
     public static class VariousCommon
     {
         /// <summary>

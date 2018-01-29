@@ -79,7 +79,7 @@
             // Start a battle if close enough
             if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
             {
-                MainManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
+                BattleManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
             }
         }
 
@@ -88,7 +88,7 @@
         /// </summary>
         private void LookForTarget()
         {
-            GameObject[] players = GameObject.FindGameObjectsWithTag(MainManager.PlayerEntityTag);
+            GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
 
             foreach (GameObject player in players)
             {
