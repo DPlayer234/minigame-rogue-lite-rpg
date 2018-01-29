@@ -13,6 +13,9 @@ TagManager:
   - MainManager
   - BattleHud
   - ExploreHud
+  - Wall
+  - RoomConnection
+  - EnemySpawnPoint
   layers:
   - Default
   - TransparentFX

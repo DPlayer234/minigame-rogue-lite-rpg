@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using UnityEngine;
-using SAE.RoguePG.Main;
-using SAE.RoguePG.Main.Driver;
-using SAE.RoguePG.Main.Sprite3D;
-
-namespace SAE.RoguePG.Dev
+﻿namespace SAE.RoguePG.Dev
 {
+    using System.Collections;
+    using UnityEngine;
+    using SAE.RoguePG.Main;
+    using SAE.RoguePG.Main.Driver;
+    using SAE.RoguePG.Main.Sprite3D;
+
     /// <summary>
     ///     Used to help assigning data to GameObjects.
     /// </summary>
