@@ -1,6 +1,7 @@
 ﻿namespace SAE.RoguePG.Main
 {
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Driver;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -8,10 +9,12 @@
     /// <summary>
     ///     Generates a floor when attached; then deletes itself.
     /// </summary>
-    public class RoomGenerator : MonoBehaviour
+    public class DungeonGenerator : MonoBehaviour
     {
-        private const string RoomConnectorTag = "RoomConnector";
+        /// <summary> Tag used by RoomConnectors </summary>
+        private const string RoomConnectionTag = "RoomConnection";
 
+        /// <summary> Tag used by Enemy Spawn Points </summary>
         private const string EnemySpawnPointTag = "EnemySpawnPoint";
 
         /// <summary>
@@ -30,12 +33,22 @@
         public GameObject[] roomPrefabs;
 
         /// <summary>
-        ///     Prefabs used for enemies
+        ///     Prefabs used for players
         /// </summary>
-        public GameObject[] enemyPrefabs;
+        public PlayerDriver[] playerPrefabs;
 
         /// <summary>
-        ///     Floor Number (First Floor is 1, second is 2 ....)
+        ///     Prefabs used for enemies
+        /// </summary>
+        public EnemyDriver[] enemyPrefabs;
+
+        /// <summary>
+        ///     Minimum and maximum enemy count per spawn point.
+        /// </summary>
+        public Vector2Int enemyCount;
+
+        /// <summary>
+        ///     Floor Number (First Floor is 1, second is 2 etc.)
         /// </summary>
         public int floorNumber = 1;
 
@@ -47,11 +60,19 @@
         /// <summary>
         ///     How many rooms does this floor have?
         /// </summary>
+        private int totalFloorSize = -1;
+
+        /// <summary>
+        ///     How many rooms does this floor have?
+        /// </summary>
         private int TotalFloorSize
         {
             get
             {
-                return Mathf.CeilToInt(floorNumber * 2 + 4 + Random.Range(-1, 1));
+                // Generate value on first demand
+                return this.totalFloorSize < 0 ?
+                    this.totalFloorSize = Mathf.CeilToInt(floorNumber * 2 + 4 + Random.Range(-1, 1)) :
+                    this.totalFloorSize;
             }
         }
 
@@ -61,48 +82,130 @@
         private void Start()
         {
             Instantiate(this.startPrefab).transform.position = Vector3.zero;
+            Instantiate(this.playerPrefabs.GetRandomItem()).transform.position = Vector3.zero;
 
-            while (this.generatedRooms < this.TotalFloorSize)
+            int i = 0;
+
+            while (GameObject.FindGameObjectWithTag(RoomConnectionTag) != null)
             {
+                ++i;
                 this.SpawnNextRooms();
+                if (i > 10)
+                {
+                    print("CANCELED");
+                    return;
+                }
             }
+
+            this.SpawnEnemies();
 
             Destroy(this);
         }
 
+        /// <summary>
+        ///     Spawns rooms where appropriate
+        /// </summary>
         private void SpawnNextRooms()
         {
-            GameObject[] roomConnections = GameObject.FindGameObjectsWithTag(RoomConnectorTag);
+            GameObject[] roomConnections = GameObject.FindGameObjectsWithTag(RoomConnectionTag);
 
             foreach (GameObject roomConnection in roomConnections)
             {
-                ++this.generatedRooms;
+                bool tooLarge = ++this.generatedRooms > this.TotalFloorSize;
 
-                bool tooLarge = this.generatedRooms > this.TotalFloorSize;
-
-                GameObject nextPiece =
+                // Instantiate next room (or wall)
+                GameObject nextRoom =
                     tooLarge ?
-                    Instantiate(wallPrefab) :
-                    Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Length)]);
+                    Instantiate(this.wallPrefab) :
+                    Instantiate(this.roomPrefabs.GetRandomItem());
 
-                nextPiece.transform.position = roomConnection.transform.position;
-                nextPiece.transform.rotation = roomConnection.transform.rotation;
+                // Find connectors to that room
+                GameObject connectTo = FindGameObjectsByTagInChildrenOf(nextRoom, RoomConnectionTag).GetRandomItem();
 
-                Destroy(roomConnection);
-                if (tooLarge) break;
+                // Move the room so they connect.
+                // This leaves the related trigonometry to be handled by Unity, not my code!
+                connectTo.transform.parent = null;
+                nextRoom.transform.parent = connectTo.transform;
+
+                connectTo.transform.position = roomConnection.transform.position;
+                connectTo.transform.forward = -roomConnection.transform.forward; 
+
+                // Let's not delete the room accidentally though.
+                nextRoom.transform.parent = null;
+
+                // Should be used for bounds; leaving it for later
+                Collider collider = nextRoom.GetComponent<Collider>();
+                if (collider != null)
+                {
+                    Destroy(collider);
+                }
+
+                DestroyImmediate(roomConnection.gameObject);
+                DestroyImmediate(connectTo.gameObject);
             }
-
-            this.SpawnEnemies();
         }
 
+        /// <summary>
+        ///     Spawns enemies at all EnemySpawnPoints and deletes those
+        /// </summary>
         private void SpawnEnemies()
         {
             GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(EnemySpawnPointTag);
 
             foreach (GameObject enemySpawnPoint in enemySpawnPoints)
             {
-                Destroy(enemySpawnPoint);
+                int enemyCount = Random.Range(this.enemyCount.x, this.enemyCount.y + 1);
+
+                if (enemyCount > 0)
+                {
+                    EnemyDriver leaderEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
+                    leaderEnemy.transform.position = enemySpawnPoint.transform.position;
+
+                    EnemyDriver followEnemy = leaderEnemy;
+
+                    // Effectively starts at 1, ends at enemyCount-1
+                    for (int i = 0; i < enemyCount; ++i)
+                    {
+                        EnemyDriver nextEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
+                        nextEnemy.transform.position = enemySpawnPoint.transform.position;
+
+                        nextEnemy.leader = leaderEnemy;
+                        nextEnemy.following = followEnemy;
+
+                        followEnemy = nextEnemy;
+                    }
+                }
+
+                DestroyImmediate(enemySpawnPoint);
             }
+        }
+
+        /// <summary>
+        ///     Finds all GameObjects with <paramref name="tag"/> in the children of <paramref name="gameObject"/>
+        /// </summary>
+        /// <param name="gameObject">The GameObject whose children to search</param>
+        /// <param name="tag">The tag they need to match</param>
+        /// <returns>A list of GameObjects</returns>
+        private static List<GameObject> FindGameObjectsByTagInChildrenOf(GameObject gameObject, string tag)
+        {
+            List<GameObject> childrenWithTag = new List<GameObject>();
+            Transform transform = gameObject.transform;
+
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                GameObject child = transform.GetChild(i).gameObject;
+
+                if (child.CompareTag(tag))
+                {
+                    childrenWithTag.Add(child);
+                }
+                else
+                {
+                    childrenWithTag.AddRange(FindGameObjectsByTagInChildrenOf(child, tag));
+                }
+            }
+
+            return childrenWithTag;
         }
     }
 }

@@ -23,6 +23,9 @@
         /// <summary> Tag used by the battle HUD root </summary>
         public const string BattleHudTag = "BattleHud";
 
+        /// <summary> Whether there is a fight going on right now. Probably. </summary>
+        private bool initialized = false;
+
         /// <summary> The Entity whose turn it currently is. </summary>
         private BaseBattleDriver currentTurnOf;
 
@@ -56,8 +59,9 @@
         public static void StartBattleMode(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
             if (MainManager.Instance == null) throw new Exceptions.MainManagerException("Cannot start battle mode without an Instance of MainManager!");
+            if (Instance != null) return;//throw new Exceptions.MainManagerException("Cannot start another battle while one is already going!");
 
-            MainManager.Instance.gameObject.AddComponent<BattleManager>();
+            Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
 
             Instance.StartCoroutine(Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
         }
@@ -73,19 +77,11 @@
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="MainManager"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="BattleManager"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            if (Instance != null)
-            {
-                Debug.LogWarning("There was an additional active MainManager. The new instance was destroyed.");
-                Destroy(this);
-                return;
-            }
-            
-            Instance = this;
-            //// DontDestroyOnLoad(this);
+            //if (Instance != this) throw new Exceptions.MainManagerException("Something went wrong, but I'm not sure what it was!?");
 
 #if UNITY_EDITOR
             // Debug code... or something goes here
@@ -97,6 +93,8 @@
         /// </summary>
         private void Update()
         {
+            if (!this.initialized) return;
+
             this.UpdateBattle();
         }
 
@@ -315,6 +313,8 @@
                     (battleDriver is PlayerBattleDriver ? playerHealthBarCount++ : enemyHealthBarCount++) * -30,
                     0.0f);
             }
+
+            this.initialized = true;
         }
 
         /// <summary>

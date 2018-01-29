@@ -16,6 +16,7 @@ TagManager:
   - Wall
   - RoomConnection
   - EnemySpawnPoint
+  - RoomBounds
   layers:
   - Default
   - TransparentFX

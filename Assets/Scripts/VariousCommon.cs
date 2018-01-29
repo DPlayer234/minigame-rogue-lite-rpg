@@ -207,5 +207,18 @@
 
             return newArray;
         }
+
+        /// <summary>
+        ///     Returns a random item from a list
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in <paramref name="list"/></typeparam>
+        /// <param name="list">The list to pick an element from</param>
+        /// <returns>A random element</returns>
+        public static T GetRandomItem<T>(this IList<T> list)
+        {
+            if (list.Count == 0) throw new InvalidOperationException("Cannot get random item from an empty IList.");
+
+            return list[UnityEngine.Random.Range(0, list.Count)];
+        }
     }
 }
