@@ -618,10 +618,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e5a5e9caf0cd84db412315cf552321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallPrefab: {fileID: 1524019917228700, guid: 77ff26470b13214448983a7a390c2208, type: 2}
-  startPrefab: {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af,
-    type: 2}
-  roomPrefabs:
+  roomSize: {x: 10, y: 10}
+  wallPrefabs:
+  - {fileID: 1524019917228700, guid: 77ff26470b13214448983a7a390c2208, type: 2}
+  startingRoomPrefabs:
+  - {fileID: 1082606131664352, guid: 5830bc6d41417bf4cbcc251f5680c855, type: 2}
+  commonRoomPrefabs:
+  - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
+  bossRoomPrefabs:
+  - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
+  treasureRoomPrefabs:
   - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
   playerPrefabs:
   - {fileID: 114320421902846042, guid: 53cab8e7c17d94945b5e395909c791a0, type: 2}
