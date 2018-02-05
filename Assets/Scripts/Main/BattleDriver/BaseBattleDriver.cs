@@ -17,6 +17,9 @@
         /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
         public const float MaximumAttackPoints = 10.0f;
 
+        /// <summary> The name displayed in battle </summary>
+        public string battleName;
+
         /// <summary> An array of <seealso cref="BattleAction.ActionClass"/>es </summary>
         public BattleAction.ActionClass[] actionClasses;
 
@@ -56,15 +59,18 @@
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
 
+        /// <summary> Status Display used by this BattleDriver </summary>
+        protected GameObject statusDisplay;
+
         /// <summary> Current level; use the property <seealso cref="Level"/> instead </summary>
         [SerializeField]
         private int level = 1;
 
         /// <summary> Maximum Health; use the property <seealso cref="MaximumHealth"/> instead </summary>
-        private int maximumHealth;
+        private int maximumHealth = -1;
 
         /// <summary> Current Health Value; use the property <seealso cref="CurrentHealth"/> instead </summary>
-        private int currentHealth = int.MaxValue;
+        private int currentHealth = -1;
 
         /// <summary> Physical Damage value; use the property <seealso cref="PhysicalDamage"/> instead </summary>
         private float physicalDamage;
@@ -225,6 +231,10 @@
             this.RecalculateStats();
 
             this.AttackPoints = MaximumAttackPoints;
+
+            this.statusDisplay = Instantiate(MainManager.Instance.statusDisplayPrefab, this.spriteManager.rootTransform);
+            this.statusDisplay.transform.localPosition = new Vector3(0.0f, 1.3f, 0.0f);
+            //this.statusDisplay.GetComponent<UI.StatusDisplayController>().battleDriver = this;
         }
 
         /// <summary>
@@ -232,7 +242,10 @@
         /// </summary>
         public virtual void OnBattleEnd()
         {
-
+            if (this.statusDisplay != null)
+            {
+                Destroy(this.statusDisplay);
+            }
         }
 
         /// <summary>

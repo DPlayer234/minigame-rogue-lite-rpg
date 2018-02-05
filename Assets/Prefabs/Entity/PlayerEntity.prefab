@@ -447,6 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869b876af809cf042b916fcae23cd81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleName: Player
   actionClasses: 0000000001000000
   healthBase: 10
   physicalBase: 10

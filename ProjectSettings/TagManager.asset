@@ -14,10 +14,12 @@ TagManager:
   - BattleHud
   - ExploreHud
   - Wall
-  - RoomConnection
   - EnemySpawnPoint
-  - RoomBounds
   - PlayerSpawnPoint
+  - StatusDisplay
+  - StatusDisplayLabel
+  - StatusDisplayHealth
+  - StatusDisplayAP
   layers:
   - Default
   - TransparentFX
@@ -75,4 +77,10 @@ TagManager:
     locked: 0
   - name: RightArm
     uniqueID: 3443008203
+    locked: 0
+  - name: StatusDisplayBase
+    uniqueID: 3708375351
+    locked: 0
+  - name: StatusDisplayBar
+    uniqueID: 3598410909
     locked: 0

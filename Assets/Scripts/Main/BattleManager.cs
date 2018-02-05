@@ -295,23 +295,9 @@
             MainManager.ExploreHud.SetActive(false);
             MainManager.BattleHud.SetActive(true);
 
-            int playerHealthBarCount = 0;
-            int enemyHealthBarCount = 0;
-
             foreach (BaseBattleDriver battleDriver in this.fightingEntities)
             {
                 battleDriver.OnBattleStart();
-
-                GameObject healthBar = Instantiate(
-                    battleDriver is PlayerBattleDriver ? MainManager.Instance.playerHealthBarPrefab : MainManager.Instance.enemyHealthBarPrefab,
-                    MainManager.BattleHud.transform);
-
-                healthBar.GetComponent<UI.HealthController>().battleDriver = battleDriver;
-
-                healthBar.transform.localPosition += new Vector3(
-                    0.0f,
-                    (battleDriver is PlayerBattleDriver ? playerHealthBarCount++ : enemyHealthBarCount++) * -30,
-                    0.0f);
             }
 
             this.initialized = true;
@@ -346,15 +332,10 @@
             MainManager.ExploreHud.SetActive(true);
             MainManager.BattleHud.SetActive(false);
 
-            for (int i = 0; i < MainManager.BattleHud.transform.childCount; i++)
+            /*for (int i = 0; i < MainManager.BattleHud.transform.childCount; i++)
             {
                 Transform transform = MainManager.BattleHud.transform.GetChild(i);
-
-                if (transform.GetComponent<UI.HealthController>())
-                {
-                    Destroy(transform.gameObject);
-                }
-            }
+            }*/
 
             Destroy(this);
         }

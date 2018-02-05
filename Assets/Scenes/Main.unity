@@ -598,9 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092426352f9aaa1428728bf0d5f64f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealthBarPrefab: {fileID: 1871244153280274, guid: 11341cd3ce1a9d14cb355885eedcc99b,
-    type: 2}
-  enemyHealthBarPrefab: {fileID: 1271831426680740, guid: 9b5e63010d07e694cbce9cc90d5e150d,
+  statusDisplayPrefab: {fileID: 1643258868717906, guid: d9c1f15b947b4c348afe2a25c118bfdf,
     type: 2}
   genericPanelPrefab: {fileID: 1946340372102298, guid: 7fd1ac204dd03534296d59d2ab0e1f3d,
     type: 2}

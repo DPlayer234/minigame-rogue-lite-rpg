@@ -449,6 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8626dce526854344498c1e0a18ebf2c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleName: Enemy
   actionClasses: 00000000
   healthBase: 10
   physicalBase: 10

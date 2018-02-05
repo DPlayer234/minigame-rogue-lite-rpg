@@ -271,6 +271,7 @@
         {
             GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(EnemySpawnPointTag);
 
+            int enemyLeaderCount = 0;
             foreach (GameObject enemySpawnPoint in enemySpawnPoints)
             {
                 int enemyCount = Random.Range(this.enemyCount.x, this.enemyCount.y + 1);
@@ -278,6 +279,7 @@
                 if (enemyCount > 0)
                 {
                     EnemyDriver leaderEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
+                    leaderEnemy.name = string.Format("LeaderEnemy #{0}", enemyLeaderCount);
                     leaderEnemy.transform.position = enemySpawnPoint.transform.position;
 
                     EnemyDriver followEnemy = leaderEnemy;
@@ -286,6 +288,7 @@
                     for (int i = 0; i < enemyCount; ++i)
                     {
                         EnemyDriver nextEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
+                        nextEnemy.name = string.Format("Enemy #{0}-{1}", enemyLeaderCount, i);
                         nextEnemy.transform.position = enemySpawnPoint.transform.position;
 
                         nextEnemy.leader = leaderEnemy;
@@ -296,6 +299,7 @@
                 }
 
                 DestroyImmediate(enemySpawnPoint);
+                ++enemyLeaderCount;
             }
         }
 

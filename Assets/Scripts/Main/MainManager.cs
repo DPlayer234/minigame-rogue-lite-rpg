@@ -12,10 +12,7 @@
     public class MainManager : MonoBehaviour
     {
         /// <summary> Prefab for player health bars </summary>
-        public GameObject playerHealthBarPrefab;
-
-        /// <summary> Prefab for enemy health bars </summary>
-        public GameObject enemyHealthBarPrefab;
+        public GameObject statusDisplayPrefab;
 
         /// <summary> Prefab for an empty panel </summary>
         public GameObject genericPanelPrefab;
