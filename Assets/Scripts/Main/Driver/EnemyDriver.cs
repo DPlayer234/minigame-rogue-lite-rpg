@@ -79,7 +79,9 @@
             // Start a battle if close enough
             if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
             {
-                BattleManager.StartBattleMode(this.targetPlayer.battleDriver as PlayerBattleDriver, this.battleDriver as EnemyBattleDriver);
+                BattleManager.StartBattleMode(
+                    this.targetPlayer.battleDriver as PlayerBattleDriver,
+                    (this.IsLeader ? this.battleDriver : this.leader.battleDriver) as EnemyBattleDriver);
             }
         }
 

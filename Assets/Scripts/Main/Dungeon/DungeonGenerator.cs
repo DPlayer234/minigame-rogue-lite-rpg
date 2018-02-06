@@ -83,6 +83,12 @@
         /// </summary>
         private Dictionary<Vector2Int, RoomType> floorLayout;
 
+        /// <summary> Parent transform for the entities. </summary>
+        private Transform entityParent;
+
+        /// <summary> Parent transform for the dungeon rooms and co. </summary>
+        private Transform dungeonParent;
+
         /// <summary>
         ///     Lists possible offsets from one room to the next
         /// </summary>
@@ -124,8 +130,19 @@
             {
                 // Generate value on first demand
                 return this.totalFloorSize < 0 ?
-                    this.totalFloorSize = Mathf.CeilToInt(floorNumber * 2 + 4 + Random.Range(-1, 1)) :
+                    this.totalFloorSize = Mathf.CeilToInt(this.floorNumber * 2 + 4 + Random.Range(-1, 1)) :
                     this.totalFloorSize;
+            }
+        }
+
+        /// <summary>
+        ///     What level are enemies supposed to be? Slightly random.
+        /// </summary>
+        private int EnemyLevel
+        {
+            get
+            {
+                return Mathf.Max(1, Mathf.RoundToInt(Mathf.Pow(this.floorNumber, 1.5f) + Random.Range(-1, 2)));
             }
         }
 
@@ -134,12 +151,15 @@
         /// </summary>
         private void Start()
         {
+            this.entityParent = new GameObject("EntityParent").transform;
+            this.dungeonParent = new GameObject("DungeonParent").transform;
+
+            this.entityParent.position = Vector3.zero;
+            this.dungeonParent.position = Vector3.zero;
+
             this.DefineLayout();
-
             this.SpawnRooms();
-
             this.SpawnPlayer();
-
             this.SpawnEnemies();
 
             Destroy(this);
@@ -244,7 +264,7 @@
 
             foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
             {
-                Instantiate(typeToPrefabs[item.Value].GetRandomItem()).transform.position = new Vector3(
+                Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.dungeonParent).transform.position = new Vector3(
                     item.Key.x * this.roomSize.x,
                     0.0f,
                     item.Key.y * this.roomSize.y);
@@ -259,7 +279,17 @@
         {
             GameObject playerSpawnPoint = GameObject.FindGameObjectWithTag(PlayerSpawnPointTag);
 
-            Instantiate(this.playerPrefabs.GetRandomItem()).transform.position = playerSpawnPoint.transform.position;
+            GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
+
+            if (players.Length < 1)
+            {
+                players = new GameObject[]{ Instantiate(this.playerPrefabs.GetRandomItem()).gameObject };
+            }
+
+            foreach (GameObject player in players)
+            {
+                player.transform.position = playerSpawnPoint.transform.position;
+            }
 
             Destroy(playerSpawnPoint);
         }
@@ -271,36 +301,52 @@
         {
             GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(EnemySpawnPointTag);
 
-            int enemyLeaderCount = 0;
+            int enemyLeaderIndex = 0;
             foreach (GameObject enemySpawnPoint in enemySpawnPoints)
             {
                 int enemyCount = Random.Range(this.enemyCount.x, this.enemyCount.y + 1);
 
                 if (enemyCount > 0)
                 {
-                    EnemyDriver leaderEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
-                    leaderEnemy.name = string.Format("LeaderEnemy #{0}", enemyLeaderCount);
-                    leaderEnemy.transform.position = enemySpawnPoint.transform.position;
+                    EnemyDriver leaderEnemy = null, followEnemy = null;
 
-                    EnemyDriver followEnemy = leaderEnemy;
-
-                    // Effectively starts at 1, ends at enemyCount-1
-                    for (int i = 0; i < enemyCount; ++i)
+                    for (int index = 0; index < enemyCount; index++)
                     {
-                        EnemyDriver nextEnemy = Instantiate(this.enemyPrefabs.GetRandomItem());
-                        nextEnemy.name = string.Format("Enemy #{0}-{1}", enemyLeaderCount, i);
-                        nextEnemy.transform.position = enemySpawnPoint.transform.position;
+                        EnemyDriver enemy = SpawnEnemy(
+                            enemySpawnPoint.transform.position,
+                            ref leaderEnemy,
+                            ref followEnemy);
 
-                        nextEnemy.leader = leaderEnemy;
-                        nextEnemy.following = followEnemy;
-
-                        followEnemy = nextEnemy;
+                        enemy.name = string.Format("Enemy #{0}-{1}", enemyLeaderIndex, index);
                     }
                 }
 
                 DestroyImmediate(enemySpawnPoint);
-                ++enemyLeaderCount;
+                ++enemyLeaderIndex;
             }
+        }
+
+        /// <summary>
+        ///     Spawns and returns an enemy
+        /// </summary>
+        /// <param name="position">The position to spawn at</param>
+        /// <param name="leaderEnemy">The leader</param>
+        /// <param name="followEnemy">The enemy to follow</param>
+        /// <returns>The newly spawned enemy</returns>
+        private EnemyDriver SpawnEnemy(Vector3 position, ref EnemyDriver leaderEnemy, ref EnemyDriver followEnemy)
+        {
+            EnemyDriver newEnemy = Instantiate(this.enemyPrefabs.GetRandomItem(), this.entityParent);
+            newEnemy.transform.position = position;
+
+            newEnemy.GetComponent<BaseBattleDriver>().Level = this.EnemyLevel;
+
+            newEnemy.leader = leaderEnemy;
+            newEnemy.following = followEnemy;
+
+            if (leaderEnemy == null) leaderEnemy = newEnemy;
+            followEnemy = newEnemy;
+
+            return newEnemy;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
     using SAE.RoguePG.Main.BattleActions;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -16,6 +17,9 @@
     {
         /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
         public const float MaximumAttackPoints = 10.0f;
+
+        /// <summary> "Levels" added for each stat </summary>
+        private const int LevelStatOffset = 4;
 
         /// <summary> The name displayed in battle </summary>
         public string battleName;
@@ -193,17 +197,27 @@
         public float AttackPoints { get; set; }
 
         /// <summary>
+        ///     Calculates a given stat.
+        /// </summary>
+        /// <param name="base">The base stat</param>
+        /// <returns>The stat adjusted to level</returns>
+        public float CalculateStat(float @base)
+        {
+            return @base * (this.Level + BaseBattleDriver.LevelStatOffset);
+        }
+
+        /// <summary>
         ///     Recalculates all stats (Health, Physical Damage, etc...)
         /// </summary>
         public void RecalculateStats()
         {
             int oldMaximumHealth = this.MaximumHealth;
 
-            this.MaximumHealth = (int)(this.Level * this.healthBase * 5);
-            this.PhysicalDamage = this.Level * this.physicalBase;
-            this.MagicalDamage = this.Level * this.magicalBase;
-            this.Defense = this.Level * this.defenseBase;
-            this.TurnSpeed = this.Level * this.speedBase;
+            this.MaximumHealth = (int)(this.CalculateStat(this.healthBase) * 5);
+            this.PhysicalDamage = this.CalculateStat(this.physicalBase);
+            this.MagicalDamage = this.CalculateStat(this.magicalBase);
+            this.Defense = this.CalculateStat(this.defenseBase);
+            this.TurnSpeed = this.CalculateStat(this.speedBase);
 
             // Make sure the health value is valid
             this.CurrentHealth = Mathf.Max(1, this.CurrentHealth + this.MaximumHealth - oldMaximumHealth);
