@@ -168,6 +168,59 @@
         }
 
         /// <summary>
+        ///     Sums all integers in the range from <paramref name="start"/> to <paramref name="end"/>
+        /// </summary>
+        /// <param name="start">The inclusive starting point</param>
+        /// <param name="end">The inclusive ending point</param>
+        /// <returns>The sum</returns>
+        public static int SumRange(int start, int end)
+        {
+            int sum = 0;
+            for (int i = start; i <= end; i++)
+            {
+                sum += i;
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        ///     Sums all results of <paramref name="func"/>() in the range from <paramref name="start"/> to <paramref name="end"/>
+        /// </summary>
+        /// <param name="func">The function to call</param>
+        /// <param name="start">The inclusive starting point</param>
+        /// <param name="end">The inclusive ending point</param>
+        /// <returns>The sum</returns>
+        public static float SumFuncRange(Func<int, float> func, int start, int end)
+        {
+            float sum = 0;
+            for (int i = start; i <= end; i++)
+            {
+                sum += func(i);
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        ///     Sums all results of <paramref name="func"/>() in the range from <paramref name="start"/> to <paramref name="end"/>
+        /// </summary>
+        /// <param name="func">The function to call</param>
+        /// <param name="start">The inclusive starting point</param>
+        /// <param name="end">The inclusive ending point</param>
+        /// <returns>The sum</returns>
+        public static int SumFuncRange(Func<int, int> func, int start, int end)
+        {
+            int sum = 0;
+            for (int i = start; i <= end; i++)
+            {
+                sum += func(i);
+            }
+
+            return sum;
+        }
+
+        /// <summary>
         ///     Returns an array of all components in a given collection of <seealso cref="GameObject"/>s
         /// </summary>
         /// <typeparam name="T">The type of component to get</typeparam>

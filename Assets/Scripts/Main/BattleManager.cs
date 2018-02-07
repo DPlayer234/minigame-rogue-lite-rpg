@@ -23,6 +23,9 @@
         /// <summary> Tag used by the battle HUD root </summary>
         public const string BattleHudTag = "BattleHud";
 
+        /// <summary> How far the preferred camera distance is multiplied </summary>
+        private const float CameraDistanceMultiplier = 1.5f;
+
         /// <summary> Whether there is a fight going on right now. Probably. </summary>
         private bool initialized = false;
 
@@ -63,6 +66,8 @@
 
             Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
 
+            MainManager.CameraController.preferredDistance *= BattleManager.CameraDistanceMultiplier;
+
             Instance.StartCoroutine(Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
         }
 
@@ -74,6 +79,8 @@
             if (Instance == null) throw new Exceptions.MainManagerException("Cannot end battle mode without an Instance of MainManager!");
 
             Instance.EndBattleModeInstanced();
+
+            MainManager.CameraController.preferredDistance /= BattleManager.CameraDistanceMultiplier;
         }
 
         /// <summary>
@@ -267,24 +274,6 @@
                 this.fightingEnemies = listOfFightingEnemies.ToArray();
             }
 
-            // Adjust positions and rotations
-            {
-                Vector3 enemyToPlayer = (leaderPlayer.transform.position - leaderEnemy.transform.position).normalized;
-                this.transform.position = (leaderPlayer.transform.position + leaderEnemy.transform.position) * 0.5f;
-                this.transform.right = -enemyToPlayer;
-
-                leaderPlayer.transform.position = this.transform.position + enemyToPlayer;
-                leaderEnemy.transform.position = this.transform.position - enemyToPlayer;
-
-                CameraController cameraController = MainManager.MainCamera.GetComponent<CameraController>();
-                cameraController.following = this.transform;
-                cameraController.transform.position = this.transform.position - this.transform.forward * cameraController.preferredDistance;
-                cameraController.transform.forward = this.transform.forward;
-
-                this.ArrangeEntities(leaderPlayer, this.fightingPlayers, this.transform.forward);
-                this.ArrangeEntities(leaderEnemy, this.fightingEnemies, this.transform.forward);
-            }
-
             // Setup for battle
             this.fightingEntities.AddRange(this.fightingPlayers);
             this.fightingEntities.AddRange(this.fightingEnemies);
@@ -332,11 +321,6 @@
             MainManager.ExploreHud.SetActive(true);
             MainManager.BattleHud.SetActive(false);
 
-            /*for (int i = 0; i < MainManager.BattleHud.transform.childCount; i++)
-            {
-                Transform transform = MainManager.BattleHud.transform.GetChild(i);
-            }*/
-
             Destroy(this);
         }
 
@@ -348,7 +332,7 @@
         /// <param name="entityForward">Forward vector for the entities</param>
         private void ArrangeEntities(Component leader, Component[] group, Vector3 entityForward)
         {
-            Vector3 flatCameraForward = MainManager.MainCamera.transform.forward;
+            Vector3 flatCameraForward = MainManager.CameraController.transform.forward;
             flatCameraForward.y = 0.0f;
             flatCameraForward.Normalize();
 
@@ -383,14 +367,13 @@
         /// <summary>
         ///     Sets up entities to either start or end a fight
         /// </summary>
-        /// <param name="components">The List (or whatever) of <seealso cref="Component"/>s</param>
+        /// <param name="battleDrivers">The List of <seealso cref="BaseBattleDriver"/>s</param>
         /// <param name="start">Whether the fight starts (true) or ends (false)</param>
-        private void SetupEntities(IEnumerable<BaseBattleDriver> components, bool start)
+        private void SetupEntities(IEnumerable<BaseBattleDriver> battleDrivers, bool start)
         {
-            foreach (Component component in components)
+            foreach (BaseBattleDriver battleDriver in battleDrivers)
             {
-                var entityDriver = component.GetComponent<Driver.BaseDriver>();
-                var battleDriver = component.GetComponent<BaseBattleDriver>();
+                var entityDriver = battleDriver.entityDriver;
 
                 entityDriver.enabled = !start;
                 battleDriver.enabled = start;

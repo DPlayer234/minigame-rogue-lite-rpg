@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleActions
 {
+    using SAE.RoguePG.Main.BattleDriver;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using UnityEngine;
+
     /// <summary>
     ///     Simple physical attack
     /// </summary>
@@ -13,6 +15,12 @@ namespace SAE.RoguePG.Main.BattleActions
     {
         /// <summary> Action Name </summary>
         public const string ActionName = "Smash";
+
+        /// <summary> Multiplier for the attack velocity </summary>
+        public const float VelocityMultiplier = 10.0f;
+
+        /// <summary> Amount of Velocity added in Y-direction for attack </summary>
+        public const float YVelocity = 2.0f;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Smash"/> class
@@ -23,7 +31,7 @@ namespace SAE.RoguePG.Main.BattleActions
             this.name = ActionName;
 
             this.attackPointCost = 4.0f;
-            this.attackPower = 2.5f;
+            this.attackPower = 10.0f;
             this.category = ActionCategory.PhysicalAttack;
             this.targetOption = ActionTargetOption.OneOpponent;
         }
@@ -35,6 +43,31 @@ namespace SAE.RoguePG.Main.BattleActions
         protected override void Use(BaseBattleDriver target)
         {
             this.DealDamage(target);
+
+            this.User.StartCoroutine(this.DoCharge(target));
+        }
+
+        /// <summary>
+        ///     Charges through the target.
+        /// </summary>
+        private IEnumerator DoCharge(BaseBattleDriver target)
+        {
+            this.User.IsWaitingOnAnimation = true;
+
+            Rigidbody rigidbody = this.User.GetComponent<Rigidbody>();
+
+            Vector3 lookAt = (target.transform.position - this.User.transform.position) * Smash.VelocityMultiplier;
+
+            rigidbody.velocity = lookAt + new Vector3(0.0f, Smash.YVelocity, 0.0f);
+
+            Func<bool> wait = delegate { return rigidbody.velocity.y > 0.0f; };
+
+            yield return new WaitUntil(wait);
+            yield return new WaitWhile(wait);
+
+            rigidbody.velocity = Vector3.zero;
+
+            this.User.IsWaitingOnAnimation = false;
         }
     }
 }

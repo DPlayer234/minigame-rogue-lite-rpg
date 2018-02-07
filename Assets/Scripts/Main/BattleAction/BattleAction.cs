@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleActions
 {
+    using SAE.RoguePG.Main.BattleDriver;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using UnityEngine;
+
     /// <summary>
     ///     Base class for any action that can be taken during a turn.
     /// </summary>
@@ -177,25 +177,33 @@ namespace SAE.RoguePG.Main.BattleActions
                 case ActionCategory.PhysicalAttack:
                     damageStat = this.User.PhysicalDamage;
                     break;
+
                 case ActionCategory.MagicalAttack:
                     damageStat = this.User.MagicalDamage;
                     break;
+
                 default:
                     Debug.LogWarning("Attempting to deal damage with BattleAction of category " + this.Category.ToString());
                     damageStat = 0.0f;
                     break;
             }
-
-            // Damage cannot be negative
-            int damageValue = (int)(Mathf.Max(0.0f, damageStat * this.AttackPower - target.Defense));
+            
+            int damageValue = (int)(Mathf.Max(
+                0.0f,
+                (BaseBattleDriver.LevelStatOffset + this.User.Level) * this.AttackPower * damageStat / target.Defense));
             target.CurrentHealth -= damageValue;
             return damageValue;
         }
 
         /// <summary>
-        ///     The method to run when this action is being used.
+        ///     The method to run on the target when this action is being used.
         /// </summary>
         /// <param name="target">The target battle driver</param>
         protected abstract void Use(BaseBattleDriver target);
+
+        /// <summary>
+        ///     The method to run on the user when this action is being used.
+        /// </summary>
+        protected virtual void OnUse() { }
     }
 }

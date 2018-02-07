@@ -12,6 +12,9 @@
     /// <summary>
     ///     Makes battles work.
     /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(SpriteManager))]
+    [RequireComponent(typeof(SpriteAnimator))]
     [DisallowMultipleComponent]
     public abstract class BaseBattleDriver : MonoBehaviour
     {
@@ -19,7 +22,7 @@
         public const float MaximumAttackPoints = 10.0f;
 
         /// <summary> "Levels" added for each stat </summary>
-        private const int LevelStatOffset = 4;
+        public const int LevelStatOffset = 4;
 
         /// <summary> The name displayed in battle </summary>
         public string battleName;
@@ -57,9 +60,6 @@
         /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
         protected BattleAction[] actions;
 
-        /// <summary> Whether or not this is waiting for an animation to finish </summary>
-        protected bool waitingForAnimation;
-
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
 
@@ -87,6 +87,9 @@
 
         /// <summary> How fast and often can they take a turn; use the property <seealso cref="TurnSpeed"/> instead </summary>
         private float turnSpeed;
+
+        /// <summary> The amount of animations that this object is waiting for to complete </summary>
+        private int waitingOnAnimationCount = 0;
 
         /// <summary> All of its allies, including itself </summary>
         public BaseBattleDriver[] Allies { get; set; }
@@ -117,6 +120,23 @@
                 }
 
                 return alliesAndOpponents;
+            }
+        }
+
+        /// <summary>
+        ///     Gets whether it is waiting on any animation.
+        ///     Setting either adds or subtracts from the total.
+        /// </summary>
+        public bool IsWaitingOnAnimation
+        {
+            get
+            {
+                return this.waitingOnAnimationCount > 0;
+            }
+
+            set
+            {
+                this.waitingOnAnimationCount += (value ? 1 : -1);
             }
         }
 
@@ -248,7 +268,8 @@
 
             this.statusDisplay = Instantiate(MainManager.Instance.statusDisplayPrefab, this.spriteManager.rootTransform);
             this.statusDisplay.transform.localPosition = new Vector3(0.0f, 1.3f, 0.0f);
-            //this.statusDisplay.GetComponent<UI.StatusDisplayController>().battleDriver = this;
+
+            this.waitingOnAnimationCount = 0;
         }
 
         /// <summary>
@@ -260,6 +281,8 @@
             {
                 Destroy(this.statusDisplay);
             }
+
+            this.StopAllCoroutines();
         }
 
         /// <summary>
@@ -268,6 +291,7 @@
         public virtual void StartTurn()
         {
             this.LogThisAndFormat("Start Turn!");
+            MainManager.CameraController.following = this.transform;
         }
 
         /// <summary>
@@ -327,28 +351,6 @@
         protected virtual void Update()
         {
 
-        }
-
-        /// <summary>
-        ///     Does a little animation in which the entity shoots forward
-        /// </summary>
-        /// <returns>An iterator</returns>
-        protected IEnumerator JumpForward()
-        {
-            if (this.waitingForAnimation) yield return new WaitWhile(delegate () { return this.waitingForAnimation; });
-
-            Vector3 position = this.transform.position;
-            this.waitingForAnimation = true;
-
-            for (float i = 0; i < 1.0f; i += Time.deltaTime * 4.0f)
-            {
-                this.transform.position = position + this.transform.right * i;
-                yield return null;
-            }
-
-            this.transform.position = position;
-
-            this.waitingForAnimation = false;
         }
     }
 }

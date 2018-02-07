@@ -14,12 +14,6 @@ namespace SAE.RoguePG.Main.Driver
     public class PlayerDriver : BaseDriver
     {
         /// <summary>
-        ///     The <seealso cref="CameraController"/> whose <seealso cref="Camera"/> needs to follow the leading <see cref="PlayerDriver"/>.
-        ///     Is set to the one of <see cref="MainManager.MainCamera"/>.
-        /// </summary>
-        private CameraController mainCameraController;
-
-        /// <summary>
         ///     Calculates and returns the top-down movement vector.
         ///     The axes are mapped X: X, Y: Z.
         /// </summary>
@@ -29,7 +23,9 @@ namespace SAE.RoguePG.Main.Driver
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
-            Vector3 rawMovement = MainManager.MainCamera.transform.forward * vertical + MainManager.MainCamera.transform.right * horizontal;
+            Vector3 rawMovement =
+                MainManager.CameraController.transform.forward * vertical +
+                MainManager.CameraController.transform.right * horizontal;
             return new Vector2(rawMovement.x, rawMovement.z).normalized;
         }
 
@@ -47,7 +43,6 @@ namespace SAE.RoguePG.Main.Driver
         protected override void Start()
         {
             base.Start();
-            this.mainCameraController = MainManager.MainCamera.GetComponent<CameraController>();
         }
 
         /// <summary>
@@ -57,9 +52,9 @@ namespace SAE.RoguePG.Main.Driver
         {
             base.FixedUpdate();
 
-            if (this.leader == null && this.mainCameraController.following != this.spriteManager.rootTransform)
+            if (this.leader == null && MainManager.CameraController.following != this.spriteManager.rootTransform)
             {
-                this.mainCameraController.following = this.spriteManager.rootTransform;
+                MainManager.CameraController.following = this.spriteManager.rootTransform;
             }
         }
     }

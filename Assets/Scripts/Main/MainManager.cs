@@ -35,57 +35,67 @@
         public static MainManager Instance { get; private set; }
 
         /// <summary>
-        ///     The main camera in the scene.
+        ///     The <seealso cref="CameraController"/> attached to the MainCamera.
         /// </summary>
-        public static Camera MainCamera { get { return Instance.mainCamera; } }
+        public static CameraController CameraController { get; private set; }
 
         /// <summary>
         ///     The parent object for the exploration HUD.
         /// </summary>
-        public static GameObject ExploreHud { get { return Instance.exploreHud; } }
+        public static GameObject ExploreHud { get { return MainManager.Instance.exploreHud; } }
 
         /// <summary>
         ///     The parent object for the battle HUD.
         /// </summary>
-        public static GameObject BattleHud { get { return Instance.battleHud; } }
+        public static GameObject BattleHud { get { return MainManager.Instance.battleHud; } }
 
         /// <summary>
         ///     Prefab for any UI panel.
         /// </summary>
-        public static GameObject GenericPanelPrefab { get { return Instance.genericPanelPrefab; } }
+        public static GameObject GenericPanelPrefab { get { return MainManager.Instance.genericPanelPrefab; } }
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="MainManager"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            if (Instance != null)
+            if (MainManager.Instance != null)
             {
                 Debug.LogWarning("There was an additional active MainManager. The new instance was destroyed.");
                 Destroy(this);
                 return;
             }
-            
-            Instance = this;
+
+            MainManager.Instance = this;
             //// DontDestroyOnLoad(this);
 
-            if (MainCamera == null) throw new Exceptions.MainManagerException("There is no MainCamera set!");
-            if (ExploreHud == null) throw new Exceptions.MainManagerException("There is no ExploreHud set!");
-            if (BattleHud == null) throw new Exceptions.MainManagerException("There is no BattleHud set!");
+            this.ValidateSetup();
 
-            if (MainCamera.GetComponent<CameraController>() == null)
-            {
-                // Add camera follow script to Main Camera
-                Debug.LogWarning("There is no CameraController attached to the Main Camera. Attaching one at run-time; please set it in the Editor!");
-                MainCamera.gameObject.AddComponent<CameraController>();
-            }
+            MainManager.CameraController = this.mainCamera.GetComponent<CameraController>();
 
-            ExploreHud.SetActive(true);
-            BattleHud.SetActive(false);
+            MainManager.ExploreHud.SetActive(true);
+            MainManager.BattleHud.SetActive(false);
 
 #if UNITY_EDITOR
             // Debug code... or something goes here
 #endif
+        }
+
+        /// <summary>
+        ///     Validates that everything is correctly setup and throws an exception otherwise.
+        /// </summary>
+        private void ValidateSetup()
+        {
+            if (this.mainCamera == null) throw new Exceptions.MainManagerException("There is no MainCamera set!");
+            if (MainManager.ExploreHud == null) throw new Exceptions.MainManagerException("There is no ExploreHud set!");
+            if (MainManager.BattleHud == null) throw new Exceptions.MainManagerException("There is no BattleHud set!");
+
+            if (this.mainCamera.GetComponent<CameraController>() == null)
+            {
+                // Add camera follow script to Main Camera
+                Debug.LogWarning("There is no CameraController attached to the Main Camera. Attaching one at run-time; please set it in the Editor!");
+                this.mainCamera.gameObject.AddComponent<CameraController>();
+            }
         }
     }
 }

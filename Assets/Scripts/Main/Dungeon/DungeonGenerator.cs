@@ -19,6 +19,12 @@
         private const string EnemySpawnPointTag = "EnemySpawnPoint";
 
         /// <summary>
+        ///     The average amount of enemies per room.
+        ///     Relevant for enemy level calculations
+        /// </summary>
+        public const int AverageEnemyCountPerRoom = 2;
+
+        /// <summary>
         ///     How large the rooms are (width and depth)
         /// </summary>
         public Vector2 roomSize;
@@ -89,6 +95,12 @@
         /// <summary> Parent transform for the dungeon rooms and co. </summary>
         private Transform dungeonParent;
 
+        /// <summary> A referrence copy of <seealso cref="CameraController.LimitedRangeObjects"/> </summary>
+        private List<GameObject> limitedRangeObjects;
+
+        /// <summary> A referrence copy of <seealso cref="CameraController.LimitedRangeBehaviours"/> </summary>
+        private List<Behaviour> limitedRangeBehaviours;
+
         /// <summary>
         ///     Lists possible offsets from one room to the next
         /// </summary>
@@ -123,6 +135,7 @@
 
         /// <summary>
         ///     How many rooms does this floor have?
+        ///     Not necessarily equal to <seealso cref="DungeonGenerator.GetTotalFloorSize(int)"/>.
         /// </summary>
         private int TotalFloorSize
         {
@@ -130,19 +143,24 @@
             {
                 // Generate value on first demand
                 return this.totalFloorSize < 0 ?
-                    this.totalFloorSize = Mathf.CeilToInt(this.floorNumber * 2 + 4 + Random.Range(-1, 1)) :
+                    this.totalFloorSize = DungeonGenerator.GetTotalFloorSize(this.floorNumber) + Random.Range(-1, 1) :
                     this.totalFloorSize;
             }
         }
 
         /// <summary>
-        ///     What level are enemies supposed to be? Slightly random.
+        ///     What level are enemies supposed to be?
+        ///     Slightly variation.
         /// </summary>
         private int EnemyLevel
         {
             get
             {
-                return Mathf.Max(1, Mathf.RoundToInt(Mathf.Pow(this.floorNumber, 1.5f) + Random.Range(-1, 2)));
+                return Mathf.Max(1, Mathf.RoundToInt(
+                    VariousCommon.SumFuncRange(
+                        DungeonGenerator.GetTotalFloorSize,
+                        1,
+                        this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom +Random.Range(-1, 2)));
             }
         }
 
@@ -151,6 +169,9 @@
         /// </summary>
         private void Start()
         {
+            this.limitedRangeObjects = MainManager.CameraController.LimitedRangeObjects;
+            this.limitedRangeBehaviours = MainManager.CameraController.LimitedRangeBehaviours;
+
             this.entityParent = new GameObject("EntityParent").transform;
             this.dungeonParent = new GameObject("DungeonParent").transform;
 
@@ -264,10 +285,14 @@
 
             foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
             {
-                Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.dungeonParent).transform.position = new Vector3(
+                GameObject newRoom = Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.dungeonParent);
+
+                newRoom.transform.position = new Vector3(
                     item.Key.x * this.roomSize.x,
                     0.0f,
                     item.Key.y * this.roomSize.y);
+
+                this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
             }
         }
 
@@ -338,13 +363,15 @@
             EnemyDriver newEnemy = Instantiate(this.enemyPrefabs.GetRandomItem(), this.entityParent);
             newEnemy.transform.position = position;
 
-            newEnemy.GetComponent<BaseBattleDriver>().Level = this.EnemyLevel;
+            newEnemy.battleDriver.Level = this.EnemyLevel;
 
             newEnemy.leader = leaderEnemy;
             newEnemy.following = followEnemy;
 
             if (leaderEnemy == null) leaderEnemy = newEnemy;
             followEnemy = newEnemy;
+
+            this.limitedRangeObjects.Add(newEnemy.gameObject);
 
             return newEnemy;
         }
@@ -375,6 +402,16 @@
             }
 
             return childrenWithTag;
+        }
+
+        /// <summary>
+        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
+        /// </summary>
+        /// <param name="floorNumber">The floor number</param>
+        /// <returns>The floor size</returns>
+        private static int GetTotalFloorSize(int floorNumber)
+        {
+            return Mathf.CeilToInt(floorNumber * 2 + 4);
         }
     }
 }

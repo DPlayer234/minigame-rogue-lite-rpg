@@ -23,9 +23,6 @@
         /// <summary> The parent object for target buttons </summary>
         private GameObject targetButtonHolder;
 
-        /// <summary> The <seealso cref="PlayerDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private PlayerDriver playerDriver;
-
         /// <summary>
         ///     To be called when a battle starts
         /// </summary>
@@ -97,7 +94,6 @@
                             Destroy(this.targetButtonHolder);
 
                             action.Use(targetChoice);
-                            StartCoroutine(this.JumpForward());
                         });
                     }
                 });
@@ -147,8 +143,6 @@
         protected override void Awake()
         {
             base.Awake();
-
-            this.playerDriver = this.GetComponent<PlayerDriver>();
         }
 
         /// <summary>

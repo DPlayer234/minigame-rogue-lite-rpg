@@ -145,7 +145,10 @@
         private void LateUpdate()
         {
             // Face Camera
-            this.rootTransform.rotation = Quaternion.Euler(0.0f, MainManager.MainCamera.transform.rotation.eulerAngles.y, 0.0f);
+            this.rootTransform.rotation =
+                Quaternion.Euler(
+                    0.0f,
+                    MainManager.CameraController.transform.rotation.eulerAngles.y, 0.0f);
         }
     }
 }

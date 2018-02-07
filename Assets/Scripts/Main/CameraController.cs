@@ -9,6 +9,12 @@
     /// </summary>
     public class CameraController : MonoBehaviour
     {
+        /// <summary> Distance from the camera in which <seealso cref="LimitedRangeObjects"/> are active </summary>
+        public const float ActiveRange = 40.0f;
+
+        /// <summary> The delay in seconds between updates in <seealso cref="UpdateRangeActivity"/> </summary>
+        private const float ActivityUpdateRate = 0.1f;
+
         /// <summary>
         ///     The <seealso cref="Transform"/> of the GameObject to follow
         /// </summary>
@@ -33,6 +39,77 @@
         [Range(0.0f, 1.0f)]
         public float rotationSpeedBase = 0.01f;
 
+        /// <summary> Layer used by entity collision </summary>
+        private int opaqueLayerMask;
+
+        /// <summary> GameObjects which are only enabled in a limited range </summary>
+        public List<GameObject> LimitedRangeObjects { get; set; }
+
+        /// <summary> Behaviours which are only enabled in a limited range </summary>
+        public List<Behaviour> LimitedRangeBehaviours { get; set; }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <see cref="CameraController"/> whether it is enabled or not.
+        /// </summary>
+        private void Awake()
+        {
+            this.LimitedRangeObjects = new List<GameObject>();
+            this.LimitedRangeBehaviours = new List<Behaviour>();
+
+            this.opaqueLayerMask = LayerMask.GetMask("Default");
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <see cref="CameraController"/> when it is first enabled.
+        /// </summary>
+        private void Start()
+        {
+            this.StartCoroutine(this.UpdateRangeActivity());
+        }
+
+        /// <summary>
+        ///     Updates which objects and behaviour in <seealso cref="LimitedRangeObjects"/> and
+        ///     <seealso cref="LimitedRangeBehaviours"/> are active.
+        /// </summary>
+        /// <returns>An iterator</returns>
+        private IEnumerator UpdateRangeActivity()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(CameraController.ActivityUpdateRate);
+
+                foreach (GameObject gameObject in this.LimitedRangeObjects)
+                {
+                    bool shouldBeActive = this.IsInActiveRange(gameObject.transform);
+
+                    if (gameObject.activeSelf != shouldBeActive)
+                    {
+                        gameObject.SetActive(shouldBeActive);
+                    }
+                }
+
+                foreach (Behaviour behaviour in this.LimitedRangeBehaviours)
+                {
+                    bool shouldBeEnabled = this.IsInActiveRange(behaviour.transform);
+
+                    if (behaviour.enabled != shouldBeEnabled)
+                    {
+                        behaviour.enabled = shouldBeEnabled;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Returns whether the given transform is in the active range
+        /// </summary>
+        /// <param name="transform">The transform to check</param>
+        /// <returns>Whether it is in the active range</returns>
+        private bool IsInActiveRange(Transform transform)
+        {
+            return (this.transform.position - transform.position).sqrMagnitude < CameraController.ActiveRange * CameraController.ActiveRange;
+        }
+
         /// <summary>
         ///     Called by Unity once every frame after all Updates and FixedUpdates have been executed.
         /// </summary>
@@ -40,6 +117,22 @@
         {
             if (this.following != null)
             {
+                float distance = this.preferredDistance;
+
+                RaycastHit raycastHit;
+                Vector3 rayCastDirection = this.transform.position - this.following.position;
+                rayCastDirection.y = 0.0f;
+
+                if (Physics.Raycast(
+                    this.following.position,
+                    rayCastDirection,
+                    out raycastHit,
+                    distance,
+                    this.opaqueLayerMask))
+                {
+                    distance = (raycastHit.point - this.following.position).magnitude;
+                }
+
                 Vector3 currentRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
                 this.transform.LookAt(this.following);
                 Vector3 targetRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
@@ -50,7 +143,7 @@
 
                 Vector3 newPosition = VariousCommon.ExponentialLerp(
                     this.transform.position,
-                    this.following.position - thisToFollowing * this.preferredDistance,
+                    this.following.position - thisToFollowing * distance,
                     this.movementSpeedBase,
                     Time.fixedDeltaTime);
 

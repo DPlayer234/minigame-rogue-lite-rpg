@@ -12,11 +12,10 @@
     [DisallowMultipleComponent]
     public class EnemyBattleDriver : BaseBattleDriver
     {
-        /// <summary> The <seealso cref="EnemyDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
-        private EnemyDriver enemyDriver;
-
         /// <summary> Whether this has already granted experience/levels </summary>
         private bool grantedExperience = false;
+
+        private float waitTime = 0.0f;
 
         /// <summary>
         ///     To be called when a battle starts
@@ -45,6 +44,8 @@
         public override void StartTurn()
         {
             base.StartTurn();
+
+            this.waitTime = 1.0f;
         }
 
         /// <summary>
@@ -62,7 +63,9 @@
         {
             base.UpdateTurn();
 
-            if (!this.waitingForAnimation)
+            this.waitTime -= Time.deltaTime;
+
+            if (this.waitTime < 0.0f && !this.IsWaitingOnAnimation)
             {
                 // Random moves for now
                 if (this.AttackPoints > 0.0f)
@@ -73,7 +76,7 @@
 
                     action.Use(targets[Random.Range(0, targets.Length)]);
 
-                    StartCoroutine(this.JumpForward());
+                    this.waitTime = 1.0f;
                 }
                 else
                 {
@@ -114,8 +117,6 @@
         protected override void Awake()
         {
             base.Awake();
-
-            this.enemyDriver = this.GetComponent<EnemyDriver>();
         }
 
         /// <summary>
