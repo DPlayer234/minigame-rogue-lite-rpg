@@ -25,6 +25,11 @@
         public const int AverageEnemyCountPerRoom = 2;
 
         /// <summary>
+        ///     Whether or not to also remove the GameObject
+        /// </summary>
+        public bool removeGameObject = true;
+
+        /// <summary>
         ///     How large the rooms are (width and depth)
         /// </summary>
         public Vector2 roomSize;
@@ -183,7 +188,7 @@
             this.SpawnPlayer();
             this.SpawnEnemies();
 
-            Destroy(this);
+            this.Remove();
         }
 
         /// <summary>
@@ -308,7 +313,12 @@
 
             if (players.Length < 1)
             {
-                players = new GameObject[]{ Instantiate(this.playerPrefabs.GetRandomItem()).gameObject };
+                players = new GameObject[] {
+                    MainManager.SpawnEntityWithBonus(
+                        GeneralManager.SelectedPlayerPrefab,
+                        GeneralManager.BonusStat1,
+                        GeneralManager.BonusStat2).gameObject
+                };
             }
 
             foreach (GameObject player in players)
@@ -377,31 +387,18 @@
         }
 
         /// <summary>
-        ///     Finds all GameObjects with <paramref name="tag"/> in the children of <paramref name="gameObject"/>
+        ///     Removes this thing
         /// </summary>
-        /// <param name="gameObject">The GameObject whose children to search</param>
-        /// <param name="tag">The tag they need to match</param>
-        /// <returns>A list of GameObjects</returns>
-        private static List<GameObject> FindGameObjectsByTagInChildrenOf(GameObject gameObject, string tag)
+        private void Remove()
         {
-            List<GameObject> childrenWithTag = new List<GameObject>();
-            Transform transform = gameObject.transform;
-
-            for (int i = 0; i < transform.childCount; i++)
+            if (this.removeGameObject)
             {
-                GameObject child = transform.GetChild(i).gameObject;
-
-                if (child.CompareTag(tag))
-                {
-                    childrenWithTag.Add(child);
-                }
-                else
-                {
-                    childrenWithTag.AddRange(FindGameObjectsByTagInChildrenOf(child, tag));
-                }
+                Destroy(this.gameObject);
             }
-
-            return childrenWithTag;
+            else
+            {
+                Destroy(this);
+            }
         }
 
         /// <summary>

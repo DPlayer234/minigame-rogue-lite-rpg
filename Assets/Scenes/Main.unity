@@ -616,6 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e5a5e9caf0cd84db412315cf552321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  removeGameObject: 0
   roomSize: {x: 10, y: 10}
   wallPrefabs:
   - {fileID: 1524019917228700, guid: 77ff26470b13214448983a7a390c2208, type: 2}

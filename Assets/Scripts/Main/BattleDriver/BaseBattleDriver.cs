@@ -24,6 +24,9 @@
         /// <summary> "Levels" added for each stat </summary>
         public const int LevelStatOffset = 4;
 
+        /// <summary> The multiplier for the base stat when it gets a bonus </summary>
+        public const float BonusStatMultiplier = 1.15f;
+
         /// <summary> The name displayed in battle </summary>
         public string battleName;
 
@@ -215,6 +218,83 @@
         ///     They will regenerate during the idle phase and, once they reach <seealso cref="MaximumAttackPoints"/>, it will be this Entity's turn.
         /// </summary>
         public float AttackPoints { get; set; }
+
+        /// <summary>
+        ///     Gets a stat by the enumator
+        /// </summary>
+        /// <param name="stat">Which stat</param>
+        /// <returns>A value of the given stat</returns>
+        public float GetStat(Stat stat)
+        {
+            switch (stat)
+            {
+                case Stat.MaximumHealth:
+                    return this.MaximumHealth;
+                case Stat.PhysicalDamage:
+                    return this.PhysicalDamage;
+                case Stat.MagicalDamage:
+                    return this.MagicalDamage;
+                case Stat.Defense:
+                    return this.Defense;
+                case Stat.TurnSpeed:
+                    return this.TurnSpeed;
+                default:
+                    throw new Exceptions.EntityDriverException("Cannot get stat" + stat.ToString());
+            }
+        }
+
+        /// <summary>
+        ///     Gets the base value of a given stat
+        /// </summary>
+        /// <param name="stat">Which stat</param>
+        /// <returns>The value</returns>
+        public float GetBaseStat(Stat stat)
+        {
+            switch (stat)
+            {
+                case Stat.MaximumHealth:
+                    return this.healthBase;
+                case Stat.PhysicalDamage:
+                    return this.physicalBase;
+                case Stat.MagicalDamage:
+                    return this.magicalBase;
+                case Stat.Defense:
+                    return this.defenseBase;
+                case Stat.TurnSpeed:
+                    return this.speedBase;
+                default:
+                    throw new Exceptions.EntityDriverException("Cannot get stat" + stat.ToString());
+            }
+        }
+
+        /// <summary>
+        ///     Sets the base value of a given stat
+        /// </summary>
+        /// <param name="stat">Which stat</param>
+        /// <param name="value">The value to set it to</param>
+        public void SetBaseStat(Stat stat, float value)
+        {
+            switch (stat)
+            {
+                case Stat.MaximumHealth:
+                    this.healthBase = value;
+                    break;
+                case Stat.PhysicalDamage:
+                    this.physicalBase = value;
+                    break;
+                case Stat.MagicalDamage:
+                    this.magicalBase = value;
+                    break;
+                case Stat.Defense:
+                    this.defenseBase = value;
+                    break;
+                case Stat.TurnSpeed:
+                    this.speedBase = value;
+                    break;
+                default:
+                    throw new Exceptions.EntityDriverException("Cannot set stat" + stat.ToString());
+            }
+        }
 
         /// <summary>
         ///     Calculates a given stat.

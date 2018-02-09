@@ -1,5 +1,6 @@
 ﻿namespace SAE.RoguePG.Main
 {
+    using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.BattleDriver;
     using System.Collections;
     using System.Collections.Generic;
@@ -55,6 +56,11 @@
         public static GameObject GenericPanelPrefab { get { return MainManager.Instance.genericPanelPrefab; } }
 
         /// <summary>
+        ///     The current player party
+        /// </summary>
+        public static List<GameObject> Party { get; set; }
+
+        /// <summary>
         ///     Called by Unity to initialize the <seealso cref="MainManager"/> whether it is or is not active.
         /// </summary>
         private void Awake()
@@ -76,9 +82,40 @@
             MainManager.ExploreHud.SetActive(true);
             MainManager.BattleHud.SetActive(false);
 
+            MainManager.Party = new List<GameObject>(5);
+
 #if UNITY_EDITOR
             // Debug code... or something goes here
 #endif
+        }
+
+        /// <summary>
+        ///     Spawns an entity based on a prefab with a bonus
+        /// </summary>
+        /// <param name="prefab">The prefab to use</param>
+        /// <param name="bonus1">The first bonus stat</param>
+        /// <param name="bonus2">The second bonus stat</param>
+        /// <returns>The new entity</returns>
+        public static T SpawnEntityWithBonus<T>(T prefab, Stat? bonus1, Stat? bonus2) where T : BaseDriver
+        {
+            T driver = Instantiate(prefab);
+            BaseBattleDriver battleDriver = driver.battleDriver;
+
+            if (bonus1 != null)
+            {
+                battleDriver.SetBaseStat(
+                    (Stat)bonus1,
+                    battleDriver.GetBaseStat((Stat)bonus1) * BaseBattleDriver.BonusStatMultiplier);
+            }
+
+            if (bonus2 != null)
+            {
+                battleDriver.SetBaseStat(
+                    (Stat)bonus2,
+                    battleDriver.GetBaseStat((Stat)bonus2) * BaseBattleDriver.BonusStatMultiplier);
+            }
+
+            return driver;
         }
 
         /// <summary>
