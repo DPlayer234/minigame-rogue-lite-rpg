@@ -49,7 +49,7 @@
             if (!this.CanStillFight) return;
             
             // TODO: Make this prettier, split it up
-            this.actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+            this.actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
 
             for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
             {
@@ -57,9 +57,12 @@
 
                 Button actionButton = Instantiate(this.actionButtonPrefab, this.actionButtonHolder.transform);
                 actionButton.GetComponentInChildren<Text>().text = string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost);
-                actionButton.transform.localPosition += new Vector3(
+
+                var actionButtonController = actionButton.GetComponent<UI.ButtonController>();
+                actionButtonController.reference = this.transform;
+                actionButtonController.positionOffset = new Vector3(
                     0.0f,
-                    actionIndex * 30,
+                    actionIndex * 0.15f + 0.5f,
                     0.0f);
 
                 // Action Selection
@@ -67,7 +70,7 @@
                 {
                     if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
 
-                    this.targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.BattleHud.transform);
+                    this.targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
 
                     BaseBattleDriver[][] targetChoices = action.GetTargets();
 
@@ -83,9 +86,12 @@
 
                         Button targetButton = Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
                         targetButton.GetComponentInChildren<Text>().text = label;
-                        targetButton.transform.localPosition += new Vector3(
-                            250.0f,
-                            targetIndex * 30,
+
+                        var targetButtonController = targetButton.GetComponent<UI.ButtonController>();
+                        targetButtonController.reference = targetChoice[0].transform;
+                        targetButtonController.positionOffset = new Vector3(
+                            0.0f,
+                            0.5f,
                             0.0f);
 
                         // Target Selection

@@ -20,6 +20,7 @@ TagManager:
   - StatusDisplayLabel
   - StatusDisplayHealth
   - StatusDisplayAP
+  - RoomConnection
   layers:
   - Default
   - TransparentFX
@@ -83,4 +84,7 @@ TagManager:
     locked: 0
   - name: StatusDisplayBar
     uniqueID: 3598410909
+    locked: 0
+  - name: OtherHud
+    uniqueID: 2252684421
     locked: 0

@@ -408,7 +408,7 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
-  level: 1
+  level: 3
   actionButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
     type: 2}
 --- !u!114 &114249859629316054

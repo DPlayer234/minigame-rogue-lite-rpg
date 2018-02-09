@@ -11,7 +11,7 @@
     /// <summary>
     ///     Stores some general game state, but doesn't really do anything by itself.
     /// </summary>
-    public static class GeneralManager
+    public static class Storage
     {
         /// <summary>
         ///     The selected prefab for the first player character.

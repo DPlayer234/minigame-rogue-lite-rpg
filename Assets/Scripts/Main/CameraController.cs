@@ -1,5 +1,6 @@
 ﻿namespace SAE.RoguePG.Main
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -7,6 +8,7 @@
     /// <summary>
     ///     Will make the Camera that this is attached to follow the referenced GameObject
     /// </summary>
+    [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour
     {
         /// <summary> Distance from the camera in which <seealso cref="LimitedRangeObjects"/> are active </summary>
@@ -74,12 +76,23 @@
         /// <returns>An iterator</returns>
         private IEnumerator UpdateRangeActivity()
         {
+            Func<bool> waitWhileBattleActive = delegate ()
+            {
+                return BattleManager.IsBattleActive;
+            };
+
             while (true)
             {
-                yield return new WaitForSeconds(CameraController.ActivityUpdateRate);
+                yield return new WaitForSecondsRealtime(CameraController.ActivityUpdateRate);
+                yield return new WaitWhile(waitWhileBattleActive);
 
                 foreach (GameObject gameObject in this.LimitedRangeObjects)
                 {
+                    if (gameObject == null)
+                    {
+                        continue;
+                    }
+
                     bool shouldBeActive = this.IsInActiveRange(gameObject.transform);
 
                     if (gameObject.activeSelf != shouldBeActive)
@@ -90,6 +103,11 @@
 
                 foreach (Behaviour behaviour in this.LimitedRangeBehaviours)
                 {
+                    if (behaviour == null)
+                    {
+                        continue;
+                    }
+
                     bool shouldBeEnabled = this.IsInActiveRange(behaviour.transform);
 
                     if (behaviour.enabled != shouldBeEnabled)

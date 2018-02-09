@@ -315,9 +315,9 @@
             {
                 players = new GameObject[] {
                     MainManager.SpawnEntityWithBonus(
-                        GeneralManager.SelectedPlayerPrefab,
-                        GeneralManager.BonusStat1,
-                        GeneralManager.BonusStat2).gameObject
+                        Storage.SelectedPlayerPrefab,
+                        Storage.BonusStat1,
+                        Storage.BonusStat2).gameObject
                 };
             }
 

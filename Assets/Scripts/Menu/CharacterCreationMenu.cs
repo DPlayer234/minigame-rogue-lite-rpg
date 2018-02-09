@@ -51,8 +51,8 @@
         public void RandomizeBoni()
         {
             // Set stat boni
-            GeneralManager.BonusStat2 = this.GetRandomStat(
-                GeneralManager.BonusStat1 = this.GetRandomStat(null));
+            Storage.BonusStat2 = this.GetRandomStat(
+                Storage.BonusStat1 = this.GetRandomStat(null));
         }
 
         /// <summary>
@@ -61,7 +61,7 @@
         /// <param name="classIndex"></param>
         private void SelectClass(int classIndex)
         {
-            GeneralManager.SelectedPlayerPrefab = characterPrefabs[classIndex];
+            Storage.SelectedPlayerPrefab = characterPrefabs[classIndex];
         }
 
         /// <summary>

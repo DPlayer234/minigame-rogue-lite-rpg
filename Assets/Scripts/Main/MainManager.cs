@@ -31,6 +31,10 @@
         [SerializeField]
         private GameObject battleHud;
 
+        /// <summary> The canvas that is in world space. </summary>
+        [SerializeField]
+        private Canvas worldCanvas;
+
         /// <summary>
         ///     The global instance of the <see cref="MainManager"/>.
         /// </summary>
@@ -50,6 +54,11 @@
         ///     The parent object for the battle HUD.
         /// </summary>
         public static GameObject BattleHud { get { return MainManager.Instance.battleHud; } }
+
+        /// <summary>
+        ///     The canvas that is in world space.
+        /// </summary>
+        public static Canvas WorldCanvas { get { return MainManager.Instance.worldCanvas; } }
 
         /// <summary>
         ///     Prefab for any UI panel.

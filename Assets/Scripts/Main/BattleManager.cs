@@ -56,6 +56,17 @@
         public static BaseBattleDriver CurrentTurnOf { get { return Instance.currentTurnOf; } }
 
         /// <summary>
+        ///     Whether a battle is active
+        /// </summary>
+        public static bool IsBattleActive
+        {
+            get
+            {
+                return BattleManager.Instance != null;
+            }
+        }
+
+        /// <summary>
         ///     Starts a turn-based battle
         /// </summary>
         /// <param name="leaderPlayer">The leading player</param>
@@ -68,6 +79,7 @@
             Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
 
             MainManager.CameraController.preferredDistance *= BattleManager.CameraDistanceMultiplier;
+            MainManager.CameraController.preferredHeight /= BattleManager.CameraDistanceMultiplier;
 
             Instance.StartCoroutine(Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
         }
@@ -82,6 +94,7 @@
             Instance.EndBattleModeInstanced();
 
             MainManager.CameraController.preferredDistance /= BattleManager.CameraDistanceMultiplier;
+            MainManager.CameraController.preferredHeight *= BattleManager.CameraDistanceMultiplier;
         }
 
         /// <summary>
@@ -89,8 +102,6 @@
         /// </summary>
         private void Awake()
         {
-            //if (Instance != this) throw new Exceptions.MainManagerException("Something went wrong, but I'm not sure what it was!?");
-
 #if UNITY_EDITOR
             // Debug code... or something goes here
 #endif
