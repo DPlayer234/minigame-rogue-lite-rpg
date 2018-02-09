@@ -9,6 +9,7 @@
     ///     Stores and manages general game state of the Main scene.
     ///     Behaves like a singleton; any new instance will override the old one.
     /// </summary>
+    [DisallowMultipleComponent]
     public class BattleManager : MonoBehaviour
     {
         /// <summary> Tag used by Player Entities </summary>

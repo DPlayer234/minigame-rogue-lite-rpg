@@ -7,11 +7,20 @@
     /// <summary>
     ///     Manages the menus
     /// </summary>
+    [DisallowMultipleComponent]
     public class MenuManager : MonoBehaviour
     {
+        [Header("List Of Menus")]
+
         /// <summary> An array of parent objects for menus </summary>
         [SerializeField]
         private GameObject[] menus;
+
+        [Header("Indices Of The List")]
+
+        /// <summary> Index of the first menu to open </summary>
+        [SerializeField]
+        private int firstOpenedMenuIndex;
 
         /// <summary> The index for the main menu </summary>
         [SerializeField]
@@ -97,6 +106,8 @@
             MenuManager.Instance = this;
 
             this.ValidateSetup();
+
+            MenuManager.SetMenu(this.firstOpenedMenuIndex);
 
 #if UNITY_EDITOR
             // Debug code... or something goes here

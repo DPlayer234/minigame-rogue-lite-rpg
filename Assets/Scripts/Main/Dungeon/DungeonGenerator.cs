@@ -170,7 +170,7 @@
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="RoomGenerator"/>
+        ///     Called by Unity to initialize the <seealso cref="DungeonGenerator"/>
         /// </summary>
         private void Start()
         {

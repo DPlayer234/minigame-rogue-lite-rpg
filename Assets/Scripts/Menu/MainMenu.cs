@@ -18,6 +18,22 @@
         }
 
         /// <summary>
+        ///     Switches to the how to play screen.
+        /// </summary>
+        public void GoToHowToPlay()
+        {
+            MenuManager.SetMenu(MenuManager.HowToPlayScreenIndex);
+        }
+
+        /// <summary>
+        ///     Switches to the credits screen.
+        /// </summary>
+        public void GoToCredits()
+        {
+            MenuManager.SetMenu(MenuManager.CreditsScreenIndex);
+        }
+
+        /// <summary>
         ///     Exits the game.
         ///     No questions asked.
         /// </summary>

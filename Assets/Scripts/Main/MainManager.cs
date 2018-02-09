@@ -10,6 +10,7 @@
     ///     Stores and manages general game state of the Main scene.
     ///     Behaves like a singleton; any new instance will override the old one.
     /// </summary>
+    [DisallowMultipleComponent]
     public class MainManager : MonoBehaviour
     {
         /// <summary> Prefab for player health bars </summary>

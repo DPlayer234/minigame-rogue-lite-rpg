@@ -7,6 +7,7 @@
     /// <summary>
     ///     Base class for any menu.
     /// </summary>
+    [DisallowMultipleComponent]
     public class AnyMenu : MonoBehaviour
     {
         /// <summary>
