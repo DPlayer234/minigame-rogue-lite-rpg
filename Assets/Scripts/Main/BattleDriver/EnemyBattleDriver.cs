@@ -1,9 +1,9 @@
 ﻿namespace SAE.RoguePG.Main.BattleDriver
 {
-    using SAE.RoguePG.Main.BattleActions;
-    using SAE.RoguePG.Main.Driver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -34,7 +34,7 @@
 
             if (!this.CanStillFight)
             {
-                Destroy(this.gameObject);
+                MonoBehaviour.Destroy(this.gameObject);
             }
         }
 

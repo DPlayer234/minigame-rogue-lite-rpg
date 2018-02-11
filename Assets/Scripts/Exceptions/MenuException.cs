@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SAE.RoguePG.Exceptions
+﻿namespace SAE.RoguePG.Exceptions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     ///     Thrown when there are any issues with the setup of a <see cref="Main.EntityDriver"/> or similar components
     /// </summary>

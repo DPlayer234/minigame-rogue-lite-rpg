@@ -1,10 +1,10 @@
 ﻿namespace SAE.RoguePG.Main.Dungeon
 {
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -100,7 +100,7 @@
         {
             if (this.HasValueAtCoordinate(x, y))
             {
-                value = storage[x][y];
+                value = this.storage[x][y];
                 return true;
             }
             

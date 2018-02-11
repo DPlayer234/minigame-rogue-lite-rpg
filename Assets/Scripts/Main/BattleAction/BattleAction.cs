@@ -28,7 +28,7 @@
         protected ActionCategory category;
 
         /// <summary>
-        ///     Initializes a new instance of the <seealso cref="BattleAction"/> class.
+        ///     Initializes a new instance of the <see cref="BattleAction"/> class.
         ///     Since this is an abstract class, it only serves as a base.
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
@@ -193,6 +193,37 @@
                 (BaseBattleDriver.LevelStatOffset + this.User.Level) * this.AttackPower * damageStat / target.Defense));
             target.CurrentHealth -= damageValue;
             return damageValue;
+        }
+
+        /// <summary>
+        ///     Returns the label for a target selection
+        /// </summary>
+        /// <param name="targetChoice">The target selection</param>
+        /// <returns>A fitting label</returns>
+        public string GetTargetLabel(BaseBattleDriver[] targetChoice)
+        {
+            switch (this.targetOption)
+            {
+                case ActionTargetOption.Self:
+                    return "Self";
+
+                case ActionTargetOption.Anyone:
+                case ActionTargetOption.OneAlly:
+                case ActionTargetOption.OneOpponent:
+                    return targetChoice[0].battleName;
+
+                case ActionTargetOption.Everybody:
+                    return "Everybody";
+
+                case ActionTargetOption.AllAllies:
+                    return "All Allies";
+
+                case ActionTargetOption.AllOpponents:
+                    return "All Opponents";
+
+                default:
+                    return "IDK";
+            }
         }
 
         /// <summary>

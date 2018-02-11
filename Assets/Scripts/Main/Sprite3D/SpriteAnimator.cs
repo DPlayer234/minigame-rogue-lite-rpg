@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SAE.RoguePG.Main.Sprite3D
+﻿namespace SAE.RoguePG.Main.Sprite3D
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Allows for animating sprites using a <see cref="SpriteManager"/>
     /// </summary>
@@ -49,12 +49,12 @@ namespace SAE.RoguePG.Main.Sprite3D
             {
                 if (this.animationCoroutine != null)
                 {
-                    StopCoroutine(this.animationCoroutine);
+                    this.StopCoroutine(this.animationCoroutine);
                 }
 
                 if (value != null)
                 {
-                    this.animationCoroutine = StartCoroutine(value(this.SetAnimationTarget));
+                    this.animationCoroutine = this.StartCoroutine(value(this.SetAnimationTarget));
                 }
 
                 this.animation = value;
@@ -157,7 +157,7 @@ namespace SAE.RoguePG.Main.Sprite3D
         /// </summary>
         private void OnDisable()
         {
-            if (this.animationCoroutine != null) StopCoroutine(this.animationCoroutine);
+            if (this.animationCoroutine != null) this.StopCoroutine(this.animationCoroutine);
         }
     }
 }

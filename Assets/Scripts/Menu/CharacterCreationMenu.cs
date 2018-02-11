@@ -58,10 +58,10 @@
         /// <summary>
         ///     Select a class based on its index in <seealso cref="characterPrefabs"/>
         /// </summary>
-        /// <param name="classIndex"></param>
+        /// <param name="classIndex">The index of the class</param>
         private void SelectClass(int classIndex)
         {
-            Storage.SelectedPlayerPrefab = characterPrefabs[classIndex];
+            Storage.SelectedPlayerPrefab = this.characterPrefabs[classIndex];
         }
 
         /// <summary>

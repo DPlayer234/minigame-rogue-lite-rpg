@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-
-namespace SAE.RoguePG.Dev
+﻿namespace SAE.RoguePG.Dev
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using UnityEngine;
+
     /// <summary>
     ///     Includes extension methods for debugging
     /// </summary>

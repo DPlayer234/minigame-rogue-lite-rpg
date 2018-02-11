@@ -1,9 +1,9 @@
 ﻿namespace SAE.RoguePG.Main.Driver
 {
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Sprite3D;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Sprite3D;
     using UnityEngine;
 
     /// <summary>
@@ -176,18 +176,18 @@
                     this.lastVelocity.y = 0.0f;
                 }
 
-                Vector3 facingVector = spriteManager.rootTransform.forward;
+                Vector3 facingVector = this.spriteManager.rootTransform.forward;
                 facingVector.y = 0.0f;
 
                 float angle = Vector3.SignedAngle(this.lastVelocity, facingVector, new Vector3(0.0f, 1.0f, 0.0f));
 
-                if (angle < -MinimumFlipAngle && angle > MinimumFlipAngle - 180.0f)
+                if (angle < -BaseDriver.MinimumFlipAngle && angle > BaseDriver.MinimumFlipAngle - 180.0f)
                 {
-                    spriteManager.FlipToDirection(true);
+                    this.spriteManager.FlipToDirection(true);
                 }
-                else if (angle > MinimumFlipAngle && angle < 180.0f - MinimumFlipAngle)
+                else if (angle > BaseDriver.MinimumFlipAngle && angle < 180.0f - BaseDriver.MinimumFlipAngle)
                 {
-                    spriteManager.FlipToDirection(false);
+                    this.spriteManager.FlipToDirection(false);
                 }
             }
         }
@@ -200,10 +200,10 @@
         /// <returns>The new component</returns>
         private T Replace<T>() where T : Component
         {
-            Destroy(this);
+            MonoBehaviour.Destroy(this);
 
             BaseBattleDriver battleDriver = this.GetComponent<BaseBattleDriver>();
-            if (battleDriver != null) Destroy(battleDriver);
+            if (battleDriver != null) MonoBehaviour.Destroy(battleDriver);
 
             return this.gameObject.AddComponent<T>();
         }

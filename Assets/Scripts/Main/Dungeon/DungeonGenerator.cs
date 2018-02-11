@@ -1,9 +1,9 @@
 ﻿namespace SAE.RoguePG.Main.Dungeon
 {
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -12,12 +12,6 @@
     /// </summary>
     public class DungeonGenerator : MonoBehaviour
     {
-        /// <summary> Tag used by Player Spawn Points </summary>
-        private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
-
-        /// <summary> Tag used by Enemy Spawn Points </summary>
-        private const string EnemySpawnPointTag = "EnemySpawnPoint";
-
         /// <summary>
         ///     The average amount of enemies per room.
         ///     Relevant for enemy level calculations
@@ -79,6 +73,23 @@
         /// </summary>
         public int floorNumber = 1;
 
+        /// <summary> Tag used by Player Spawn Points </summary>
+        private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
+
+        /// <summary> Tag used by Enemy Spawn Points </summary>
+        private const string EnemySpawnPointTag = "EnemySpawnPoint";
+
+        /// <summary>
+        ///     Lists possible offsets from one room to the next
+        /// </summary>
+        private static List<Vector2Int> roomOffsets = new List<Vector2Int>()
+        {
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
         /// <summary>
         ///     How many rooms were already generated?
         /// </summary>
@@ -107,20 +118,9 @@
         private List<Behaviour> limitedRangeBehaviours;
 
         /// <summary>
-        ///     Lists possible offsets from one room to the next
-        /// </summary>
-        private static List<Vector2Int> roomOffsets = new List<Vector2Int>()
-        {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
-
-        /// <summary>
         ///     Defines common room types
         /// </summary>
-        enum RoomType
+        private enum RoomType
         {
             /// <summary> There is no room </summary>
             None = -1,
@@ -161,12 +161,24 @@
         {
             get
             {
-                return Mathf.Max(1, Mathf.RoundToInt(
+                int enemyLevel = Mathf.RoundToInt(
                     VariousCommon.SumFuncRange(
                         DungeonGenerator.GetTotalFloorSize,
                         1,
-                        this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom +Random.Range(-1, 2)));
+                        this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom + Random.Range(-1, 2));
+
+                return Mathf.Max(1, enemyLevel);
             }
+        }
+
+        /// <summary>
+        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
+        /// </summary>
+        /// <param name="floorNumber">The floor number</param>
+        /// <returns>The floor size</returns>
+        private static int GetTotalFloorSize(int floorNumber)
+        {
+            return Mathf.CeilToInt(floorNumber * 2 + 4);
         }
 
         /// <summary>
@@ -262,7 +274,7 @@
         /// <summary>
         ///     Returns whether the given position is valid for a special room
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="position">The position on the grid</param>
         /// <returns>Whether the given position is valid for a special room</returns>
         private bool IsValidSpecialRoomLocation(Vector2Int position)
         {
@@ -313,7 +325,8 @@
 
             if (players.Length < 1)
             {
-                players = new GameObject[] {
+                players = new GameObject[]
+                {
                     MainManager.SpawnEntityWithBonus(
                         Storage.SelectedPlayerPrefab,
                         Storage.BonusStat1,
@@ -326,7 +339,7 @@
                 player.transform.position = playerSpawnPoint.transform.position;
             }
 
-            Destroy(playerSpawnPoint);
+            MonoBehaviour.Destroy(playerSpawnPoint);
         }
 
         /// <summary>
@@ -347,7 +360,7 @@
 
                     for (int index = 0; index < enemyCount; index++)
                     {
-                        EnemyDriver enemy = SpawnEnemy(
+                        EnemyDriver enemy = this.SpawnEnemy(
                             enemySpawnPoint.transform.position,
                             ref leaderEnemy,
                             ref followEnemy);
@@ -356,7 +369,7 @@
                     }
                 }
 
-                DestroyImmediate(enemySpawnPoint);
+                MonoBehaviour.DestroyImmediate(enemySpawnPoint);
                 ++enemyLeaderIndex;
             }
         }
@@ -393,22 +406,12 @@
         {
             if (this.removeGameObject)
             {
-                Destroy(this.gameObject);
+                MonoBehaviour.Destroy(this.gameObject);
             }
             else
             {
-                Destroy(this);
+                MonoBehaviour.Destroy(this);
             }
-        }
-
-        /// <summary>
-        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
-        /// </summary>
-        /// <param name="floorNumber">The floor number</param>
-        /// <returns>The floor size</returns>
-        private static int GetTotalFloorSize(int floorNumber)
-        {
-            return Mathf.CeilToInt(floorNumber * 2 + 4);
         }
     }
 }

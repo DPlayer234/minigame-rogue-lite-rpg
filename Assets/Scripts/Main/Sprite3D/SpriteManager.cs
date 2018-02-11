@@ -55,7 +55,7 @@
             {
                 this.isFacingRight = faceRight;
 
-                StartCoroutine(this.DoFlipAnimation(faceRight));
+                this.StartCoroutine(this.DoFlipAnimation(faceRight));
             }
         }
 
@@ -148,7 +148,8 @@
             this.rootTransform.rotation =
                 Quaternion.Euler(
                     0.0f,
-                    MainManager.CameraController.transform.rotation.eulerAngles.y, 0.0f);
+                    MainManager.CameraController.transform.rotation.eulerAngles.y,
+                    0.0f);
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿namespace SAE.RoguePG.Main.BattleDriver
 {
+    //using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using SAE.RoguePG.Dev;
     using SAE.RoguePG.Main.BattleActions;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     /// <summary>
@@ -63,11 +63,11 @@
         /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
         protected BattleAction[] actions;
 
-        /// <summary> Whether it's this thing's turn </summary>
-        private bool takingTurn;
-
         /// <summary> Status Display used by this BattleDriver </summary>
         protected GameObject statusDisplay;
+
+        /// <summary> Whether it's this thing's turn </summary>
+        private bool takingTurn;
 
         /// <summary> Current level; use the property <seealso cref="Level"/> instead </summary>
         [SerializeField]
@@ -346,7 +346,7 @@
 
             this.AttackPoints = MaximumAttackPoints;
 
-            this.statusDisplay = Instantiate(MainManager.Instance.statusDisplayPrefab, this.spriteManager.rootTransform);
+            this.statusDisplay = MonoBehaviour.Instantiate(MainManager.Instance.statusDisplayPrefab, this.spriteManager.rootTransform);
             this.statusDisplay.transform.localPosition = new Vector3(0.0f, 1.3f, 0.0f);
 
             this.waitingOnAnimationCount = 0;
@@ -359,7 +359,7 @@
         {
             if (this.statusDisplay != null)
             {
-                Destroy(this.statusDisplay);
+                MonoBehaviour.Destroy(this.statusDisplay);
             }
 
             this.StopAllCoroutines();

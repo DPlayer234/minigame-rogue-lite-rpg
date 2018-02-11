@@ -21,7 +21,7 @@
         {
             if (Storage.SelectedPlayerPrefab == null) Storage.SelectedPlayerPrefab = this.defaultPlayerPrefab;
 
-            Destroy(this);
+            MonoBehaviour.Destroy(this);
         }
     }
 }

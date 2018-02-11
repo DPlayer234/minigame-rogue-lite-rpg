@@ -1,8 +1,8 @@
 ﻿namespace SAE.RoguePG.Main.UI
 {
-    using SAE.RoguePG.Main.BattleDriver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -55,7 +55,7 @@
                 if (child.CompareTag(LabelTag))
                 {
                     // Found label
-                    label = child.GetComponent<TextMesh>();
+                    this.label = child.GetComponent<TextMesh>();
                 }
                 else if (child.CompareTag(HealthBarTag))
                 {

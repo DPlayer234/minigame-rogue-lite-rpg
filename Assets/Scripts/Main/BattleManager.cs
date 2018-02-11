@@ -1,8 +1,8 @@
 ﻿namespace SAE.RoguePG.Main
 {
-    using SAE.RoguePG.Main.BattleDriver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>
@@ -23,9 +23,6 @@
 
         /// <summary> Tag used by the battle HUD root </summary>
         public const string BattleHudTag = "BattleHud";
-
-        /// <summary> How far the preferred camera distance is multiplied </summary>
-        private const float CameraDistanceMultiplier = 1.5f;
 
         /// <summary> Whether there is a fight going on right now. Probably. </summary>
         private bool initialized = false;
@@ -74,12 +71,9 @@
         public static void StartBattleMode(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
             if (MainManager.Instance == null) throw new Exceptions.MainManagerException("Cannot start battle mode without an Instance of MainManager!");
-            if (Instance != null) return;//throw new Exceptions.MainManagerException("Cannot start another battle while one is already going!");
+            if (Instance != null) return;
 
             Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
-
-            MainManager.CameraController.preferredDistance *= BattleManager.CameraDistanceMultiplier;
-            MainManager.CameraController.preferredHeight /= BattleManager.CameraDistanceMultiplier;
 
             Instance.StartCoroutine(Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
         }
@@ -92,9 +86,6 @@
             if (Instance == null) throw new Exceptions.MainManagerException("Cannot end battle mode without an Instance of MainManager!");
 
             Instance.EndBattleModeInstanced();
-
-            MainManager.CameraController.preferredDistance /= BattleManager.CameraDistanceMultiplier;
-            MainManager.CameraController.preferredHeight *= BattleManager.CameraDistanceMultiplier;
         }
 
         /// <summary>
@@ -246,13 +237,15 @@
 
             foreach (var playerEntity in this.fightingPlayers)
             {
-                Destroy(playerEntity.gameObject);
+                MonoBehaviour.Destroy(playerEntity.gameObject);
             }
         }
 
         /// <summary>
         ///     Starts a turn-based battle on the instance
         /// </summary>
+        /// <param name="leaderPlayer">The leading player driver</param>
+        /// <param name="leaderEnemy">The leading enemy driver</param>
         private void StartBattleModeInstanced(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
             this.fightingEntities = new List<BaseBattleDriver>();
@@ -333,7 +326,7 @@
             MainManager.ExploreHud.SetActive(true);
             MainManager.BattleHud.SetActive(false);
 
-            Destroy(this);
+            MonoBehaviour.Destroy(this);
         }
 
         /// <summary>

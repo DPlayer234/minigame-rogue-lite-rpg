@@ -1,10 +1,10 @@
 ﻿namespace SAE.RoguePG.Main.BattleActions
 {
-    using SAE.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using SAE.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>

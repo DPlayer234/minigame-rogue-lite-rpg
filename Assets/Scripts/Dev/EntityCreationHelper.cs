@@ -1,10 +1,10 @@
 ﻿namespace SAE.RoguePG.Dev
 {
     using System.Collections;
-    using UnityEngine;
     using SAE.RoguePG.Main;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
+    using UnityEngine;
 
     /// <summary>
     ///     Used to help assigning data to GameObjects.
@@ -24,12 +24,12 @@
         public bool update = true;
 
         /// <summary> Information to be set with a <seealso cref="PlayerDriver"/> </summary>
-        private static readonly EntityInformation playerInformation = new EntityInformation(
+        private static readonly EntityInformation PlayerInformation = new EntityInformation(
             tag: BattleManager.PlayerEntityTag,
             lightColor: new Color(0.0f, 1.0f, 0.6f));
 
         /// <summary> Information to be set with a <seealso cref="EnemyDriver"/> </summary>
-        private static readonly EntityInformation enemyInformation = new EntityInformation(
+        private static readonly EntityInformation EnemyInformation = new EntityInformation(
             tag: BattleManager.EnemyEntityTag,
             lightColor: new Color(1.0f, 0.3f, 0.3f));
 
@@ -40,14 +40,14 @@
         {
             if (Application.isPlaying)
             {
-                Destroy(this);
+                MonoBehaviour.Destroy(this);
             }
 #if UNITY_EDITOR
             else if (!Application.isPlaying && this.update)
             {
                 EntityInformation entityInformation =
-                    this.GetComponent<PlayerDriver>() != null ? playerInformation :
-                    this.GetComponent<EnemyDriver>() != null ? enemyInformation :
+                    this.GetComponent<PlayerDriver>() != null ? PlayerInformation :
+                    this.GetComponent<EnemyDriver>() != null ? EnemyInformation :
                     null;
 
                 if (entityInformation != null)

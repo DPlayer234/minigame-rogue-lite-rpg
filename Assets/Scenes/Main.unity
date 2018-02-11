@@ -272,8 +272,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   following: {fileID: 0}
-  preferredHeight: 1.25
   preferredDistance: 3
+  preferredHeight: 1.25
+  preferredDistanceBattle: 4.5
+  preferredHeightBattle: 1.8
   movementSpeedBase: 0.01
   rotationSpeedBase: 0.01
 --- !u!1 &738590204

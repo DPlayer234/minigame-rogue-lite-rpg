@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using SAE.RoguePG.Main.Sprite3D;
-using SAE.RoguePG.Main.BattleDriver;
-
-namespace SAE.RoguePG.Main.Driver
+﻿namespace SAE.RoguePG.Main.Driver
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using SAE.RoguePG.Main.Sprite3D;
+    using SAE.RoguePG.Main.BattleDriver;
+    using UnityEngine;
+
     /// <summary>
     ///     Makes Players work.
     /// </summary>

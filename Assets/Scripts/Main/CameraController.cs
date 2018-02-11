@@ -15,23 +15,13 @@
         public const float ActiveRange = 40.0f;
 
         /// <summary> The delay in seconds between updates in <seealso cref="UpdateRangeActivity"/> </summary>
-        private const float ActivityUpdateRate = 0.1f;
+        private const float ActivityUpdateRate = 0.5f;
 
         /// <summary>
         ///     The <seealso cref="Transform"/> of the GameObject to follow
         /// </summary>
         [HideInInspector]
         public Transform following;
-
-        /// <summary>
-        ///     How much higher should the camera be than the pivot of <see cref="following"/>
-        /// </summary>
-        public float preferredHeight = 1.0f;
-
-        /// <summary>
-        ///     How far away should the camera be from <see cref="following"/>
-        /// </summary>
-        public float preferredDistance = 4.0f;
 
         /// <summary> How fast the camera approaches the target position. Lower values increase the speed. </summary>
         [Range(0.0f, 1.0f)]
@@ -41,6 +31,30 @@
         [Range(0.0f, 1.0f)]
         public float rotationSpeedBase = 0.01f;
 
+        /// <summary>
+        ///     How far away should the camera be from <see cref="following"/> out of battle
+        /// </summary>
+        [SerializeField]
+        private float preferredDistance = 4.0f;
+
+        /// <summary>
+        ///     How much higher should the camera be than the pivot of <see cref="following"/> out of battle
+        /// </summary>
+        [SerializeField]
+        private float preferredHeight = 1.0f;
+
+        /// <summary>
+        ///     How far away should the camera be from <see cref="following"/> during a battle
+        /// </summary>
+        [SerializeField]
+        private float preferredDistanceBattle = 4.0f;
+
+        /// <summary>
+        ///     How much higher should the camera be than the pivot of <see cref="following"/> during a battle
+        /// </summary>
+        [SerializeField]
+        private float preferredHeightBattle = 1.0f;
+
         /// <summary> Layer used by entity collision </summary>
         private int opaqueLayerMask;
 
@@ -49,6 +63,28 @@
 
         /// <summary> Behaviours which are only enabled in a limited range </summary>
         public List<Behaviour> LimitedRangeBehaviours { get; set; }
+
+        /// <summary>
+        ///     How far away should the camera be from <see cref="following"/>
+        /// </summary>
+        public float PreferedDistance
+        {
+            get
+            {
+                return BattleManager.IsBattleActive ? this.preferredDistanceBattle : this.preferredDistance;
+            }
+        }
+
+        /// <summary>
+        ///     How much higher should the camera be than the pivot of <see cref="following"/>
+        /// </summary>
+        public float PreferedHeight
+        {
+            get
+            {
+                return BattleManager.IsBattleActive ? this.preferredHeightBattle : this.preferredHeight;
+            }
+        }
 
         /// <summary>
         ///     Called by Unity to initialize the <see cref="CameraController"/> whether it is enabled or not.
@@ -76,7 +112,7 @@
         /// <returns>An iterator</returns>
         private IEnumerator UpdateRangeActivity()
         {
-            Func<bool> waitWhileBattleActive = delegate ()
+            Func<bool> waitWhileBattleActive = delegate
             {
                 return BattleManager.IsBattleActive;
             };
@@ -135,7 +171,7 @@
         {
             if (this.following != null)
             {
-                float distance = this.preferredDistance;
+                float distance = this.PreferedDistance;
 
                 RaycastHit raycastHit;
                 Vector3 rayCastDirection = this.transform.position - this.following.position;
@@ -165,7 +201,7 @@
                     this.movementSpeedBase,
                     Time.fixedDeltaTime);
 
-                newPosition.y = this.following.position.y + this.preferredHeight;
+                newPosition.y = this.following.position.y + this.PreferedHeight;
                 this.transform.position = newPosition;
 
                 this.transform.eulerAngles = VariousCommon.ExponentialLerpRotation(

@@ -14,18 +14,18 @@
     [DisallowMultipleComponent]
     public class EnemyDriver : BaseDriver
     {
-        /// <summary> The delay in seconds between checks for the target </summary>
-        private const float TargetUpdateDelay = 0.2f;
-
-        /// <summary> The maximum distance between a player and this entity to trigger a battle </summary>
-        private const float BattleTriggerRange = 0.5f;
-
         /// <summary> How far away it will detect a player </summary>
         public float targetRange = 4.0f;
 
         /// <summary> Whether this enemy was defeated </summary>
         [HideInInspector]
         public bool defeated;
+
+        /// <summary> The delay in seconds between checks for the target </summary>
+        private const float TargetUpdateDelay = 0.2f;
+
+        /// <summary> The maximum distance between a player and this entity to trigger a battle </summary>
+        private const float BattleTriggerRange = 0.5f;
 
         /// <summary> The player this enemy is currently chasing. If null, just walks around aimlessly. </summary>
         private PlayerDriver targetPlayer;
@@ -155,7 +155,7 @@
         /// </summary>
         private void OnEnable()
         {
-            this.targetUpdater = StartCoroutine(this.UpdateTarget());
+            this.targetUpdater = this.StartCoroutine(this.UpdateTarget());
         }
 
         /// <summary>
@@ -163,7 +163,7 @@
         /// </summary>
         private void OnDisable()
         {
-            if (this.targetUpdater != null) StopCoroutine(this.targetUpdater);
+            if (this.targetUpdater != null) this.StopCoroutine(this.targetUpdater);
         }
     }
 }

@@ -99,7 +99,7 @@
             if (MenuManager.Instance != null)
             {
                 Debug.LogWarning("There was an additional active MenuManager. The new instance was destroyed.");
-                Destroy(this);
+                MonoBehaviour.Destroy(this);
                 return;
             }
 

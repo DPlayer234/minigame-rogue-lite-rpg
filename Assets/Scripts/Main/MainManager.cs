@@ -1,9 +1,9 @@
 ﻿namespace SAE.RoguePG.Main
 {
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.BattleDriver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -71,35 +71,6 @@
         public static List<GameObject> Party { get; set; }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="MainManager"/> whether it is or is not active.
-        /// </summary>
-        private void Awake()
-        {
-            if (MainManager.Instance != null)
-            {
-                Debug.LogWarning("There was an additional active MainManager. The new instance was destroyed.");
-                Destroy(this);
-                return;
-            }
-
-            MainManager.Instance = this;
-            //// DontDestroyOnLoad(this);
-
-            this.ValidateSetup();
-
-            MainManager.CameraController = this.mainCamera.GetComponent<CameraController>();
-
-            MainManager.ExploreHud.SetActive(true);
-            MainManager.BattleHud.SetActive(false);
-
-            MainManager.Party = new List<GameObject>(5);
-
-#if UNITY_EDITOR
-            // Debug code... or something goes here
-#endif
-        }
-
-        /// <summary>
         ///     Spawns an entity based on a prefab with a bonus
         /// </summary>
         /// <param name="prefab">The prefab to use</param>
@@ -126,6 +97,35 @@
             }
 
             return driver;
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="MainManager"/> whether it is or is not active.
+        /// </summary>
+        private void Awake()
+        {
+            if (MainManager.Instance != null)
+            {
+                Debug.LogWarning("There was an additional active MainManager. The new instance was destroyed.");
+                MonoBehaviour.Destroy(this);
+                return;
+            }
+
+            MainManager.Instance = this;
+            //// DontDestroyOnLoad(this);
+
+            this.ValidateSetup();
+
+            MainManager.CameraController = this.mainCamera.GetComponent<CameraController>();
+
+            MainManager.ExploreHud.SetActive(true);
+            MainManager.BattleHud.SetActive(false);
+
+            MainManager.Party = new List<GameObject>(5);
+
+#if UNITY_EDITOR
+            // Debug code... or something goes here
+#endif
         }
 
         /// <summary>

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SAE.RoguePG.Main.Sprite3D
+﻿namespace SAE.RoguePG.Main.Sprite3D
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     ///     Contains information about Animations
     /// </summary>

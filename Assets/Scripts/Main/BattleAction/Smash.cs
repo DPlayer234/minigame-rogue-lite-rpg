@@ -50,6 +50,8 @@
         /// <summary>
         ///     Charges through the target.
         /// </summary>
+        /// <param name="target">The target</param>
+        /// <returns>An enumator</returns>
         private IEnumerator DoCharge(BaseBattleDriver target)
         {
             this.User.IsWaitingOnAnimation = true;

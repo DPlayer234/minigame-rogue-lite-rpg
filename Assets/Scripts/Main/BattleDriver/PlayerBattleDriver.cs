@@ -1,9 +1,9 @@
 ﻿namespace SAE.RoguePG.Main.BattleDriver
 {
-    using SAE.RoguePG.Main.BattleActions;
-    using SAE.RoguePG.Main.Driver;
     using System.Collections;
     using System.Collections.Generic;
+    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -47,63 +47,8 @@
             base.StartTurn();
 
             if (!this.CanStillFight) return;
-            
-            // TODO: Make this prettier, split it up
-            this.actionButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
 
-            for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
-            {
-                BattleAction action = this.actions[actionIndex];
-
-                Button actionButton = Instantiate(this.actionButtonPrefab, this.actionButtonHolder.transform);
-                actionButton.GetComponentInChildren<Text>().text = string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost);
-
-                var actionButtonController = actionButton.GetComponent<UI.ButtonController>();
-                actionButtonController.reference = this.transform;
-                actionButtonController.positionOffset = new Vector3(
-                    0.0f,
-                    actionIndex * 0.15f + 0.5f,
-                    0.0f);
-
-                // Action Selection
-                actionButton.onClick.AddListener(delegate ()
-                {
-                    if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
-
-                    this.targetButtonHolder = Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
-
-                    BaseBattleDriver[][] targetChoices = action.GetTargets();
-
-                    for (int targetIndex = 0; targetIndex < targetChoices.Length; targetIndex++)
-                    {
-                        BaseBattleDriver[] targetChoice = targetChoices[targetIndex];
-
-                        string label = "> ";
-                        foreach (BaseBattleDriver target in targetChoice)
-                        {
-                            label += target.name + " ";
-                        }
-
-                        Button targetButton = Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
-                        targetButton.GetComponentInChildren<Text>().text = label;
-
-                        var targetButtonController = targetButton.GetComponent<UI.ButtonController>();
-                        targetButtonController.reference = targetChoice[0].transform;
-                        targetButtonController.positionOffset = new Vector3(
-                            0.0f,
-                            0.5f,
-                            0.0f);
-
-                        // Target Selection
-                        targetButton.onClick.AddListener(delegate ()
-                        {
-                            Destroy(this.targetButtonHolder);
-
-                            action.Use(targetChoice);
-                        });
-                    }
-                });
-            }
+            this.CreateActionButtons();
         }
 
         /// <summary>
@@ -113,8 +58,8 @@
         {
             base.EndTurn();
 
-            if (this.actionButtonHolder != null) Destroy(this.actionButtonHolder);
-            if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
+            if (this.actionButtonHolder != null) MonoBehaviour.Destroy(this.actionButtonHolder);
+            if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
         }
 
         /// <summary>
@@ -126,8 +71,8 @@
 
             if (this.AttackPoints <= 0)
             {
-                if (this.actionButtonHolder != null) Destroy(this.actionButtonHolder);
-                if (this.targetButtonHolder != null) Destroy(this.targetButtonHolder);
+                if (this.actionButtonHolder != null) MonoBehaviour.Destroy(this.actionButtonHolder);
+                if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
 
                 this.TakingTurn = false;
             }
@@ -165,6 +110,84 @@
         private void Start()
         {
 
+        }
+
+        /// <summary>
+        ///     Creates the the buttons for all actions
+        /// </summary>
+        private void CreateActionButtons()
+        {
+            this.actionButtonHolder = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
+
+            for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
+            {
+                BattleAction action = this.actions[actionIndex];
+
+                Button actionButton = MonoBehaviour.Instantiate(this.actionButtonPrefab, this.actionButtonHolder.transform);
+                actionButton.GetComponentInChildren<Text>().text = string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost);
+
+                var actionButtonController = actionButton.GetComponent<UI.ButtonController>();
+                actionButtonController.reference = this.transform;
+                actionButtonController.positionOffset = new Vector3(
+                    0.0f,
+                    actionIndex * 0.15f + 0.5f,
+                    0.0f);
+
+                // Action Selection
+                actionButton.onClick.AddListener(delegate
+                {
+                    this.CreateTargetButtons(action);
+                });
+            }
+        }
+
+        /// <summary>
+        ///     Creates the target buttons, given an action
+        /// </summary>
+        /// <param name="action">The action to create the target buttons for</param>
+        private void CreateTargetButtons(BattleAction action)
+        {
+            if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
+
+            this.targetButtonHolder = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
+
+            BaseBattleDriver[][] targetChoices = action.GetTargets();
+
+            for (int targetIndex = 0; targetIndex < targetChoices.Length; targetIndex++)
+            {
+                BaseBattleDriver[] targetChoice = targetChoices[targetIndex];
+
+                this.CreateTargetButton(action, targetChoice);
+            }
+        }
+
+        /// <summary>
+        ///     Creates the button for a single target choice
+        /// </summary>
+        /// <param name="action">The action</param>
+        /// <param name="targetChoice">The target choice</param>
+        private void CreateTargetButton(BattleAction action, BaseBattleDriver[] targetChoice)
+        {
+            foreach (BaseBattleDriver target in targetChoice)
+            {
+                Button targetButton = MonoBehaviour.Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
+                targetButton.GetComponentInChildren<Text>().text = action.GetTargetLabel(targetChoice);
+
+                var targetButtonController = targetButton.GetComponent<UI.ButtonController>();
+                targetButtonController.reference = target.transform;
+                targetButtonController.positionOffset = new Vector3(
+                    0.0f,
+                    0.5f,
+                    0.0f);
+
+                // Target Selection
+                targetButton.onClick.AddListener(delegate
+                {
+                    MonoBehaviour.Destroy(this.targetButtonHolder);
+
+                    action.Use(targetChoice);
+                });
+            }
         }
     }
 }
