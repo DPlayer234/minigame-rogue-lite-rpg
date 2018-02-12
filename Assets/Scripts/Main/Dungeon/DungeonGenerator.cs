@@ -10,7 +10,7 @@
     ///     Generates a floor when attached; then deletes itself.
     ///     Rooms are generated on a grid.
     /// </summary>
-    public class DungeonGenerator : MonoBehaviour
+    public partial class DungeonGenerator : MonoBehaviour
     {
         /// <summary>
         ///     The average amount of enemies per room.
@@ -28,30 +28,8 @@
         /// </summary>
         public Vector2 roomSize;
 
-        /// <summary>
-        ///     Prefabs used for walls
-        /// </summary>
-        public GameObject[] wallPrefabs;
-
-        /// <summary>
-        ///     Prefabs used for the starting rooms (<seealso cref="RoomType.Start"/>)
-        /// </summary>
-        public GameObject[] startingRoomPrefabs;
-
-        /// <summary>
-        ///     Prefabs used for common rooms (<seealso cref="RoomType.Common"/>)
-        /// </summary>
-        public GameObject[] commonRoomPrefabs;
-
-        /// <summary>
-        ///     Prefabs used for boss rooms (<seealso cref="RoomType.Boss"/>)
-        /// </summary>
-        public GameObject[] bossRoomPrefabs;
-
-        /// <summary>
-        ///     Prefabs used for treasure rooms (<seealso cref="RoomType.Treasure"/>)
-        /// </summary>
-        public GameObject[] treasureRoomPrefabs;
+        /// <summary> Parts used in the dungeon </summary>
+        public DungeonPrefabs parts;
 
         /// <summary>
         ///     Prefabs used for players
@@ -62,6 +40,11 @@
         ///     Prefabs used for enemies
         /// </summary>
         public EnemyDriver[] enemyPrefabs;
+
+        /// <summary>
+        ///     Prefabs used for bosses
+        /// </summary>
+        public EnemyDriver[] bossPrefabs;
 
         /// <summary>
         ///     Minimum and maximum enemy count per spawn point.
@@ -78,6 +61,15 @@
 
         /// <summary> Tag used by Enemy Spawn Points </summary>
         private const string EnemySpawnPointTag = "EnemySpawnPoint";
+
+        /// <summary> Tag used by Boss Spawn Points </summary>
+        private const string BossSpawnPointTag = "BossSpawnPoint";
+
+        /// <summary> Tag used for anything to be deleted on the next floor </summary>
+        private const string DeleteOnNextFloorTag = "DeleteOnNextFloor";
+
+        /// <summary> The multiplier for the level of bosses compared to regular enemies </summary>
+        private const float BossLevelMultiplier = 1.15f;
 
         /// <summary>
         ///     Lists possible offsets from one room to the next
@@ -189,214 +181,41 @@
             this.limitedRangeObjects = MainManager.CameraController.LimitedRangeObjects;
             this.limitedRangeBehaviours = MainManager.CameraController.LimitedRangeBehaviours;
 
-            this.entityParent = new GameObject("EntityParent").transform;
-            this.dungeonParent = new GameObject("DungeonParent").transform;
-
-            this.entityParent.position = Vector3.zero;
-            this.dungeonParent.position = Vector3.zero;
-
+            this.DeleteLastFloor();
+            this.CreateParents();
             this.DefineLayout();
             this.SpawnRooms();
             this.SpawnPlayer();
             this.SpawnEnemies();
+            this.SpawnBoss();
 
             this.Remove();
         }
 
         /// <summary>
-        ///     Defines the floor layout
+        ///     Deletes the last floor
         /// </summary>
-        private void DefineLayout()
+        private void DeleteLastFloor()
         {
-            this.floorLayout = new Dictionary<Vector2Int, RoomType>();
-
-            Vector2Int coordinate = new Vector2Int(0, 0);
-            this.floorLayout[coordinate] = RoomType.Start;
-
-            // Common Rooms
-            for (int i = 0; i < this.TotalFloorSize; i++)
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag(DungeonGenerator.DeleteOnNextFloorTag))
             {
-                // Move room coordinate by 1 in any direction
-                coordinate += DungeonGenerator.roomOffsets.GetRandomItem();
-
-                // Skip iteration and repeat if the room was already set.
-                if (this.floorLayout.ContainsKey(coordinate))
-                {
-                    --i;
-                    continue;
-                }
-
-                this.floorLayout[coordinate] = RoomType.Common;
-            }
-
-            this.DefineSpecialRoomLayout();
-        }
-
-        /// <summary>
-        ///     Defines the position of special rooms
-        /// </summary>
-        private void DefineSpecialRoomLayout()
-        {
-            // Gets any valid locations for 'special' room types (aka, empty and exactly one connection to other rooms)
-            var validSpecialLocations = new List<Vector2Int>();
-
-            foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
-            {
-                Vector2Int position = item.Key;
-
-                foreach (Vector2Int offset in DungeonGenerator.roomOffsets)
-                {
-                    Vector2Int checkPosition = position + offset;
-
-                    if (!validSpecialLocations.Contains(checkPosition) && this.IsValidSpecialRoomLocation(checkPosition))
-                    {
-                        validSpecialLocations.Add(checkPosition);
-                    }
-                }
-            }
-
-            this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
-        }
-
-        /// <summary>
-        ///     Adds a given special room to the layout
-        /// </summary>
-        /// <param name="validSpecialLocations">A list of valid locations for special rooms</param>
-        /// <param name="roomType">The room type</param>
-        private void AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
-        {
-            Vector2Int roomPosition = validSpecialLocations.GetRandomItem();
-            validSpecialLocations.Remove(roomPosition);
-
-            this.floorLayout[roomPosition] = roomType;
-        }
-
-        /// <summary>
-        ///     Returns whether the given position is valid for a special room
-        /// </summary>
-        /// <param name="position">The position on the grid</param>
-        /// <returns>Whether the given position is valid for a special room</returns>
-        private bool IsValidSpecialRoomLocation(Vector2Int position)
-        {
-            int adjacent = 0;
-
-            foreach (Vector2Int offset in DungeonGenerator.roomOffsets)
-            {
-                adjacent += this.floorLayout.ContainsKey(position + offset) ? 1 : 0;
-            }
-
-            return adjacent == 1;
-        }
-
-        /// <summary>
-        ///     Spawns rooms where appropriate
-        /// </summary>
-        private void SpawnRooms()
-        {
-            // This is going to make assigning rooms easier.
-            Dictionary<RoomType, GameObject[]> typeToPrefabs = new Dictionary<RoomType, GameObject[]>(4);
-            typeToPrefabs[RoomType.Start] = this.startingRoomPrefabs;
-            typeToPrefabs[RoomType.Common] = this.commonRoomPrefabs;
-            typeToPrefabs[RoomType.Boss] = this.bossRoomPrefabs;
-            typeToPrefabs[RoomType.Treasure] = this.treasureRoomPrefabs;
-
-            foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
-            {
-                GameObject newRoom = Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.dungeonParent);
-
-                newRoom.transform.position = new Vector3(
-                    item.Key.x * this.roomSize.x,
-                    0.0f,
-                    item.Key.y * this.roomSize.y);
-
-                this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+                MonoBehaviour.Destroy(gameObject);
             }
         }
 
         /// <summary>
-        ///     Spawns the player.
-        ///     There should always only be one player spawn point per floor.
+        ///     Creates the parent game objects
         /// </summary>
-        private void SpawnPlayer()
+        private void CreateParents()
         {
-            GameObject playerSpawnPoint = GameObject.FindGameObjectWithTag(PlayerSpawnPointTag);
+            this.entityParent = new GameObject("EntityParent").transform;
+            this.dungeonParent = new GameObject("DungeonParent").transform;
 
-            GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
+            this.entityParent.tag = DungeonGenerator.DeleteOnNextFloorTag;
+            this.dungeonParent.tag = DungeonGenerator.DeleteOnNextFloorTag;
 
-            if (players.Length < 1)
-            {
-                players = new GameObject[]
-                {
-                    MainManager.SpawnEntityWithBonus(
-                        Storage.SelectedPlayerPrefab,
-                        Storage.BonusStat1,
-                        Storage.BonusStat2).gameObject
-                };
-            }
-
-            foreach (GameObject player in players)
-            {
-                player.transform.position = playerSpawnPoint.transform.position;
-            }
-
-            MonoBehaviour.Destroy(playerSpawnPoint);
-        }
-
-        /// <summary>
-        ///     Spawns enemies at all EnemySpawnPoints and deletes those
-        /// </summary>
-        private void SpawnEnemies()
-        {
-            GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(EnemySpawnPointTag);
-
-            int enemyLeaderIndex = 0;
-            foreach (GameObject enemySpawnPoint in enemySpawnPoints)
-            {
-                int enemyCount = Random.Range(this.enemyCount.x, this.enemyCount.y + 1);
-
-                if (enemyCount > 0)
-                {
-                    EnemyDriver leaderEnemy = null, followEnemy = null;
-
-                    for (int index = 0; index < enemyCount; index++)
-                    {
-                        EnemyDriver enemy = this.SpawnEnemy(
-                            enemySpawnPoint.transform.position,
-                            ref leaderEnemy,
-                            ref followEnemy);
-
-                        enemy.name = string.Format("Enemy #{0}-{1}", enemyLeaderIndex, index);
-                    }
-                }
-
-                MonoBehaviour.DestroyImmediate(enemySpawnPoint);
-                ++enemyLeaderIndex;
-            }
-        }
-
-        /// <summary>
-        ///     Spawns and returns an enemy
-        /// </summary>
-        /// <param name="position">The position to spawn at</param>
-        /// <param name="leaderEnemy">The leader</param>
-        /// <param name="followEnemy">The enemy to follow</param>
-        /// <returns>The newly spawned enemy</returns>
-        private EnemyDriver SpawnEnemy(Vector3 position, ref EnemyDriver leaderEnemy, ref EnemyDriver followEnemy)
-        {
-            EnemyDriver newEnemy = Instantiate(this.enemyPrefabs.GetRandomItem(), this.entityParent);
-            newEnemy.transform.position = position;
-
-            newEnemy.battleDriver.Level = this.EnemyLevel;
-
-            newEnemy.leader = leaderEnemy;
-            newEnemy.following = followEnemy;
-
-            if (leaderEnemy == null) leaderEnemy = newEnemy;
-            followEnemy = newEnemy;
-
-            this.limitedRangeObjects.Add(newEnemy.gameObject);
-
-            return newEnemy;
+            this.entityParent.position = Vector3.zero;
+            this.dungeonParent.position = Vector3.zero;
         }
 
         /// <summary>

@@ -12,9 +12,14 @@
     [DisallowMultipleComponent]
     public class EnemyBattleDriver : BaseBattleDriver
     {
+        /// <summary> Whether this enemy is a boss mob </summary>
+        [SerializeField]
+        private bool isBoss = false;
+
         /// <summary> Whether this has already granted experience/levels </summary>
         private bool grantedExperience = false;
 
+        /// <summary> How long to wait before taking the next action </summary>
         private float waitTime = 0.0f;
 
         /// <summary>
@@ -35,6 +40,11 @@
             if (!this.CanStillFight)
             {
                 MonoBehaviour.Destroy(this.gameObject);
+
+                if (this.isBoss)
+                {
+                    this.OpenNextFloorEntrance();
+                }
             }
         }
 
@@ -128,9 +138,9 @@
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EnemyBattleDriver"/> when it first becomes active
+        ///     Opens the entrance to the next floor
         /// </summary>
-        private void Start()
+        private void OpenNextFloorEntrance()
         {
 
         }

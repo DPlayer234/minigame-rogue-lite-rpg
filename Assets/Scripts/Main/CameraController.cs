@@ -31,6 +31,9 @@
         [Range(0.0f, 1.0f)]
         public float rotationSpeedBase = 0.01f;
 
+        /// <summary> How fast is the manual camera control </summary>
+        public float manualControlSpeed = 5.0f;
+
         /// <summary>
         ///     How far away should the camera be from <see cref="following"/> out of battle
         /// </summary>
@@ -189,6 +192,7 @@
 
                 Vector3 currentRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
                 this.transform.LookAt(this.following);
+                this.transform.position += this.transform.right * Input.GetAxis("CameraHorizontal") * Time.fixedDeltaTime * this.manualControlSpeed;
                 Vector3 targetRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
 
                 Vector3 thisToFollowing = this.transform.forward;

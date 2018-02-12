@@ -13,6 +13,16 @@
     [DisallowMultipleComponent]
     public class PlayerBattleDriver : BaseBattleDriver
     {
+        /// <summary>
+        ///     Distance between buttons
+        /// </summary>
+        public const float ButtonDistance = 0.2f;
+
+        /// <summary>
+        ///     Base Height for buttons
+        /// </summary>
+        public const float ButtonBaseHeight = 0.45f;
+
         /// <summary> Prefab for action buttons </summary>
         [SerializeField]
         private Button actionButtonPrefab;
@@ -130,7 +140,7 @@
                 actionButtonController.reference = this.transform;
                 actionButtonController.positionOffset = new Vector3(
                     0.0f,
-                    actionIndex * 0.15f + 0.5f,
+                    actionIndex * PlayerBattleDriver.ButtonDistance + PlayerBattleDriver.ButtonBaseHeight,
                     0.0f);
 
                 // Action Selection
@@ -171,7 +181,7 @@
             foreach (BaseBattleDriver target in targetChoice)
             {
                 Button targetButton = MonoBehaviour.Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
-                targetButton.GetComponentInChildren<Text>().text = action.GetTargetLabel(targetChoice);
+                targetButton.GetComponentInChildren<Text>().text = action.GetTargetLabel();
 
                 var targetButtonController = targetButton.GetComponent<UI.ButtonController>();
                 targetButtonController.reference = target.transform;

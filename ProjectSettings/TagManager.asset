@@ -21,6 +21,8 @@ TagManager:
   - StatusDisplayHealth
   - StatusDisplayAP
   - RoomConnection
+  - BossSpawnPoint
+  - DeleteOnNextFloor
   layers:
   - Default
   - TransparentFX

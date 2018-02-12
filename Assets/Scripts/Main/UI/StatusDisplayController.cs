@@ -122,7 +122,7 @@
         private void UpdateBar(Transform bar, TextMesh textMesh, float currentValue, float maximumValue)
         {
             // Update width of the bar
-            bar.transform.localScale = new Vector3(currentValue / maximumValue, 1.0f, 1.0f);
+            bar.transform.localScale = new Vector3(Mathf.Clamp01(currentValue / maximumValue), 1.0f, 1.0f);
 
             // Update the associated display text
             textMesh.text = string.Format("{0}/{1}", Mathf.RoundToInt(currentValue), Mathf.RoundToInt(maximumValue));

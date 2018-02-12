@@ -12,6 +12,24 @@
     /// </summary>
     public abstract partial class BattleAction
     {
+        /// <summary> Label for actions using <seealso cref="ActionTargetOption.Self"/> </summary>
+        public const string SelfLabel = "Me";
+
+        /// <summary> Label for actions usable against a single target </summary>
+        public const string SingleLabel = "This";
+
+        /// <summary> Label for actions using <seealso cref="ActionTargetOption.Everybody"/> </summary>
+        public const string EverybodyLabel = "Everybody";
+
+        /// <summary> Label for actions using <seealso cref="ActionTargetOption.AllAllies"/> </summary>
+        public const string AllAlliesLabel = "All Allies";
+
+        /// <summary> Label for actions using <seealso cref="ActionTargetOption.AllOpponents"/> </summary>
+        public const string AllOpponentsLabel = "All Opponents";
+
+        /// <summary> Fall-back label </summary>
+        public const string FallbackLabel = "IDK";
+
         /// <summary> See: <see cref="Name"/> </summary>
         protected string name;
 
@@ -200,29 +218,29 @@
         /// </summary>
         /// <param name="targetChoice">The target selection</param>
         /// <returns>A fitting label</returns>
-        public string GetTargetLabel(BaseBattleDriver[] targetChoice)
+        public string GetTargetLabel()
         {
             switch (this.targetOption)
             {
                 case ActionTargetOption.Self:
-                    return "Self";
+                    return BattleAction.SelfLabel;
 
                 case ActionTargetOption.Anyone:
                 case ActionTargetOption.OneAlly:
                 case ActionTargetOption.OneOpponent:
-                    return targetChoice[0].battleName;
+                    return BattleAction.SingleLabel;
 
                 case ActionTargetOption.Everybody:
-                    return "Everybody";
+                    return BattleAction.EverybodyLabel;
 
                 case ActionTargetOption.AllAllies:
-                    return "All Allies";
+                    return BattleAction.AllAlliesLabel;
 
                 case ActionTargetOption.AllOpponents:
-                    return "All Opponents";
+                    return BattleAction.AllOpponentsLabel;
 
                 default:
-                    return "IDK";
+                    return BattleAction.FallbackLabel;
             }
         }
 

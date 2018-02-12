@@ -285,6 +285,8 @@
 
             this.SetupEntities(this.fightingEntities, true);
 
+            BaseBattleDriver.HighestTurnSpeed = this.GetHighestTurnSpeed();
+
             // HUD
             MainManager.ExploreHud.SetActive(false);
             MainManager.BattleHud.SetActive(true);
@@ -397,6 +399,21 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Returns the highest turn speed within all fighting entities.
+        /// </summary>
+        /// <returns>The highest turn speed</returns>
+        private float GetHighestTurnSpeed()
+        {
+            float turnSpeed = 0;
+            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+            {
+                turnSpeed = Mathf.Max(battleDriver.TurnSpeed, turnSpeed);
+            }
+
+            return turnSpeed;
         }
 
         /// <summary>
