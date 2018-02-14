@@ -7,11 +7,44 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Generates a floor when attached; then deletes itself.
+    ///     Generates a floor when attached to a GameObject.
     ///     Rooms are generated on a grid.
     /// </summary>
     public partial class DungeonGenerator
     {
+        /// <summary> Tag used by Player Spawn Points </summary>
+        private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
+
+        /// <summary> Tag used by Enemy Spawn Points </summary>
+        private const string EnemySpawnPointTag = "EnemySpawnPoint";
+
+        /// <summary> Tag used by Boss Spawn Points </summary>
+        private const string BossSpawnPointTag = "BossSpawnPoint";
+
+        /// <summary> The multiplier for the level of bosses compared to regular enemies </summary>
+        private const float BossLevelMultiplier = 1.15f;
+
+        /// <summary> Parent transform for the entities. </summary>
+        private Transform entityParent;
+
+        /// <summary>
+        ///     What level are enemies supposed to be?
+        ///     Slightly variation.
+        /// </summary>
+        private int EnemyLevel
+        {
+            get
+            {
+                int enemyLevel = Mathf.RoundToInt(
+                    VariousCommon.SumFuncRange(
+                        DungeonGenerator.GetTotalFloorSize,
+                        1,
+                        this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom + Random.Range(-1, 2));
+
+                return Mathf.Max(1, enemyLevel);
+            }
+        }
+
         /// <summary>
         ///     Spawns the player.
         ///     There should always only be one player spawn point per floor.

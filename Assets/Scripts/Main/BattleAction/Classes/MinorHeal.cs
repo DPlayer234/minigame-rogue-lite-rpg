@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleAction.Actions
 {
     using System;
     using System.Collections.Generic;

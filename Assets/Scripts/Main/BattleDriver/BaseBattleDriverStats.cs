@@ -3,7 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Dev;
-    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.BattleAction;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
     using UnityEngine;
@@ -116,6 +116,29 @@
         }
 
         /// <summary>
+        ///     Sets a stat by the enumator
+        /// </summary>
+        /// <param name="stat">Which stat</param>
+        public float SetStat(Stat stat, float value)
+        {
+            switch (stat)
+            {
+                case Stat.MaximumHealth:
+                    return this.MaximumHealth = (int)value;
+                case Stat.PhysicalDamage:
+                    return this.PhysicalDamage = value;
+                case Stat.MagicalDamage:
+                    return this.MagicalDamage = value;
+                case Stat.Defense:
+                    return this.Defense = value;
+                case Stat.TurnSpeed:
+                    return this.TurnSpeed = value;
+                default:
+                    throw new Exceptions.EntityDriverException("Cannot set stat" + stat.ToString());
+            }
+        }
+
+        /// <summary>
         ///     Gets the base value of a given stat
         /// </summary>
         /// <param name="stat">Which stat</param>
@@ -135,36 +158,32 @@
                 case Stat.TurnSpeed:
                     return this.speedBase;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot get stat" + stat.ToString());
+                    throw new Exceptions.EntityDriverException("Cannot get base stat" + stat.ToString());
             }
         }
 
         /// <summary>
-        ///     Sets the base value of a given stat
+        ///     Sets the base value of a given stat.
+        ///     Does not recalculate the stats.
         /// </summary>
         /// <param name="stat">Which stat</param>
         /// <param name="value">The value to set it to</param>
-        public void SetBaseStat(Stat stat, float value)
+        public float SetBaseStat(Stat stat, float value)
         {
             switch (stat)
             {
                 case Stat.MaximumHealth:
-                    this.healthBase = value;
-                    break;
+                    return this.healthBase = value;
                 case Stat.PhysicalDamage:
-                    this.physicalBase = value;
-                    break;
+                    return this.physicalBase = value;
                 case Stat.MagicalDamage:
-                    this.magicalBase = value;
-                    break;
+                    return this.magicalBase = value;
                 case Stat.Defense:
-                    this.defenseBase = value;
-                    break;
+                    return this.defenseBase = value;
                 case Stat.TurnSpeed:
-                    this.speedBase = value;
-                    break;
+                    return this.speedBase = value;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot set stat" + stat.ToString());
+                    throw new Exceptions.EntityDriverException("Cannot set base stat" + stat.ToString());
             }
         }
 

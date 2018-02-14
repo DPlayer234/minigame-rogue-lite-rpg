@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleAction
 {
     using SAE.RoguePG.Main.BattleDriver;
     using System;

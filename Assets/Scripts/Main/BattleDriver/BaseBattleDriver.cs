@@ -3,7 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Dev;
-    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.BattleAction;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
     using UnityEngine;
@@ -59,6 +59,18 @@
 
         /// <summary> The amount of animations that this object is waiting for to complete </summary>
         private int waitingOnAnimationCount = 0;
+
+        /// <summary>
+        ///     Any function to be called when a turn starts or ends
+        /// </summary>
+        /// <returns>Whether to remove the action</returns>
+        public delegate bool TurnAction();
+
+        /// <summary> A list of actions to be called when a turn starts </summary>
+        public List<TurnAction> StartTurnActions { get; private set; }
+
+        /// <summary> A list of actions to be called when a turn ends </summary>
+        public List<TurnAction> EndTurnActions { get; private set; }
 
         /// <summary> All of its allies, including itself </summary>
         public BaseBattleDriver[] Allies { get; set; }
@@ -150,6 +162,9 @@
             }
         }
 
+        /// <summary> The number of turns that this driver has already taken </summary>
+        public int TurnNumber { get; protected set; }
+
         /// <summary>
         ///     Regenerates (updates) the <seealso cref="actions"/> from <seealso cref="actionClasses"/>
         /// </summary>
@@ -177,6 +192,10 @@
             this.statusDisplay.transform.localPosition = new Vector3(0.0f, this.statusDisplayHeight, 0.0f);
 
             this.waitingOnAnimationCount = 0;
+
+            this.TurnNumber = 0;
+            this.StartTurnActions = new List<TurnAction>();
+            this.EndTurnActions = new List<TurnAction>();
         }
 
         /// <summary>
@@ -199,6 +218,17 @@
         {
             this.LogThisAndFormat("Start Turn!");
             MainManager.CameraController.following = this.transform;
+
+            ++this.TurnNumber;
+
+            // Handle turn actions
+            for (int i = this.StartTurnActions.Count - 1; i >= 0; i--)
+            {
+                if (this.StartTurnActions[i]())
+                {
+                    this.StartTurnActions.RemoveAt(i);
+                }
+            }
         }
 
         /// <summary>
@@ -207,6 +237,15 @@
         public virtual void EndTurn()
         {
             this.LogThisAndFormat("End Turn!");
+
+            // Handle turn actions
+            for (int i = this.EndTurnActions.Count - 1; i >= 0; i--)
+            {
+                if (this.EndTurnActions[i]())
+                {
+                    this.EndTurnActions.RemoveAt(i);
+                }
+            }
         }
 
         /// <summary>

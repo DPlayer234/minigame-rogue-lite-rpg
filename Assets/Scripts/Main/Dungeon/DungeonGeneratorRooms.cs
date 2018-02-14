@@ -7,11 +7,86 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Generates a floor when attached; then deletes itself.
+    ///     Generates a floor when attached to a GameObject.
     ///     Rooms are generated on a grid.
     /// </summary>
     public partial class DungeonGenerator
     {
+        /// <summary>
+        ///     Lists possible offsets from one room to the next
+        /// </summary>
+        private static List<Vector2Int> roomOffsets = new List<Vector2Int>()
+        {
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
+        /// <summary>
+        ///     How many rooms were already generated?
+        /// </summary>
+        private int generatedRooms;
+
+        /// <summary>
+        ///     How many rooms does this floor have?
+        /// </summary>
+        private int totalFloorSize = -1;
+
+        /// <summary>
+        ///     How the floor is layed out.
+        /// </summary>
+        private Dictionary<Vector2Int, RoomType> floorLayout;
+
+        /// <summary>
+        ///     Position of the boss room in the grid
+        /// </summary>
+        private Vector2Int bossRoomPosition;
+
+        /// <summary>
+        ///     The wall object "blocking" the floor transition
+        /// </summary>
+        private GameObject floorTransitionBlockingWall;
+
+        /// <summary> Parent transform for the dungeon rooms and co. </summary>
+        private Transform roomParent;
+
+        /// <summary>
+        ///     How many rooms does this floor have?
+        ///     Not necessarily equal to <seealso cref="DungeonGenerator.GetTotalFloorSize(int)"/>.
+        /// </summary>
+        private int TotalFloorSize
+        {
+            get
+            {
+                // Generate value on first demand
+                return this.totalFloorSize < 0 ?
+                    this.totalFloorSize = DungeonGenerator.GetTotalFloorSize(this.floorNumber) + Random.Range(-1, 1) :
+                    this.totalFloorSize;
+            }
+        }
+
+        /// <summary>
+        ///     Defines common room types
+        /// </summary>
+        public enum RoomType
+        {
+            /// <summary> There is no room </summary>
+            None = -1,
+
+            /// <summary> The starting room </summary>
+            Start,
+
+            /// <summary> A room without any special features </summary>
+            Common,
+
+            /// <summary> The boss room, containing the boss and the path to the next floor </summary>
+            Boss,
+
+            /// <summary> A room with 'treasure' of some kind </summary>
+            Treasure
+        }
+
         /// <summary>
         ///     Defines the floor layout
         /// </summary>
@@ -64,7 +139,7 @@
                 }
             }
 
-            this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
+            this.bossRoomPosition = this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
         }
 
         /// <summary>
@@ -72,12 +147,14 @@
         /// </summary>
         /// <param name="validSpecialLocations">A list of valid locations for special rooms</param>
         /// <param name="roomType">The room type</param>
-        private void AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
+        /// <returns>The position of the special room</returns>
+        private Vector2Int AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
         {
             Vector2Int roomPosition = validSpecialLocations.GetRandomItem();
             validSpecialLocations.Remove(roomPosition);
 
             this.floorLayout[roomPosition] = roomType;
+            return roomPosition;
         }
 
         /// <summary>
@@ -111,7 +188,7 @@
 
             foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
             {
-                GameObject newRoom = Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.dungeonParent);
+                GameObject newRoom = Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.roomParent);
 
                 newRoom.transform.position = new Vector3(
                     item.Key.x * this.roomSize.x,

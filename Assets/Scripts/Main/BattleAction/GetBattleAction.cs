@@ -1,6 +1,7 @@
-﻿namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleAction
 {
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.BattleAction.Actions;
     using UnityEngine;
 
     /// <summary>

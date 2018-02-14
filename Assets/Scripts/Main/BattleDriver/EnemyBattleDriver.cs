@@ -2,7 +2,7 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleActions;
+    using SAE.RoguePG.Main.BattleAction;
     using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 

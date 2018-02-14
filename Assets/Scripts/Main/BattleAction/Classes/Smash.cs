@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.BattleActions
+﻿namespace SAE.RoguePG.Main.BattleAction.Actions
 {
     using SAE.RoguePG.Main.BattleDriver;
     using System;
@@ -11,7 +11,7 @@
     /// <summary>
     ///     Simple physical attack
     /// </summary>
-    public class Smash : BattleAction
+    public class Smash : ChargeAction
     {
         /// <summary> Action Name </summary>
         public const string ActionName = "Smash";
@@ -45,31 +45,6 @@
             this.DealDamage(target);
 
             this.User.StartCoroutine(this.DoCharge(target));
-        }
-
-        /// <summary>
-        ///     Charges through the target.
-        /// </summary>
-        /// <param name="target">The target</param>
-        /// <returns>An enumator</returns>
-        private IEnumerator DoCharge(BaseBattleDriver target)
-        {
-            this.User.IsWaitingOnAnimation = true;
-
-            Rigidbody rigidbody = this.User.GetComponent<Rigidbody>();
-
-            Vector3 lookAt = (target.transform.position - this.User.transform.position) * Smash.VelocityMultiplier;
-
-            rigidbody.velocity = lookAt + new Vector3(0.0f, Smash.YVelocity, 0.0f);
-
-            Func<bool> wait = delegate { return rigidbody.velocity.y > 0.0f; };
-
-            yield return new WaitUntil(wait);
-            yield return new WaitWhile(wait);
-
-            rigidbody.velocity = Vector3.zero;
-
-            this.User.IsWaitingOnAnimation = false;
         }
     }
 }
