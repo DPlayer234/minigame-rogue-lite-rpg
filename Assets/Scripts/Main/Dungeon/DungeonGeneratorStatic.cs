@@ -2,8 +2,6 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -13,6 +11,11 @@
     public partial class DungeonGenerator
     {
         /// <summary>
+        ///     Whether a floor is being generated already.
+        /// </summary>
+        private static bool isGeneratingFloor = false;
+
+        /// <summary>
         ///     The current <see cref="DungeonGenerator"/> instance
         /// </summary>
         private static DungeonGenerator Instance { get; set; }
@@ -20,7 +23,7 @@
         /// <summary>
         ///     The current layout of the floor (<seealso cref="floorLayout"/>)
         /// </summary>
-        public static Dictionary<Vector2Int, RoomType> CurrentFloorLayout
+        private static Dictionary<Vector2Int, RoomType> CurrentFloorLayout
         {
             get
             {
@@ -31,7 +34,7 @@
         /// <summary>
         ///     The current amount of rooms on the floor (<seealso cref="TotalFloorSize"/>)
         /// </summary>
-        public static int CurrentFloorSize
+        private static int CurrentFloorSize
         {
             get
             {
@@ -42,7 +45,7 @@
         /// <summary>
         ///     The wall blocking the floor transition (<seealso cref="floorTransitionBlockingWall"/>)
         /// </summary>
-        public static GameObject CurrentFloorTransitionBlockingWall
+        private static GameObject CurrentFloorTransitionBlockingWall
         {
             get
             {
@@ -53,7 +56,7 @@
         /// <summary>
         ///     Parts currently used by the dungeon generator. 
         /// </summary>
-        public static DungeonPrefabs CurrentParts
+        private static DungeonPrefabs CurrentParts
         {
             get
             {
@@ -62,17 +65,28 @@
         }
 
         /// <summary>
-        ///     Initializes and updates static fields and properties
+        ///     Generates the next floor.
         /// </summary>
-        private void InitializeStatic()
+        public static void GoToNextFloor()
         {
-            DungeonGenerator.Instance = this;
+            if (DungeonGenerator.Instance == null)
+            {
+                throw new Exceptions.DungeonGeneratorException("There is no active instance of the dungeon generator.");
+            }
+
+            if (!DungeonGenerator.isGeneratingFloor)
+            {
+                DungeonGenerator.isGeneratingFloor = true;
+
+                ++DungeonGenerator.Instance.floorNumber;
+                DungeonGenerator.Instance.StartCoroutine(DungeonGenerator.Instance.GenerateFloorCo());
+            }
         }
 
         /// <summary>
         ///     Creates the floor transition
         /// </summary>
-        private void CreateFloorTransition()
+        public static void CreateFloorTransition()
         {
             if (DungeonGenerator.Instance == null)
             {
@@ -91,6 +105,27 @@
 
             // Delete the wall
             MonoBehaviour.Destroy(DungeonGenerator.CurrentFloorTransitionBlockingWall);
+        }
+
+        /// <summary>
+        ///     Initializes and updates static fields and properties
+        /// </summary>
+        private void InitializeStatic()
+        {
+            DungeonGenerator.Instance = this;
+        }
+
+        /// <summary>
+        ///     Generates the floor within a coroutine. (Not immediately.)
+        /// </summary>
+        /// <returns>An enumator</returns>
+        private IEnumerator GenerateFloorCo()
+        {
+            yield return null;
+
+            this.GenerateFloor();
+
+            DungeonGenerator.isGeneratingFloor = false;
         }
     }
 }

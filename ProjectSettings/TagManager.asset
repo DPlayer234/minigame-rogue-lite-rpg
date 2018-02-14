@@ -23,6 +23,7 @@ TagManager:
   - RoomConnection
   - BossSpawnPoint
   - DeleteOnNextFloor
+  - FloorTransitionZone
   layers:
   - Default
   - TransparentFX

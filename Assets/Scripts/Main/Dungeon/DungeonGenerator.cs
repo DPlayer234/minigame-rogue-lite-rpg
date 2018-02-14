@@ -80,6 +80,14 @@
         /// </summary>
         private void Start()
         {
+            this.GenerateFloor();
+        }
+
+        /// <summary>
+        ///     Generates a floor.
+        /// </summary>
+        private void GenerateFloor()
+        {
             this.limitedRangeObjects = MainManager.CameraController.LimitedRangeObjects;
             this.limitedRangeBehaviours = MainManager.CameraController.LimitedRangeBehaviours;
 

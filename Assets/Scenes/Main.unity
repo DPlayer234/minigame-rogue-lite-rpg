@@ -652,15 +652,18 @@ MonoBehaviour:
   removeGameObject: 0
   roomSize: {x: 10, y: 10}
   parts:
-    wall: {fileID: 1524019917228700, guid: 77ff26470b13214448983a7a390c2208, type: 2}
-    floorTransition: {fileID: 0}
+    wall: {fileID: 1507651457678456, guid: 45afa0568f73f3a489f7b9d901db3c6a, type: 2}
+    floorTransition: {fileID: 1879744419368326, guid: e0391517b193e1f40ba8471221ce76ef,
+      type: 2}
     details: []
     startingRooms:
-    - {fileID: 1082606131664352, guid: 5830bc6d41417bf4cbcc251f5680c855, type: 2}
+    - {fileID: 1755045687769698, guid: 6b5e4c8cf15afc3449eb95b04ede6aeb, type: 2}
     commonRooms:
     - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
+    - {fileID: 1714523809056188, guid: e3fcb9d9df6062b4f92c64c5236f37db, type: 2}
+    - {fileID: 1056692276184940, guid: c2846bb454f07a74ca3cd4125f8357fd, type: 2}
     bossRooms:
-    - {fileID: 1238953003546548, guid: 4720640c0a780e44ea4a25b6121a2b2b, type: 2}
+    - {fileID: 1289830454451176, guid: 9ff4b8071da1d564da115c3b6b7425f8, type: 2}
     treasureRooms:
     - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
   playerPrefabs:

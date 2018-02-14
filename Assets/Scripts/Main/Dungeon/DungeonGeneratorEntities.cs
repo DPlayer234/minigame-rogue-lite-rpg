@@ -51,7 +51,20 @@
         /// </summary>
         private void SpawnPlayer()
         {
-            GameObject playerSpawnPoint = GameObject.FindGameObjectWithTag(PlayerSpawnPointTag);
+            // Get all, so useful errors and warning can be given
+            GameObject[] playerSpawnPoints = GameObject.FindGameObjectsWithTag(PlayerSpawnPointTag);
+
+            if (playerSpawnPoints.Length == 0)
+            {
+                throw new Exceptions.DungeonGeneratorException("There is no player spawn point!");
+            }
+            else if (playerSpawnPoints.Length > 1)
+            {
+                Debug.LogWarning("There is more than one player spawn point.");
+            }
+
+            // Pick the first one
+            GameObject playerSpawnPoint = playerSpawnPoints[0];
 
             GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
 

@@ -142,7 +142,7 @@
         /// </summary>
         private void OpenNextFloorEntrance()
         {
-
+            Dungeon.DungeonGenerator.CreateFloorTransition();
         }
     }
 }

@@ -133,7 +133,16 @@
             // Update drivers
             foreach (BaseBattleDriver battleDriver in this.fightingEntities)
             {
-                battleDriver.UpdateIdle();
+                try
+                {
+                    battleDriver.UpdateIdle();
+                }
+                catch (System.Exception e)
+                {
+                    // We don't want any errors to interupt the program flow any more,
+                    // but we don't want them to be ignored either.
+                    Debug.LogError(e);
+                }
 
                 if (battleDriver.CanStillFight)
                 {
@@ -177,7 +186,16 @@
         {
             if (this.currentTurnOf != null)
             {
-                this.currentTurnOf.UpdateTurn();
+                try
+                {
+                    this.currentTurnOf.UpdateTurn();
+                }
+                catch (System.Exception e)
+                {
+                    // We don't want any errors to interupt the program flow any more,
+                    // but we don't want them to be ignored either.
+                    Debug.LogError(e);
+                }
 
                 // Ended turn
                 if (!this.currentTurnOf.TakingTurn)

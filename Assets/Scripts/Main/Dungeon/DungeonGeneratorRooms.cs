@@ -24,6 +24,12 @@
         };
 
         /// <summary>
+        ///     Assigns every <seealso cref="RoomType"/> to
+        ///     an array <seealso cref="GameObject"/> with the matching rooms.
+        /// </summary>
+        private Dictionary<RoomType, GameObject[]> typeToPrefabs;
+
+        /// <summary>
         ///     How many rooms were already generated?
         /// </summary>
         private int generatedRooms;
@@ -69,7 +75,7 @@
         /// <summary>
         ///     Defines common room types
         /// </summary>
-        public enum RoomType
+        private enum RoomType
         {
             /// <summary> There is no room </summary>
             None = -1,
@@ -180,23 +186,60 @@
         private void SpawnRooms()
         {
             // This is going to make assigning rooms easier.
-            Dictionary<RoomType, GameObject[]> typeToPrefabs = new Dictionary<RoomType, GameObject[]>(4);
-            typeToPrefabs[RoomType.Start] = this.parts.startingRooms;
-            typeToPrefabs[RoomType.Common] = this.parts.commonRooms;
-            typeToPrefabs[RoomType.Boss] = this.parts.bossRooms;
-            typeToPrefabs[RoomType.Treasure] = this.parts.treasureRooms;
+            this.typeToPrefabs = new Dictionary<RoomType, GameObject[]>(4);
+            this.typeToPrefabs[RoomType.Start] = this.parts.startingRooms;
+            this.typeToPrefabs[RoomType.Common] = this.parts.commonRooms;
+            this.typeToPrefabs[RoomType.Boss] = this.parts.bossRooms;
+            this.typeToPrefabs[RoomType.Treasure] = this.parts.treasureRooms;
 
-            foreach (KeyValuePair<Vector2Int, RoomType> item in this.floorLayout)
+            foreach (KeyValuePair<Vector2Int, RoomType> roomData in this.floorLayout)
             {
-                GameObject newRoom = Instantiate(typeToPrefabs[item.Value].GetRandomItem(), this.roomParent);
-
-                newRoom.transform.position = new Vector3(
-                    item.Key.x * this.roomSize.x,
-                    0.0f,
-                    item.Key.y * this.roomSize.y);
-
-                this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+                this.SpawnRoom(roomData.Key, roomData.Value);
             }
+        }
+
+        /// <summary>
+        ///     Spawns a single room and its walls
+        /// </summary>
+        /// <param name="position">The position of the room on the grid</param>
+        /// <param name="roomType">The type of the room</param>
+        private void SpawnRoom(Vector2Int position, RoomType roomType)
+        {
+            GameObject newRoom = MonoBehaviour.Instantiate(this.typeToPrefabs[roomType].GetRandomItem(), this.roomParent);
+
+            // Set room position
+            newRoom.transform.position = new Vector3(
+                position.x * this.roomSize.x,
+                0.0f,
+                position.y * this.roomSize.y);
+
+            // Spawns walls
+            GameObject[] walls = new GameObject[4];
+            int wallIndex = 0;
+
+            foreach (Vector2Int offset in DungeonGenerator.roomOffsets)
+            {
+                if (!this.floorLayout.ContainsKey(position + offset))
+                {
+                    GameObject newWall = MonoBehaviour.Instantiate(this.parts.wall, newRoom.transform);
+
+                    newWall.transform.localPosition = Vector3.zero;
+                    newWall.transform.forward = new Vector3(
+                        offset.x,
+                        0.0f,
+                        offset.y);
+
+                    walls[wallIndex++] = newWall;
+                }
+            }
+
+            // Define the floor transition position
+            if (roomType == RoomType.Boss)
+            {
+                this.floorTransitionBlockingWall = walls[Random.Range(0, wallIndex)];
+            }
+
+            this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
         }
     }
 }

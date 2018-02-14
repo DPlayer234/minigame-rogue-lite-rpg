@@ -199,7 +199,7 @@ Transform:
   m_GameObject: {fileID: 1021764131925648}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.87, y: 0, z: 0.62}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4709884676292614}
   - {fileID: 4750661153690018}
@@ -240,7 +240,7 @@ Transform:
   m_GameObject: {fileID: 1867542624106214}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 4040193276485464}
   - {fileID: 4492281230155926}
@@ -257,7 +257,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1938969654909132}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3125, z: 0}
+  m_LocalPosition: {x: 0, y: 0.625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4543292677890254}
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleName: Enemy
-  statusDisplayHeight: 1.3
+  statusDisplayHeight: 2
   actionClasses: 00000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
@@ -471,10 +471,10 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 2aeedb2beecabf849b8b602002e5112a, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1
+  m_Radius: 0.5
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!210 &210804524931184410
 SortingGroup:
   m_ObjectHideFlags: 1
