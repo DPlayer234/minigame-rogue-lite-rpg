@@ -8,18 +8,18 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Healing action
+    ///     Template for any healing action
     /// </summary>
-    public class MinorHeal : HealAction
+    public class _NewHeal : HealAction
     {
         /// <summary> Action Name </summary>
-        public const string ActionName = "Minor Heal";
+        public const string ActionName = "ACTIONNAME";
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MinorHeal"/> class
+        ///     Initializes a new instance of the <see cref="_NewHeal"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
-        public MinorHeal(BaseBattleDriver user) : base(user)
+        public _NewHeal(BaseBattleDriver user) : base(user)
         {
             this.name = ActionName;
 

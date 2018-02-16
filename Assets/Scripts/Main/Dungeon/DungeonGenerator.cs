@@ -13,12 +13,6 @@
     public partial class DungeonGenerator : MonoBehaviour
     {
         /// <summary>
-        ///     The average amount of enemies per room.
-        ///     Relevant for enemy level calculations
-        /// </summary>
-        public const int AverageEnemyCountPerRoom = 2;
-
-        /// <summary>
         ///     Floor Number
         /// </summary>
         public int floorNumber = 1;
@@ -101,6 +95,7 @@
             this.ApplyDesign();
 
             this.SpawnPlayer();
+            this.SpawnRecruits();
             this.SpawnEnemies();
             this.SpawnBoss();
 

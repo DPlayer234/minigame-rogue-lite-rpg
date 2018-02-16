@@ -25,6 +25,17 @@
         public ChargeAction(BaseBattleDriver user) : base(user) { }
 
         /// <summary>
+        ///     The method to run when this action is being used.
+        /// </summary>
+        /// <param name="target">The target battle driver</param>
+        protected override void Use(BaseBattleDriver target)
+        {
+            this.DealDamage(target);
+
+            this.User.StartCoroutine(this.DoCharge(target));
+        }
+
+        /// <summary>
         ///     Charges through the target.
         /// </summary>
         /// <param name="target">The target</param>

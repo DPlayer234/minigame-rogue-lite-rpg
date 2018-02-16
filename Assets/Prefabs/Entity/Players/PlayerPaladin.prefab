@@ -380,7 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleName: Player
   statusDisplayHeight: 1.3
-  actionClasses: 0000000001000000
+  actionClasses: 050000000100000000000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}

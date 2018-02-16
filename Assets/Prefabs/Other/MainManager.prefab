@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 475c40e50fe4f1f48843dbcc4352b5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPlayerPrefab: {fileID: 114673902638022314, guid: 13a9f53de7ee22945b0fb77afa47ce3c,
+  defaultPlayerPrefab: {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac,
     type: 2}
 --- !u!114 &114863674862582132
 MonoBehaviour:
@@ -234,7 +234,7 @@ MonoBehaviour:
     bossRooms:
     - {fileID: 1289830454451176, guid: 9ff4b8071da1d564da115c3b6b7425f8, type: 2}
     treasureRooms:
-    - {fileID: 1785078785243936, guid: 1ed13a2a86038d747b9851df855b68af, type: 2}
+    - {fileID: 1032327783466852, guid: 36b220766b7f7d444a751ea36a4d68f9, type: 2}
   playerPrefabs:
   - {fileID: 114320421902846042, guid: 53cab8e7c17d94945b5e395909c791a0, type: 2}
   enemyPrefabs:

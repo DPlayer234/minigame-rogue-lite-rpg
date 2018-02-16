@@ -8,25 +8,25 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Healing action
+    ///     Healing action that fully recovers HP
     /// </summary>
-    public class MinorHeal : HealAction
+    public class MajorHeal : HealAction
     {
         /// <summary> Action Name </summary>
-        public const string ActionName = "Minor Heal";
+        public const string ActionName = "Major Heal";
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MinorHeal"/> class
+        ///     Initializes a new instance of the <see cref="MajorHeal"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
-        public MinorHeal(BaseBattleDriver user) : base(user)
+        public MajorHeal(BaseBattleDriver user) : base(user)
         {
             this.name = ActionName;
 
             // Storing heal-potential (fraction) in attack power.
-            this.attackPower = 0.25f;
+            this.attackPower = 1.00f;
 
-            this.attackPointCost = 6.0f;
+            this.attackPointCost = 14.0f;
             this.category = ActionCategory.Support;
             this.targetOption = ActionTargetOption.OneAlly;
         }

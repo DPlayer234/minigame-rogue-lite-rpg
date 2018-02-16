@@ -8,27 +8,27 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Healing action
+    ///     Healing action which heals all allies
     /// </summary>
-    public class MinorHeal : HealAction
+    public class AOEHeal : HealAction
     {
         /// <summary> Action Name </summary>
         public const string ActionName = "Minor Heal";
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MinorHeal"/> class
+        ///     Initializes a new instance of the <see cref="AOEHeal"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
-        public MinorHeal(BaseBattleDriver user) : base(user)
+        public AOEHeal(BaseBattleDriver user) : base(user)
         {
             this.name = ActionName;
 
             // Storing heal-potential (fraction) in attack power.
             this.attackPower = 0.25f;
 
-            this.attackPointCost = 6.0f;
+            this.attackPointCost = 10.0f;
             this.category = ActionCategory.Support;
-            this.targetOption = ActionTargetOption.OneAlly;
+            this.targetOption = ActionTargetOption.AllAllies;
         }
     }
 }

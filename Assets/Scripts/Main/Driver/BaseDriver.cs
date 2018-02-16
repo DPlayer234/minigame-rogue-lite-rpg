@@ -60,7 +60,7 @@
         private const float MinimumFollowDistance = 1.0f;
 
         /// <summary> Returns whether this <see cref="BaseDriver"/> is the leader </summary>
-        public bool IsLeader { get { return this.leader == null && this.following == null; } }
+        public virtual bool IsLeader { get { return this.leader == null && this.following == null; } }
 
         /// <summary>
         ///     Generic idle animation! Yay!

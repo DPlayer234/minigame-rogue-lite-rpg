@@ -9,23 +9,23 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Simple physical attack
+    ///     Stronger physical attack
     /// </summary>
-    public class Smash : ChargeAction
+    public class QuickSlash : ChargeAction
     {
         /// <summary> Action Name </summary>
-        public const string ActionName = "Smash";
+        public const string ActionName = "Quick Slash";
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Smash"/> class
+        ///     Initializes a new instance of the <see cref="QuickSlash"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
-        public Smash(BaseBattleDriver user) : base(user)
+        public QuickSlash(BaseBattleDriver user) : base(user)
         {
             this.name = ActionName;
 
-            this.attackPointCost = 4.0f;
-            this.attackPower = 10.0f;
+            this.attackPointCost = 7.0f;
+            this.attackPower = 14.0f;
             this.category = ActionCategory.PhysicalAttack;
             this.targetOption = ActionTargetOption.OneOpponent;
         }

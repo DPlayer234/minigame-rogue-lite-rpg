@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -31,7 +32,7 @@
         private BaseBattleDriver currentTurnOf;
 
         /// <summary> All Entities currently fighting </summary>
-        private List<BaseBattleDriver> fightingEntities;
+        private BaseBattleDriver[] fightingEntities;
 
         /// <summary> All Players currently fighting </summary>
         private PlayerBattleDriver[] fightingPlayers;
@@ -71,11 +72,11 @@
         public static void StartBattleMode(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
             if (MainManager.Instance == null) throw new Exceptions.MainManagerException("Cannot start battle mode without an Instance of MainManager!");
-            if (Instance != null) return;
+            if (BattleManager.Instance != null) return;
 
-            Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
+            BattleManager.Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
 
-            Instance.StartCoroutine(Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
+            BattleManager.Instance.StartCoroutine(BattleManager.Instance.StartBattleNextFrame(leaderPlayer, leaderEnemy));
         }
 
         /// <summary>
@@ -83,9 +84,9 @@
         /// </summary>
         public static void EndBattleMode()
         {
-            if (Instance == null) throw new Exceptions.MainManagerException("Cannot end battle mode without an Instance of MainManager!");
+            if (BattleManager.Instance == null) throw new Exceptions.MainManagerException("Cannot end battle mode without an Instance of MainManager!");
 
-            Instance.EndBattleModeInstanced();
+            BattleManager.Instance.EndBattleModeInstanced();
         }
 
         /// <summary>
@@ -188,7 +189,14 @@
             {
                 try
                 {
-                    this.currentTurnOf.UpdateTurn();
+                    if (this.currentTurnOf.CanStillFight)
+                    {
+                        this.currentTurnOf.UpdateTurn();
+                    }
+                    else
+                    {
+                        this.currentTurnOf.TakingTurn = false;
+                    }
                 }
                 catch (System.Exception e)
                 {
@@ -230,7 +238,7 @@
 
             if (playersAlive != enemiesAlive)
             {
-                EndBattleMode();
+                BattleManager.EndBattleMode();
 
                 if (!playersAlive)
                 {
@@ -266,42 +274,13 @@
         /// <param name="leaderEnemy">The leading enemy driver</param>
         private void StartBattleModeInstanced(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
-            this.fightingEntities = new List<BaseBattleDriver>();
             this.deactivatedGameObjects = new List<GameObject>();
+            
+            this.FindFightingPlayers(leaderPlayer);
+            this.FindFightingEnemies(leaderEnemy);
 
-            // Deactivate irrelevant GameObjects and get fighting enemies
-            {
-                GameObject[] allEnemies = GameObject.FindGameObjectsWithTag(EnemyEntityTag);
-
-                List<EnemyBattleDriver> listOfFightingEnemies = new List<EnemyBattleDriver>();
-
-                Driver.EnemyDriver leaderEnemyDriver = leaderEnemy.GetComponent<Driver.EnemyDriver>();
-
-                foreach (GameObject enemy in allEnemies)
-                {
-                    Driver.EnemyDriver enemyDriver = enemy.GetComponent<Driver.EnemyDriver>();
-
-                    if (enemyDriver != null && (enemyDriver.leader == leaderEnemyDriver || enemyDriver == leaderEnemyDriver))
-                    {
-                        // Required component; cannot be missing unless extremely messed with
-                        listOfFightingEnemies.Add(enemy.GetComponent<EnemyBattleDriver>());
-                    }
-                    else
-                    {
-                        enemy.SetActive(false);
-                        this.deactivatedGameObjects.Add(enemy);
-                    }
-                }
-
-                this.fightingPlayers = VariousCommon.GetComponentsInCollection<PlayerBattleDriver>(GameObject.FindGameObjectsWithTag(PlayerEntityTag));
-                this.fightingEnemies = listOfFightingEnemies.ToArray();
-            }
-
-            // Setup for battle
-            this.fightingEntities.AddRange(this.fightingPlayers);
-            this.fightingEntities.AddRange(this.fightingEnemies);
-
-            this.SetupEntities(this.fightingEntities, true);
+            this.AssignFightingEntities();
+            this.SetupEntities(battleStarts: true);
 
             BaseBattleDriver.HighestTurnSpeed = this.GetHighestTurnSpeed();
 
@@ -329,7 +308,7 @@
                     battleDriver.OnBattleEnd();
                 }
 
-                this.SetupEntities(this.fightingEntities, false);
+                this.SetupEntities(battleStarts: false);
             }
 
             if (this.deactivatedGameObjects != null)
@@ -350,60 +329,93 @@
         }
 
         /// <summary>
-        ///     Properly arranges all entities for a battle
+        ///     Gets all player fighters and deactivates the ones not participating.
+        ///     Assigns <seealso cref="fightingPlayers"/>.
         /// </summary>
-        /// <param name="leader">The leader</param>
-        /// <param name="group">The entire group (may or may not include leader)</param>
-        /// <param name="entityForward">Forward vector for the entities</param>
-        private void ArrangeEntities(Component leader, Component[] group, Vector3 entityForward)
+        /// <param name="leaderPlayer">The leader player</param>
+        private void FindFightingPlayers(PlayerBattleDriver leaderPlayer)
         {
-            Vector3 flatCameraForward = MainManager.CameraController.transform.forward;
-            flatCameraForward.y = 0.0f;
-            flatCameraForward.Normalize();
+            this.fightingPlayers = this.FindFighters<PlayerBattleDriver, PlayerDriver>(leaderPlayer, BattleManager.PlayerEntityTag);
+        }
 
-            bool faceRight = Vector3.SignedAngle(flatCameraForward, entityForward, new Vector3(0.0f, 1.0f, 0.0f)) > 0.0f;
+        /// <summary>
+        ///     Gets all enemy fighters and deactivates the ones not participating.
+        ///     Assigns <seealso cref="fightingEnemies"/>.
+        /// </summary>
+        /// <param name="leaderEnemy">The leader enemy</param>
+        private void FindFightingEnemies(EnemyBattleDriver leaderEnemy)
+        {
+            this.fightingEnemies = this.FindFighters<EnemyBattleDriver, EnemyDriver>(leaderEnemy, BattleManager.EnemyEntityTag);
+        }
 
+        /// <summary>
+        ///     Finds all fighters of type <typeparamref name="TBattleDriver"/> and deactivates the ones not participating
+        /// </summary>
+        /// <typeparam name="TBattleDriver">The battle driver type</typeparam>
+        /// <typeparam name="TDriver">The regular driver type</typeparam>
+        /// <param name="leaderBattleDriver">The leader of the bunch</param>
+        /// <param name="tag">The entity tag associated</param>
+        /// <returns>A list of <typeparamref name="TBattleDriver"/></returns>
+        private TBattleDriver[] FindFighters<TBattleDriver, TDriver>(TBattleDriver leaderBattleDriver, string tag)
+            where TBattleDriver : BaseBattleDriver
+            where TDriver : BaseDriver
+        {
+            // Find all GameObjects with that tag
+            GameObject[] allFighters = GameObject.FindGameObjectsWithTag(tag);
+
+            List<TBattleDriver> listOfFighters = new List<TBattleDriver>();
+
+            TDriver leaderDriver = leaderBattleDriver.GetComponent<TDriver>();
+
+            // Check each of them
+            foreach (GameObject fighter in allFighters)
             {
-                leader.transform.forward = entityForward;
+                TDriver driver = fighter.GetComponent<TDriver>();
 
-                Sprite3D.SpriteManager spriteManager = leader.GetComponent<Sprite3D.SpriteManager>();
-                if (spriteManager) spriteManager.SetDirection(faceRight);
-            }
-
-            int placementOffset = 1;
-            bool arrangeAbove = true;
-            foreach (Component member in group)
-            {
-                if (member != leader)
+                if (driver != null && (driver.leader == leaderDriver || driver == leaderDriver))
                 {
-                    member.transform.forward = entityForward;
-
-                    member.transform.position = leader.transform.position + flatCameraForward * placementOffset * (arrangeAbove ? 1.0f : -1.0f);
-
-                    Sprite3D.SpriteManager spriteManager = member.GetComponent<Sprite3D.SpriteManager>();
-                    if (spriteManager) spriteManager.SetDirection(faceRight);
-
-                    arrangeAbove = !arrangeAbove;
-                    if (arrangeAbove) placementOffset++;
+                    // Required component; should never be missing
+                    listOfFighters.Add(fighter.GetComponent<TBattleDriver>());
+                }
+                else
+                {
+                    fighter.SetActive(false);
+                    this.deactivatedGameObjects.Add(fighter);
                 }
             }
+
+            return listOfFighters.ToArray();
+        }
+
+        /// <summary>
+        ///     Assigns <seealso cref="fightingEntities"/> using <seealso cref="fightingPlayers"/> and <seealso cref="fightingEnemies"/>
+        /// </summary>
+        private void AssignFightingEntities()
+        {
+            var fightingEntityList = new List<BaseBattleDriver>();
+
+            // Setup for battle
+            // For some reason, conversion of 'compatible' lists won't work, but it works with arrays.
+            fightingEntityList.AddRange(this.fightingPlayers);
+            fightingEntityList.AddRange(this.fightingEnemies);
+
+            this.fightingEntities = fightingEntityList.ToArray();
         }
 
         /// <summary>
         ///     Sets up entities to either start or end a fight
         /// </summary>
-        /// <param name="battleDrivers">The List of <seealso cref="BaseBattleDriver"/>s</param>
-        /// <param name="start">Whether the fight starts (true) or ends (false)</param>
-        private void SetupEntities(IEnumerable<BaseBattleDriver> battleDrivers, bool start)
+        /// <param name="battleStarts">Whether the fight starts (true) or ends (false)</param>
+        private void SetupEntities(bool battleStarts)
         {
-            foreach (BaseBattleDriver battleDriver in battleDrivers)
+            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
             {
                 var entityDriver = battleDriver.entityDriver;
 
-                entityDriver.enabled = !start;
-                battleDriver.enabled = start;
+                entityDriver.enabled = !battleStarts;
+                battleDriver.enabled = battleStarts;
 
-                if (start)
+                if (battleStarts)
                 {
                     if (battleDriver is PlayerBattleDriver)
                     {

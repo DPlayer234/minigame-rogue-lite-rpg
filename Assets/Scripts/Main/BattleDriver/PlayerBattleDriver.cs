@@ -115,14 +115,6 @@
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="PlayerBattleDriver"/> when it first becomes active
-        /// </summary>
-        private void Start()
-        {
-
-        }
-
-        /// <summary>
         ///     Creates the the buttons for all actions
         /// </summary>
         private void CreateActionButtons()
@@ -160,14 +152,10 @@
             if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
 
             this.targetButtonHolder = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
-
-            BaseBattleDriver[][] targetChoices = action.GetTargets();
-
-            for (int targetIndex = 0; targetIndex < targetChoices.Length; targetIndex++)
+            
+            foreach (BaseBattleDriver[] targetChoice in action.GetTargets())
             {
-                BaseBattleDriver[] targetChoice = targetChoices[targetIndex];
-
-                this.CreateTargetButton(action, targetChoice);
+                this.CreateTargetChoiceButtons(action, targetChoice);
             }
         }
 
@@ -176,13 +164,14 @@
         /// </summary>
         /// <param name="action">The action</param>
         /// <param name="targetChoice">The target choice</param>
-        private void CreateTargetButton(BattleAction action, BaseBattleDriver[] targetChoice)
+        private void CreateTargetChoiceButtons(BattleAction action, BaseBattleDriver[] targetChoice)
         {
             foreach (BaseBattleDriver target in targetChoice)
             {
                 Button targetButton = MonoBehaviour.Instantiate(this.actionButtonPrefab, this.targetButtonHolder.transform);
                 targetButton.GetComponentInChildren<Text>().text = action.GetTargetLabel();
 
+                // Update Button Controller
                 var targetButtonController = targetButton.GetComponent<UI.ButtonController>();
                 targetButtonController.reference = target.transform;
                 targetButtonController.positionOffset = new Vector3(
@@ -190,7 +179,7 @@
                     0.5f,
                     0.0f);
 
-                // Target Selection
+                // Button to finalize a selection
                 targetButton.onClick.AddListener(delegate
                 {
                     MonoBehaviour.Destroy(this.targetButtonHolder);

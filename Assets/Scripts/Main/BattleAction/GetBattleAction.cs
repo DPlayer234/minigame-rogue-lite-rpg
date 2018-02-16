@@ -1,8 +1,7 @@
 ﻿namespace SAE.RoguePG.Main.BattleAction
 {
-    using SAE.RoguePG.Main.BattleDriver;
     using SAE.RoguePG.Main.BattleAction.Actions;
-    using UnityEngine;
+    using SAE.RoguePG.Main.BattleDriver;
 
     /// <summary>
     ///     Base class for any action that can be taken during a turn.
@@ -16,8 +15,13 @@
         /// </summary>
         public enum ActionClass
         {
+            AOEHeal,
+            Bravery,
+            FireMagic,
+            MajorHeal,
+            MinorHeal,
             Smash,
-            MinorHeal
+            QuickSlash
         }
 
         /// <summary>
@@ -30,12 +34,20 @@
         {
             switch (action)
             {
-                case ActionClass.Smash:
-                    return new Smash(user);
-
+                case ActionClass.AOEHeal:
+                    return new AOEHeal(user);
+                case ActionClass.Bravery:
+                    return new Bravery(user);
+                case ActionClass.FireMagic:
+                    return new FireMagic(user);
+                case ActionClass.MajorHeal:
+                    return new MajorHeal(user);
                 case ActionClass.MinorHeal:
                     return new MinorHeal(user);
-
+                case ActionClass.Smash:
+                    return new Smash(user);
+                case ActionClass.QuickSlash:
+                    return new QuickSlash(user);
                 default:
                     // Default to smash
                     return new Smash(user);

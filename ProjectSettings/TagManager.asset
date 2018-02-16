@@ -26,6 +26,7 @@ TagManager:
   - FloorTransitionZone
   - Floor
   - Roof
+  - RecruitSpawnPoint
   layers:
   - Default
   - TransparentFX

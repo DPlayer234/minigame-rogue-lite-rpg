@@ -22,7 +22,7 @@
         public int TurnDuration { get; protected set; }
 
         /// <summary>
-        ///     Applies a buff to battle driver
+        ///     Applies a buff to a battle driver
         /// </summary>
         /// <param name="target">The target battle driver</param>
         public void Apply(BaseBattleDriver target)
@@ -48,7 +48,7 @@
             });
         }
 
-        // These functions aren't abstract because they are supposed to be optional-
+        // These functions aren't abstract because they are supposed to be optional.
 
         /// <summary>
         ///     Called when the buff is applied

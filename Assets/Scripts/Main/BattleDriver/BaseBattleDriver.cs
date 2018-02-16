@@ -134,6 +134,8 @@
 
             set
             {
+                this.takingTurn = value;
+
                 if (value)
                 {
                     this.StartTurn();
@@ -142,8 +144,6 @@
                 {
                     this.EndTurn();
                 }
-
-                this.takingTurn = value;
             }
         }
 
@@ -253,7 +253,7 @@
         /// </summary>
         public virtual void UpdateTurn()
         {
-            
+
         }
 
         /// <summary>

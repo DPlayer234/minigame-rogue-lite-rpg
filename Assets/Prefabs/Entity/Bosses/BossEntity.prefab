@@ -401,7 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleName: Enemy
   statusDisplayHeight: 2
-  actionClasses: 00000000
+  actionClasses: 05000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}

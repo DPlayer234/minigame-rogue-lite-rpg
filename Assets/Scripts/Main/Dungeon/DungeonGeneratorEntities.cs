@@ -12,8 +12,17 @@
     /// </summary>
     public partial class DungeonGenerator
     {
+        /// <summary>
+        ///     The average amount of enemies per room.
+        ///     Relevant for enemy level calculations
+        /// </summary>
+        public const int AverageEnemyCountPerRoom = 2;
+
         /// <summary> Tag used by Player Spawn Points </summary>
         private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
+
+        /// <summary> Tag used by Recruit Spawn Points </summary>
+        private const string RecruitSpawnPointTag = "RecruitSpawnPoint";
 
         /// <summary> Tag used by Enemy Spawn Points </summary>
         private const string EnemySpawnPointTag = "EnemySpawnPoint";
@@ -52,7 +61,7 @@
         private void SpawnPlayer()
         {
             // Get all, so useful errors and warning can be given
-            GameObject[] playerSpawnPoints = GameObject.FindGameObjectsWithTag(PlayerSpawnPointTag);
+            GameObject[] playerSpawnPoints = GameObject.FindGameObjectsWithTag(DungeonGenerator.PlayerSpawnPointTag);
 
             if (playerSpawnPoints.Length == 0)
             {
@@ -65,12 +74,11 @@
 
             // Pick the first one
             GameObject playerSpawnPoint = playerSpawnPoints[0];
-
-            GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
-
-            if (players.Length < 1)
+            
+            // Make sure there's a party
+            if (PlayerDriver.Party == null || PlayerDriver.Party.Count < 1)
             {
-                players = new GameObject[]
+                PlayerDriver.Party = new List<GameObject>()
                 {
                     MainManager.SpawnEntityWithBonus(
                         Storage.SelectedPlayerPrefab,
@@ -79,7 +87,7 @@
                 };
             }
 
-            foreach (GameObject player in players)
+            foreach (GameObject player in PlayerDriver.Party)
             {
                 player.transform.position = playerSpawnPoint.transform.position;
             }
@@ -88,11 +96,38 @@
         }
 
         /// <summary>
+        ///     Spawns recruits at RecruitSpawnPoints
+        /// </summary>
+        public void SpawnRecruits()
+        {
+            GameObject[] recruitSpawnPoints = GameObject.FindGameObjectsWithTag(DungeonGenerator.RecruitSpawnPointTag);
+
+            int recruitIndex = 0;
+            foreach (GameObject recruitSpawnPoint in recruitSpawnPoints)
+            {
+                PlayerDriver recruit = MainManager.SpawnEntityWithBonus(
+                    this.playerPrefabs.GetRandomItem(),
+                    Stat.Random,
+                    Stat.Random);
+
+                recruit.transform.parent = this.entityParent;
+                recruit.transform.position = recruitSpawnPoint.transform.position;
+
+                recruit.IsRecruit = true;
+
+                recruit.name = string.Format("Recruit #{0}", recruitIndex);
+
+                MonoBehaviour.Destroy(recruitSpawnPoint);
+                ++recruitIndex;
+            }
+        }
+
+        /// <summary>
         ///     Spawns enemies at all EnemySpawnPoints and deletes those
         /// </summary>
         private void SpawnEnemies()
         {
-            GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(EnemySpawnPointTag);
+            GameObject[] enemySpawnPoints = GameObject.FindGameObjectsWithTag(DungeonGenerator.EnemySpawnPointTag);
 
             int enemyLeaderIndex = 0;
             foreach (GameObject enemySpawnPoint in enemySpawnPoints)
@@ -114,7 +149,7 @@
                     }
                 }
 
-                MonoBehaviour.DestroyImmediate(enemySpawnPoint);
+                MonoBehaviour.Destroy(enemySpawnPoint);
                 ++enemyLeaderIndex;
             }
         }

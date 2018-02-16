@@ -39,12 +39,12 @@
 
             if (!this.CanStillFight)
             {
-                MonoBehaviour.Destroy(this.gameObject);
-
                 if (this.isBoss)
                 {
                     this.OpenNextFloorEntrance();
                 }
+
+                MonoBehaviour.Destroy(this.gameObject);
             }
         }
 
@@ -80,11 +80,11 @@
                 // Random moves for now
                 if (this.AttackPoints > 0.0f)
                 {
-                    var action = this.actions[Random.Range(0, this.actions.Length)];
+                    var action = this.actions.GetRandomItem();
 
                     var targets = action.GetTargets();
 
-                    action.Use(targets[Random.Range(0, targets.Length)]);
+                    action.Use(targets.GetRandomItem());
 
                     this.waitTime = 1.0f;
                 }
@@ -109,8 +109,6 @@
                 // Grants XP/Levels upon defeat
                 if (!this.grantedExperience)
                 {
-                    this.gameObject.SetActive(false);
-
                     foreach (BaseBattleDriver battleDriver in this.Opponents)
                     {
                         ++battleDriver.Level;

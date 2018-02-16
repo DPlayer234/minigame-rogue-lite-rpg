@@ -13,6 +13,11 @@
     public partial class DungeonGenerator
     {
         /// <summary>
+        ///     The amount of treasure rooms in relation to regular rooms.
+        /// </summary>
+        private const float TreasureRoomMultiplier = 0.05f;
+
+        /// <summary>
         ///     Lists possible offsets from one room to the next
         /// </summary>
         private static List<Vector2Int> roomOffsets = new List<Vector2Int>()
@@ -141,6 +146,11 @@
             }
 
             this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
+
+            for (int i = 0; i < Mathf.Max(1, (int)(this.TotalFloorSize * DungeonGenerator.TreasureRoomMultiplier)); i++)
+            {
+                this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Treasure);
+            }
         }
 
         /// <summary>
