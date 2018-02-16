@@ -19,16 +19,23 @@
         public const int AverageEnemyCountPerRoom = 2;
 
         /// <summary>
-        ///     Whether or not to also remove the GameObject
+        ///     Floor Number
         /// </summary>
-        public bool removeGameObject = true;
+        public int floorNumber = 1;
+
+        /// <summary>
+        ///     Minimum and maximum enemy count per spawn point.
+        /// </summary>
+        public Vector2Int enemyCount;
 
         /// <summary>
         ///     How large the rooms are (width and depth)
         /// </summary>
         public Vector2 roomSize;
 
-        /// <summary> Parts used in the dungeon </summary>
+        /// <summary>
+        ///     Parts used in the dungeon
+        /// </summary>
         public DungeonPrefabs parts;
 
         /// <summary>
@@ -47,14 +54,9 @@
         public EnemyDriver[] bossPrefabs;
 
         /// <summary>
-        ///     Minimum and maximum enemy count per spawn point.
+        ///     The design of the dungeon
         /// </summary>
-        public Vector2Int enemyCount;
-
-        /// <summary>
-        ///     Floor Number (First Floor is 1, second is 2 etc.)
-        /// </summary>
-        public int floorNumber = 1;
+        public DungeonDesign design;
 
         /// <summary> Tag used for anything to be deleted on the next floor </summary>
         private const string DeleteOnNextFloorTag = "DeleteOnNextFloor";
@@ -93,8 +95,11 @@
 
             this.DeleteLastFloor();
             this.CreateParents();
+
             this.DefineLayout();
             this.SpawnRooms();
+            this.ApplyDesign();
+
             this.SpawnPlayer();
             this.SpawnEnemies();
             this.SpawnBoss();

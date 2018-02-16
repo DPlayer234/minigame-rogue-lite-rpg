@@ -217,7 +217,7 @@
         public virtual void StartTurn()
         {
             this.LogThisAndFormat("Start Turn!");
-            MainManager.CameraController.following = this.transform;
+            MainManager.CameraController.following = this.spriteManager.rootTransform;
 
             ++this.TurnNumber;
 

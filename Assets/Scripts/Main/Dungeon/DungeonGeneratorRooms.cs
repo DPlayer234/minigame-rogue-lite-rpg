@@ -45,11 +45,6 @@
         private Dictionary<Vector2Int, RoomType> floorLayout;
 
         /// <summary>
-        ///     Position of the boss room in the grid
-        /// </summary>
-        private Vector2Int bossRoomPosition;
-
-        /// <summary>
         ///     The wall object "blocking" the floor transition
         /// </summary>
         private GameObject floorTransitionBlockingWall;
@@ -145,7 +140,7 @@
                 }
             }
 
-            this.bossRoomPosition = this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
+            this.AddSpecialRoomToLayout(validSpecialLocations, RoomType.Boss);
         }
 
         /// <summary>
@@ -154,13 +149,12 @@
         /// <param name="validSpecialLocations">A list of valid locations for special rooms</param>
         /// <param name="roomType">The room type</param>
         /// <returns>The position of the special room</returns>
-        private Vector2Int AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
+        private void AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
         {
             Vector2Int roomPosition = validSpecialLocations.GetRandomItem();
             validSpecialLocations.Remove(roomPosition);
 
             this.floorLayout[roomPosition] = roomType;
-            return roomPosition;
         }
 
         /// <summary>
@@ -213,15 +207,36 @@
                 0.0f,
                 position.y * this.roomSize.y);
 
+            List<GameObject> walls = this.AddWalls(newRoom, position);
+
+            // Define the floor transition position
+            if (roomType == RoomType.Boss)
+            {
+                this.floorTransitionBlockingWall = walls.GetRandomItem();
+
+                // Unparent it, so it doesn't cause any trouble later on
+                this.floorTransitionBlockingWall.transform.parent = this.roomParent;
+            }
+
+            this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+        }
+
+        /// <summary>
+        ///     Adds walls to a room at the given position.
+        /// </summary>
+        /// <param name="room">The room</param>
+        /// <param name="position">The position on the grid</param>
+        /// <returns>A list of walls</returns>
+        private List<GameObject> AddWalls(GameObject room, Vector2Int position)
+        {
             // Spawns walls
-            GameObject[] walls = new GameObject[4];
-            int wallIndex = 0;
+            List<GameObject> walls = new List<GameObject>(4);
 
             foreach (Vector2Int offset in DungeonGenerator.roomOffsets)
             {
                 if (!this.floorLayout.ContainsKey(position + offset))
                 {
-                    GameObject newWall = MonoBehaviour.Instantiate(this.parts.wall, newRoom.transform);
+                    GameObject newWall = MonoBehaviour.Instantiate(this.parts.wall, room.transform);
 
                     newWall.transform.localPosition = Vector3.zero;
                     newWall.transform.forward = new Vector3(
@@ -229,17 +244,55 @@
                         0.0f,
                         offset.y);
 
-                    walls[wallIndex++] = newWall;
+                    walls.Add(newWall);
                 }
             }
 
-            // Define the floor transition position
-            if (roomType == RoomType.Boss)
+            return walls;
+        }
+
+        /// <summary>
+        ///     Applies the dungeon design to all rooms
+        /// </summary>
+        private void ApplyDesign()
+        {
+            this.ApplyDesign(this.roomParent);
+        }
+
+        /// <summary>
+        ///     Applies the dungeon design to <paramref name="transform"/> and its children
+        /// </summary>
+        /// <param name="transform">The transform parent</param>
+        private void ApplyDesign(Transform transform)
+        {
+            foreach (Light light in transform.GetComponentsInChildren<Light>())
             {
-                this.floorTransitionBlockingWall = walls[Random.Range(0, wallIndex)];
+                if (light.type == LightType.Point)
+                {
+                    light.intensity = this.design.pointLightIntensity;
+                }
             }
 
-            this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+            foreach (MeshRenderer meshRenderer in transform.GetComponentsInChildren<MeshRenderer>())
+            {
+                foreach (var tagMaterialPair in this.design.materials)
+                {
+                    try
+                    {
+                        if (meshRenderer.CompareTag(tagMaterialPair.tag))
+                        {
+                            meshRenderer.material = tagMaterialPair.material;
+                            break;
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        // Might throw an error due to an invalid tag.
+                        // Log that but do not interrupt program flow.
+                        Debug.LogError(e);
+                    }
+                }
+            }
         }
     }
 }
