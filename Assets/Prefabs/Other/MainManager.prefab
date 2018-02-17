@@ -185,9 +185,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092426352f9aaa1428728bf0d5f64f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPartyDebug: []
   statusDisplayPrefab: {fileID: 1643258868717906, guid: d9c1f15b947b4c348afe2a25c118bfdf,
     type: 2}
   genericPanelPrefab: {fileID: 1946340372102298, guid: 7fd1ac204dd03534296d59d2ab0e1f3d,
+    type: 2}
+  genericButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
+    type: 2}
+  generic3DTextPrefab: {fileID: 114570685099983448, guid: fa3f6f80a066ac841afa54318d20db63,
     type: 2}
   mainCamera: {fileID: 0}
   exploreHud: {fileID: 0}
@@ -236,7 +241,9 @@ MonoBehaviour:
     treasureRooms:
     - {fileID: 1032327783466852, guid: 36b220766b7f7d444a751ea36a4d68f9, type: 2}
   playerPrefabs:
-  - {fileID: 114320421902846042, guid: 53cab8e7c17d94945b5e395909c791a0, type: 2}
+  - {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac, type: 2}
+  - {fileID: 114673902638022314, guid: 13a9f53de7ee22945b0fb77afa47ce3c, type: 2}
+  - {fileID: 114249859629316054, guid: 993cf002a82adb945af22dcabfce1681, type: 2}
   enemyPrefabs:
   - {fileID: 114515041225683976, guid: 592012ba3e185a642b02e6e4c33993db, type: 2}
   bossPrefabs:

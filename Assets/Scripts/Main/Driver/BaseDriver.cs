@@ -32,15 +32,11 @@
         /// </summary>
         public float movementSpeed = 1.0f;
 
-        /// <summary>
-        ///     The <seealso cref="BaseDriver"/> leading the group.
-        /// </summary>
-        public BaseDriver leader;
+        /// <summary> The <seealso cref="BaseDriver"/> leading the group. </summary>
+        protected BaseDriver leader;
 
-        /// <summary>
-        ///     The <seealso cref="BaseDriver"/> this one is directly following.
-        /// </summary>
-        public BaseDriver following;
+        /// <summary> The <seealso cref="BaseDriver"/> this one is directly following. </summary>
+        protected BaseDriver following;
 
         /// <summary> The <seealso cref="Rigidbody"/> also attached to this <seealso cref="GameObject"/> </summary>
         protected new Rigidbody rigidbody;
@@ -55,12 +51,22 @@
         private const float MinimumFlipVelocity = 0.1f;
 
         /// <summary>
-        ///     Minimum distance needed to walk towards <see cref="following"/>
+        ///     Minimum distance needed to walk towards <see cref="Following"/>
         /// </summary>
         private const float MinimumFollowDistance = 1.0f;
 
+        /// <summary>
+        ///     The <seealso cref="BaseDriver"/> leading the group.
+        /// </summary>
+        public virtual BaseDriver Leader { get { return this.leader; } }
+
+        /// <summary>
+        ///     The <seealso cref="BaseDriver"/> this one is directly following.
+        /// </summary>
+        public virtual BaseDriver Following { get { return this.following; } }
+
         /// <summary> Returns whether this <see cref="BaseDriver"/> is the leader </summary>
-        public virtual bool IsLeader { get { return this.leader == null && this.following == null; } }
+        public virtual bool IsLeader { get { return this.Leader == null && this.Following == null; } }
 
         /// <summary>
         ///     Generic idle animation! Yay!
@@ -144,16 +150,18 @@
         /// </summary>
         protected virtual void FixedUpdate()
         {
+            BaseDriver following;
+
             Vector2 movement = (
                 // Leading and not following
                 this.IsLeader ?
                 this.GetLeaderMovement() :
 
                 // Following and not impeding personal space
-                this.following != null && (this.following.transform.position - this.transform.position).sqrMagnitude > MinimumFollowDistance ?
+                (following = this.Following) != null && (following.transform.position - this.transform.position).sqrMagnitude > MinimumFollowDistance ?
                 new Vector2(
-                    this.following.transform.position.x - this.transform.position.x,
-                    this.following.transform.position.z - this.transform.position.z) :
+                    following.transform.position.x - this.transform.position.x,
+                    following.transform.position.z - this.transform.position.z) :
 
                 // Not walking
                 Vector2.zero).normalized * this.movementSpeed;

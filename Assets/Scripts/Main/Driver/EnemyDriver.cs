@@ -34,6 +34,17 @@
         private Coroutine targetUpdater;
 
         /// <summary>
+        ///     Sets the leader and the thing it's following
+        /// </summary>
+        /// <param name="leader">The Leader</param>
+        /// <param name="following">The Following Driver</param>
+        public void SetLeaderAndFollowing(EnemyDriver leader, EnemyDriver following)
+        {
+            this.leader = leader;
+            this.following = following;
+        }
+
+        /// <summary>
         ///     Calculates and returns the top-down movement vector.
         ///     The axes are mapped X: X, Y: Z.
         /// </summary>
@@ -81,7 +92,7 @@
             {
                 BattleManager.StartBattleMode(
                     this.targetPlayer.battleDriver as PlayerBattleDriver,
-                    (this.IsLeader ? this.battleDriver : this.leader.battleDriver) as EnemyBattleDriver);
+                    (this.IsLeader ? this.battleDriver : this.Leader.battleDriver) as EnemyBattleDriver);
             }
         }
 
@@ -90,17 +101,11 @@
         /// </summary>
         private void LookForTarget()
         {
-            GameObject[] players = GameObject.FindGameObjectsWithTag(BattleManager.PlayerEntityTag);
+            PlayerDriver player = PlayerDriver.Party.GetLeader();
 
-            foreach (GameObject player in players)
+            if (player != null && this.CanSee(player.gameObject))
             {
-                PlayerDriver playerDriver = player.GetComponent<PlayerDriver>();
-
-                if (playerDriver != null && playerDriver.IsLeader && this.CanSee(player))
-                {
-                    this.targetPlayer = playerDriver;
-                    break;
-                }
+                this.targetPlayer = player;
             }
         }
 

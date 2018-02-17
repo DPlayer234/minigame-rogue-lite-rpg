@@ -16,15 +16,71 @@
         /// <summary>
         ///     The current player party
         /// </summary>
-        public static List<GameObject> Party { get; set; }
+        public static Party<PlayerDriver> Party { get; private set; }
 
         /// <summary>
-        ///     Whether this player driver is a recruit
+        ///     The recruitable component attached to this GameObject
         /// </summary>
-        public bool IsRecruit { get; set; }
+        private RecruitablePlayer recruitableComponent;
+
+        /// <summary>
+        ///     Whether this player driver is recruitable (and therefore not in the party)
+        /// </summary>
+        public bool IsRecruitable
+        {
+            get
+            {
+                return !PlayerDriver.Party.Contains(this);
+            }
+        }
+
+        /// <summary>
+        ///     The <seealso cref="PlayerDriver"/> leading the group.
+        /// </summary>
+        public override BaseDriver Leader
+        {
+            get
+            {
+                return !this.IsRecruitable ? PlayerDriver.Party.GetLeader() : null;
+            }
+        }
+
+        /// <summary>
+        ///     The <seealso cref="PlayerDriver"/> this one is directly following.
+        /// </summary>
+        public override BaseDriver Following
+        {
+            get
+            {
+                int myIndex = PlayerDriver.Party.IndexOf(this);
+                return (!this.IsRecruitable && myIndex > 0) ? PlayerDriver.Party[myIndex - 1] : null;
+            }
+        }
 
         /// <summary> Returns whether this <see cref="PlayerDriver"/> is the leader </summary>
-        public override bool IsLeader { get { return base.IsLeader && !this.IsRecruit; } }
+        public override bool IsLeader { get { return this.Leader == this; } }
+
+        /// <summary>
+        ///     Assigns an new <seealso cref="Party{T}"/> to <seealso cref="Party"/>
+        /// </summary>
+        public static void CreateNewParty()
+        {
+            PlayerDriver.Party = new Party<PlayerDriver>();
+
+#if UNITY_EDITOR
+            // Set this variable for debugging
+            MainManager.Instance.playerPartyDebug = (List<PlayerDriver>)PlayerDriver.Party;
+#endif
+        }
+
+        /// <summary>
+        ///     Makes this player leave the party
+        /// </summary>
+        public void LeaveParty()
+        {
+            PlayerDriver.Party.Remove(this);
+            this.transform.parent = Dungeon.DungeonGenerator.EntityParent;
+        }
 
         /// <summary>
         ///     Calculates and returns the top-down movement vector.
@@ -68,6 +124,32 @@
             if (this.IsLeader && MainManager.CameraController.following != this.spriteManager.rootTransform)
             {
                 MainManager.CameraController.following = this.spriteManager.rootTransform;
+            }
+
+            // Make sure the recruitable component is attached while needed
+            if (this.IsRecruitable)
+            {
+                this.FindRecruitableComponent();
+            }
+            else if (this.recruitableComponent != null)
+            {
+                MonoBehaviour.Destroy(this.recruitableComponent);
+            }
+        }
+
+        /// <summary>
+        ///     Finds or attaches a <seealso cref="RecruitablePlayer"/> to the GameObject and assigns it to <seealso cref="recruitableComponent"/>
+        /// </summary>
+        private void FindRecruitableComponent()
+        {
+            if (this.recruitableComponent == null)
+            {
+                this.recruitableComponent = this.GetComponent<RecruitablePlayer>();
+
+                if (this.recruitableComponent == null)
+                {
+                    this.recruitableComponent = this.gameObject.AddComponent<RecruitablePlayer>();
+                }
             }
         }
     }

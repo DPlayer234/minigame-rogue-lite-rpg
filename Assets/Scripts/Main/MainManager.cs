@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
     using SAE.RoguePG.Main.Driver;
+    using SAE.RoguePG.Main.UI;
     using UnityEngine;
+    using UnityEngine.UI;
 
     /// <summary>
     ///     Stores and manages general game state of the Main scene.
@@ -14,11 +16,23 @@
     [DisallowMultipleComponent]
     public class MainManager : MonoBehaviour
     {
+        /// <summary>
+        ///     The current player party
+        /// </summary>
+        [Tooltip("Do not set this. It is easier to debug with something in the editor.")]
+        public List<PlayerDriver> playerPartyDebug;
+
         /// <summary> Prefab for player health bars </summary>
         public GameObject statusDisplayPrefab;
 
         /// <summary> Prefab for an empty panel </summary>
         public GameObject genericPanelPrefab;
+
+        /// <summary> Prefab for buttons </summary>
+        public Button genericButtonPrefab;
+
+        /// <summary> Prefab for 3D Text </summary>
+        public Text3DController generic3DTextPrefab;
 
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
         [SerializeField]
@@ -65,6 +79,16 @@
         ///     Prefab for any UI panel.
         /// </summary>
         public static GameObject GenericPanelPrefab { get { return MainManager.Instance.genericPanelPrefab; } }
+
+        /// <summary>
+        ///     Prefab for buttons.
+        /// </summary>
+        public static Button GenericButtonPrefab { get { return MainManager.Instance.genericButtonPrefab; } }
+
+        /// <summary>
+        ///     Prefab for 3D Text.
+        /// </summary>
+        public static Text3DController Generic3DTextPrefab { get { return MainManager.Instance.generic3DTextPrefab; } }
 
         /// <summary>
         ///     Spawns an entity based on a prefab with a bonus
@@ -127,7 +151,7 @@
             MainManager.ExploreHud.SetActive(true);
             MainManager.BattleHud.SetActive(false);
 
-            MainManager.Party = new List<GameObject>(5);
+            PlayerDriver.CreateNewParty();
 
 #if UNITY_EDITOR
             // Debug code... or something goes here

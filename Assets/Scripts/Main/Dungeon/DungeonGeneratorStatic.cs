@@ -16,14 +16,9 @@
         private static bool isGeneratingFloor = false;
 
         /// <summary>
-        ///     The current <see cref="DungeonGenerator"/> instance
-        /// </summary>
-        private static DungeonGenerator Instance { get; set; }
-
-        /// <summary>
         ///     The current layout of the floor (<seealso cref="floorLayout"/>)
         /// </summary>
-        private static Dictionary<Vector2Int, RoomType> CurrentFloorLayout
+        public static Dictionary<Vector2Int, RoomType> CurrentFloorLayout
         {
             get
             {
@@ -34,13 +29,40 @@
         /// <summary>
         ///     The current amount of rooms on the floor (<seealso cref="TotalFloorSize"/>)
         /// </summary>
-        private static int CurrentFloorSize
+        public static int CurrentFloorSize
         {
             get
             {
                 return DungeonGenerator.Instance.TotalFloorSize;
             }
         }
+
+        /// <summary>
+        ///     Parent transform for all entities
+        /// </summary>
+        public static Transform EntityParent
+        {
+            get
+            {
+                return DungeonGenerator.Instance.entityParent;
+            }
+        }
+
+        /// <summary>
+        ///     Parent transform for the dungeon rooms and co.
+        /// </summary>
+        public static Transform RoomParent
+        {
+            get
+            {
+                return DungeonGenerator.Instance.roomParent;
+            }
+        }
+
+        /// <summary>
+        ///     The current <see cref="DungeonGenerator"/> instance
+        /// </summary>
+        private static DungeonGenerator Instance { get; set; }
 
         /// <summary>
         ///     The wall blocking the floor transition (<seealso cref="floorTransitionBlockingWall"/>)

@@ -75,7 +75,7 @@
         /// <summary>
         ///     Defines common room types
         /// </summary>
-        private enum RoomType
+        public enum RoomType
         {
             /// <summary> There is no room </summary>
             None = -1,

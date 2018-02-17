@@ -372,7 +372,7 @@
             {
                 TDriver driver = fighter.GetComponent<TDriver>();
 
-                if (driver != null && (driver.leader == leaderDriver || driver == leaderDriver))
+                if (driver != null && (driver.Leader == leaderDriver || driver == leaderDriver))
                 {
                     // Required component; should never be missing
                     listOfFighters.Add(fighter.GetComponent<TBattleDriver>());

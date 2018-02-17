@@ -76,18 +76,20 @@
             GameObject playerSpawnPoint = playerSpawnPoints[0];
             
             // Make sure there's a party
-            if (PlayerDriver.Party == null || PlayerDriver.Party.Count < 1)
+            if (PlayerDriver.Party == null || PlayerDriver.Party.Count == 0)
             {
-                PlayerDriver.Party = new List<GameObject>()
-                {
+                PlayerDriver.CreateNewParty();
+
+                PlayerDriver player =
                     MainManager.SpawnEntityWithBonus(
                         Storage.SelectedPlayerPrefab,
                         Storage.BonusStat1,
-                        Storage.BonusStat2).gameObject
-                };
+                        Storage.BonusStat2);
+
+                PlayerDriver.Party.Add(player);
             }
 
-            foreach (GameObject player in PlayerDriver.Party)
+            foreach (PlayerDriver player in PlayerDriver.Party)
             {
                 player.transform.position = playerSpawnPoint.transform.position;
             }
@@ -112,8 +114,6 @@
 
                 recruit.transform.parent = this.entityParent;
                 recruit.transform.position = recruitSpawnPoint.transform.position;
-
-                recruit.IsRecruit = true;
 
                 recruit.name = string.Format("Recruit #{0}", recruitIndex);
 
@@ -167,9 +167,8 @@
             newEnemy.transform.position = position;
 
             newEnemy.battleDriver.Level = this.EnemyLevel;
-
-            newEnemy.leader = leaderEnemy;
-            newEnemy.following = followEnemy;
+            
+            newEnemy.SetLeaderAndFollowing(leaderEnemy, followEnemy);
 
             if (leaderEnemy == null) leaderEnemy = newEnemy;
             followEnemy = newEnemy;
