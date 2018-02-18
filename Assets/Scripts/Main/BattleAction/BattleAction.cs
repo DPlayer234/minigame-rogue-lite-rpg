@@ -218,7 +218,7 @@
         /// </summary>
         /// <param name="targetChoice">The target selection</param>
         /// <returns>A fitting label</returns>
-        public string GetTargetLabel()
+        public string GetTargetLabel(BaseBattleDriver[] targetChoice)
         {
             switch (this.targetOption)
             {
@@ -228,7 +228,7 @@
                 case ActionTargetOption.Anyone:
                 case ActionTargetOption.OneAlly:
                 case ActionTargetOption.OneOpponent:
-                    return BattleAction.SingleLabel;
+                    return targetChoice[0].battleName;
 
                 case ActionTargetOption.Everybody:
                     return BattleAction.EverybodyLabel;

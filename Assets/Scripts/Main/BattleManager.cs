@@ -43,6 +43,9 @@
         /// <summary> All GameObjects that were disabled to make room for the fighters </summary>
         private List<GameObject> deactivatedGameObjects;
 
+        /// <summary> The HUD Parent for anything this adds to the HUD </summary>
+        private Transform hudParent;
+
         /// <summary>
         ///     The global instance of the <see cref="BattleManager"/>.
         /// </summary>
@@ -289,6 +292,13 @@
                 battleDriver.OnBattleStart();
             }
 
+            this.hudParent = MonoBehaviour.Instantiate(GenericPrefab.Panel, HudManager.BattleHud.transform).transform;
+
+            BaseBattleDriver.CreateStatusBars(this.fightingEntities, this.hudParent);
+
+            leaderPlayer.DeduplicateBattleNamesInAllies();
+            leaderEnemy.DeduplicateBattleNamesInAllies();
+
             this.initialized = true;
         }
 
@@ -318,6 +328,7 @@
                 this.deactivatedGameObjects = null;
             }
 
+            MonoBehaviour.Destroy(this.hudParent.gameObject);
             MonoBehaviour.Destroy(this);
         }
 

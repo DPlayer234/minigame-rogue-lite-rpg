@@ -13,7 +13,7 @@
     public class AOEHeal : HealAction
     {
         /// <summary> Action Name </summary>
-        public const string ActionName = "Minor Heal";
+        public const string ActionName = "Area Heal";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AOEHeal"/> class

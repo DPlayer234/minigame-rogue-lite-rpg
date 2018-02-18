@@ -263,11 +263,6 @@ Prefab:
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1044443994}
-    - target: {fileID: 114863674862582132, guid: ad1bb0f46b8427d4ab002c4eba090ae5,
-        type: 2}
-      propertyPath: floorNumber
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad1bb0f46b8427d4ab002c4eba090ae5, type: 2}
   m_IsPrefabParent: 0
@@ -442,7 +437,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1064811375
 RectTransform:
   m_ObjectHideFlags: 0
@@ -659,7 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 475c40e50fe4f1f48843dbcc4352b5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedPlayerPrefab: {fileID: 114673902638022314, guid: 13a9f53de7ee22945b0fb77afa47ce3c,
+  selectedPlayerPrefab: {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac,
     type: 2}
   bonusStat1: 0
   bonusStat2: 1

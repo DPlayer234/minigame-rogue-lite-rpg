@@ -11,6 +11,11 @@
     /// </summary>
     public class StatusDisplayController : MonoBehaviour
     {
+        /// <summary>
+        ///     Height of each individual controller
+        /// </summary>
+        public const float Height = 50.0f;
+
         /// <summary> The tag used by the label </summary>
         private const string LabelTag = "StatusDisplayLabel";
 
@@ -22,32 +27,29 @@
 
         /// <summary>
         ///     The <seealso cref="BaseBattleDriver"/> to display the information of.
-        ///     It is assumed to be a component of any parent.
         /// </summary>
-        private BaseBattleDriver battleDriver;
+        public BaseBattleDriver battleDriver;
 
         /// <summary> The label <seealso cref="TextMesh"/> </summary>
-        private TextMesh label;
+        private Text label;
 
         /// <summary> The health bar <seealso cref="Transform"/> </summary>
         private Transform healthBar;
 
         /// <summary> The health bar label <seealso cref="TextMesh"/> </summary>
-        private TextMesh healthLabel;
+        private Text healthLabel;
 
         /// <summary> The AP bar <seealso cref="Transform"/> </summary>
         private Transform apBar;
 
         /// <summary> The AP bar label <seealso cref="TextMesh"/> </summary>
-        private TextMesh apLabel;
+        private Text apLabel;
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="StatusDisplayController"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            this.battleDriver = this.GetComponentInParent<BaseBattleDriver>();
-
             for (int i = 0; i < this.transform.childCount; i++)
             {
                 Transform child = this.transform.GetChild(i);
@@ -55,17 +57,17 @@
                 if (child.CompareTag(LabelTag))
                 {
                     // Found label
-                    this.label = child.GetComponent<TextMesh>();
+                    this.label = child.GetComponent<Text>();
                 }
                 else if (child.CompareTag(HealthBarTag))
                 {
                     // Found Health Bar Part
-                    this.AssignTransformOrMesh(child, ref this.healthBar, ref this.healthLabel);
+                    this.AssignTransformOrText(child, ref this.healthBar, ref this.healthLabel);
                 }
                 else if (child.CompareTag(APBarTag))
                 {
                     // Found AP Bar Part
-                    this.AssignTransformOrMesh(child, ref this.apBar, ref this.apLabel);
+                    this.AssignTransformOrText(child, ref this.apBar, ref this.apLabel);
                 }
             }
         }
@@ -84,17 +86,17 @@
         /// <param name="transform">The transform to search</param>
         /// <param name="transformTo">The variable to assign the transform to</param>
         /// <param name="mesh">The variable to assign the mesh to</param>
-        private void AssignTransformOrMesh(Transform transform, ref Transform transformTo, ref TextMesh mesh)
+        private void AssignTransformOrText(Transform transform, ref Transform transformTo, ref Text mesh)
         {
-            TextMesh assignedMesh = transform.GetComponent<TextMesh>();
+            Text assignedText = transform.GetComponent<Text>();
 
-            if (assignedMesh == null)
+            if (assignedText == null)
             {
                 transformTo = transform;
             }
             else
             {
-                mesh = assignedMesh;
+                mesh = assignedText;
             }
         }
 
@@ -107,24 +109,22 @@
             {
                 throw new RPGException(RPGException.Cause.StatusDisplayMissingComponent);
             }
-
-            if (this.battleDriver == null) throw new RPGException(RPGException.Cause.StatusDisplayNoBattleDriver);
         }
 
         /// <summary>
-        ///     Updates a bar made up of <paramref name="bar"/> and <paramref name="textMesh"/>.
+        ///     Updates a bar made up of <paramref name="bar"/> and <paramref name="text"/>.
         /// </summary>
         /// <param name="bar">The <seealso cref="Transform"/> of the used bar</param>
-        /// <param name="textMesh">The <seealso cref="TextMesh"/> of the used bar</param>
+        /// <param name="text">The <seealso cref="Text"/> of the used bar</param>
         /// <param name="currentValue">The current value of the bar</param>
         /// <param name="maximumValue">The maximum value of the bar</param>
-        private void UpdateBar(Transform bar, TextMesh textMesh, float currentValue, float maximumValue)
+        private void UpdateBar(Transform bar, Text text, float currentValue, float maximumValue)
         {
             // Update width of the bar
             bar.transform.localScale = new Vector3(Mathf.Clamp01(currentValue / maximumValue), 1.0f, 1.0f);
 
             // Update the associated display text
-            textMesh.text = string.Format("{0}/{1}", Mathf.RoundToInt(currentValue), Mathf.RoundToInt(maximumValue));
+            text.text = string.Format("{0}/{1}", Mathf.RoundToInt(currentValue), Mathf.RoundToInt(maximumValue));
         }
 
         /// <summary>

@@ -22,6 +22,30 @@
         /// <summary> How long to wait before taking the next action </summary>
         private float waitTime = 0.0f;
 
+        /// <summary> Current Health Value </summary>
+        public override int CurrentHealth
+        {
+            get
+            {
+                return this.currentHealth;
+            }
+
+            set
+            {
+                this.currentHealth = Mathf.Clamp(value, 0, this.MaximumHealth);
+
+                if (this.currentHealth == 0 && !this.grantedExperience)
+                {
+                    foreach (BaseBattleDriver battleDriver in this.Opponents)
+                    {
+                        ++battleDriver.Level;
+                    }
+
+                    this.grantedExperience = true;
+                }
+            }
+        }
+
         /// <summary>
         ///     To be called when a battle starts
         /// </summary>
@@ -93,46 +117,6 @@
                     this.TakingTurn = false;
                 }
             }
-        }
-
-        /// <summary>
-        ///     Updates the Enemy once a frame while nothing is taking a turn
-        /// </summary>
-        public override void UpdateIdle()
-        {
-            if (this.CanStillFight)
-            {
-                base.UpdateIdle();
-            }
-            else
-            {
-                // Grants XP/Levels upon defeat
-                if (!this.grantedExperience)
-                {
-                    foreach (BaseBattleDriver battleDriver in this.Opponents)
-                    {
-                        ++battleDriver.Level;
-                    }
-
-                    this.grantedExperience = true;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="EnemyBattleDriver"/> whether it is or is not active.
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
-        /// <summary>
-        ///     Called by Unity every frame to update the <see cref="BaseBattleDriver"/>
-        /// </summary>
-        protected override void Update()
-        {
-            base.Update();
         }
 
         /// <summary>

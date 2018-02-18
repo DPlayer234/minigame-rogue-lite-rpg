@@ -6,6 +6,7 @@
     using SAE.RoguePG.Main.BattleAction;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.Sprite3D;
+    using SAE.RoguePG.Main.UI;
     using UnityEngine;
 
     /// <summary>
@@ -29,9 +30,6 @@
         /// <summary> The name displayed in battle </summary>
         public string battleName;
 
-        /// <summary> How high should the status display be </summary>
-        public float statusDisplayHeight = 1.3f;
-
         /// <summary> An array of the used <seealso cref="BattleAction.ActionClass"/>es </summary>
         public BattleAction.ActionClass[] actionClasses;
 
@@ -51,7 +49,7 @@
         protected BattleAction[] actions;
 
         /// <summary> Status Display used by this BattleDriver </summary>
-        protected GameObject statusDisplay;
+        protected StatusDisplayController statusDisplay;
 
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
@@ -169,6 +167,35 @@
         public int TurnNumber { get; protected set; }
 
         /// <summary>
+        ///     Creates status bars for a set of battle drivers.
+        /// </summary>
+        /// <param name="battleDrivers">The battle drivers to generate them for</param>
+        /// <param name="parent">The transform to parent them to</param>
+        public static void CreateStatusBars(IList<BaseBattleDriver> battleDrivers, Transform parent)
+        {
+            int playerIndex = 0, enemyIndex = 0;
+
+            foreach (BaseBattleDriver battleDriver in battleDrivers)
+            {
+                StatusDisplayController statusDisplay = MonoBehaviour.Instantiate(
+                    battleDriver is PlayerBattleDriver ? GenericPrefab.StatusDisplayPlayer : GenericPrefab.StatusDisplayEnemy,
+                    parent);
+
+                print(battleDriver);
+                statusDisplay.battleDriver = battleDriver;
+
+                RectTransform rectTransform = statusDisplay.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    rectTransform.anchoredPosition3D = new Vector3(
+                        0.0f,
+                        -StatusDisplayController.Height * (battleDriver is PlayerBattleDriver ? playerIndex++ : enemyIndex++),
+                        0.0f);
+                }
+            }
+        }
+
+        /// <summary>
         ///     Regenerates (updates) the <seealso cref="actions"/> from <seealso cref="actionClasses"/>
         /// </summary>
         public void RegenerateActions()
@@ -191,9 +218,6 @@
 
             this.AttackPoints = BaseBattleDriver.MaximumAttackPoints;
 
-            this.statusDisplay = MonoBehaviour.Instantiate(GenericPrefab.StatusDisplay, this.spriteManager.rootTransform);
-            this.statusDisplay.transform.localPosition = new Vector3(0.0f, this.statusDisplayHeight, 0.0f);
-
             this.waitingOnAnimationCount = 0;
 
             this.TurnNumber = 0;
@@ -206,11 +230,6 @@
         /// </summary>
         public virtual void OnBattleEnd()
         {
-            if (this.statusDisplay != null)
-            {
-                MonoBehaviour.Destroy(this.statusDisplay);
-            }
-
             this.StopAllCoroutines();
         }
 
@@ -268,6 +287,42 @@
         }
 
         /// <summary>
+        ///     Deduplicates battle names by suffixing #Number
+        /// </summary>
+        public void DeduplicateBattleNamesInAllies()
+        {
+            // Count every occurence
+            Dictionary<string, int> names = new Dictionary<string, int>();
+
+            foreach (BaseBattleDriver ally in this.Allies)
+            {
+                if (names.ContainsKey(ally.battleName))
+                {
+                    names[ally.battleName] += 1;
+                    continue;
+                }
+
+                names.Add(ally.battleName, 1);
+            }
+
+            // Add #N where needed
+            Dictionary<string, int> namesYet = new Dictionary<string, int>();
+
+            foreach (BaseBattleDriver ally in this.Allies)
+            {
+                if (names[ally.battleName] > 1)
+                {
+                    if (!namesYet.ContainsKey(ally.battleName))
+                    {
+                        namesYet.Add(ally.battleName, 0);
+                    }
+
+                    ally.battleName = ally.battleName + " #" + (++namesYet[ally.battleName]);
+                }
+            }
+        }
+
+        /// <summary>
         ///     Called by Unity when the Behaviour is enabled
         /// </summary>
         protected virtual void OnEnable()
@@ -291,14 +346,6 @@
             this.entityDriver = this.GetComponent<BaseDriver>();
 
             this.battleName = this.possibleBattleNames != null ? this.possibleBattleNames.GetRandomItem() : this.battleName;
-        }
-        
-        /// <summary>
-        ///     Called by Unity every frame to update the <see cref="BaseBattleDriver"/>
-        /// </summary>
-        protected virtual void Update()
-        {
-
         }
     }
 }

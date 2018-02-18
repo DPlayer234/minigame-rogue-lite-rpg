@@ -12,7 +12,11 @@
     {
         /// <summary> Prefab for player health bars </summary>
         [SerializeField]
-        private GameObject statusDisplay = null;
+        private StatusDisplayController statusDisplayPlayer = null;
+
+        /// <summary> Prefab for enemy health bars </summary>
+        [SerializeField]
+        private StatusDisplayController statusDisplayEnemy = null;
 
         /// <summary> Prefab for an empty panel </summary>
         [SerializeField]
@@ -35,7 +39,10 @@
         private Text3DController text3D = null;
 
         /// <summary> Prefab for player health bars </summary>
-        public static GameObject StatusDisplay { get; private set; }
+        public static StatusDisplayController StatusDisplayPlayer { get; private set; }
+
+        /// <summary> Prefab for enemy health bars </summary>
+        public static StatusDisplayController StatusDisplayEnemy { get; private set; }
 
         /// <summary> Prefab for an empty panel </summary>
         public static GameObject Panel { get; private set; }
@@ -57,7 +64,8 @@
         /// </summary>
         private void Awake()
         {
-            GenericPrefab.StatusDisplay = this.statusDisplay;
+            GenericPrefab.StatusDisplayPlayer = this.statusDisplayPlayer;
+            GenericPrefab.StatusDisplayEnemy = this.statusDisplayEnemy;
             GenericPrefab.Panel = this.panel;
             GenericPrefab.Button = this.button;
             GenericPrefab.WorldButton = this.worldButton;

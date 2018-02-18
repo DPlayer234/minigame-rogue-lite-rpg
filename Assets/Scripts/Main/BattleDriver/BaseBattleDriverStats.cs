@@ -41,28 +41,28 @@
         public float speedBase = 10.0f;
 
         /// <summary> Maximum Health; use the property <seealso cref="MaximumHealth"/> instead </summary>
-        private int maximumHealth = -1;
+        protected int maximumHealth = -1;
 
         /// <summary> Current Health Value; use the property <seealso cref="CurrentHealth"/> instead </summary>
-        private int currentHealth = -1;
+        protected int currentHealth = -1;
 
         /// <summary> Physical Damage value; use the property <seealso cref="PhysicalDamage"/> instead </summary>
-        private float physicalDamage;
+        protected float physicalDamage;
 
         /// <summary> Magical Damage value; use the property <seealso cref="MagicalDamage"/> instead </summary>
-        private float magicalDamage;
+        protected float magicalDamage;
 
         /// <summary> Defense; resistance against damage; use the property <seealso cref="Defense"/> instead </summary>
-        private float defense;
+        protected float defense;
 
         /// <summary> How fast and often can they take a turn; use the property <seealso cref="TurnSpeed"/> instead </summary>
-        private float turnSpeed;
+        protected float turnSpeed;
 
         /// <summary> Maximum Health </summary>
         public int MaximumHealth { get { return this.maximumHealth; } private set { this.maximumHealth = value; } }
 
         /// <summary> Current Health Value </summary>
-        public int CurrentHealth
+        public virtual int CurrentHealth
         {
             get
             {

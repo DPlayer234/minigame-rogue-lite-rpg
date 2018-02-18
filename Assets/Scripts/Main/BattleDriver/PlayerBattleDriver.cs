@@ -15,14 +15,20 @@
     public class PlayerBattleDriver : BaseBattleDriver
     {
         /// <summary>
-        ///     Distance between buttons
+        ///     Button height
         /// </summary>
-        public const float ButtonDistance = 0.2f;
+        private const float ButtonHeight = 30.0f;
 
         /// <summary>
-        ///     Base Height for buttons
+        ///     Button width
         /// </summary>
-        public const float ButtonBaseHeight = 0.45f;
+        private const float ButtonWidth = 150.0f;
+
+        /// <summary>
+        ///     The buttons' anchor point
+        ///     (Pretend this is const)
+        /// </summary>
+        private static Vector2 ButtonAnchorPoint = Vector2.zero;
 
         /// <summary> The parent object for action buttons </summary>
         private GameObject actionButtonHolder;
@@ -94,22 +100,6 @@
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="PlayerBattleDriver"/> whether it is or is not active.
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
-        /// <summary>
-        ///     Called by Unity every frame to update the <see cref="PlayerBattleDriver"/>
-        /// </summary>
-        protected override void Update()
-        {
-            base.Update();
-        }
-
-        /// <summary>
         ///     Destory all action and target buttons.
         /// </summary>
         private void DestroyActionButtons()
@@ -125,19 +115,21 @@
         {
             this.DestroyActionButtons();
 
-            this.actionButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, MainManager.WorldCanvas.transform);
+            this.actionButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, HudManager.BattleHud.transform);
 
             for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
             {
                 BattleAction action = this.actions[actionIndex];
 
-                ButtonController actionButton = MonoBehaviour.Instantiate(GenericPrefab.WorldButton, this.actionButtonHolder.transform);
+                Button actionButton = MonoBehaviour.Instantiate(GenericPrefab.Button, this.actionButtonHolder.transform);
                 actionButton.SetText(string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost));
-                
-                actionButton.SetupButtonController(this.transform, actionIndex * PlayerBattleDriver.ButtonDistance + PlayerBattleDriver.ButtonBaseHeight);
+
+                actionButton.SetAnchoredPosition3D(
+                    new Vector3(0.0f, (this.actions.Length - actionIndex) * PlayerBattleDriver.ButtonHeight, 0.0f),
+                    PlayerBattleDriver.ButtonAnchorPoint);
 
                 // Action Selection
-                actionButton.OnClick.AddListener(delegate
+                actionButton.onClick.AddListener(delegate
                 {
                     this.CreateTargetButtons(action);
                 });
@@ -152,30 +144,23 @@
         {
             if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
 
-            this.targetButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, MainManager.WorldCanvas.transform);
-            
-            foreach (BaseBattleDriver[] targetChoice in action.GetTargets())
-            {
-                this.CreateTargetChoiceButtons(action, targetChoice);
-            }
-        }
+            this.targetButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, HudManager.BattleHud.transform);
 
-        /// <summary>
-        ///     Creates the button for a single target choice
-        /// </summary>
-        /// <param name="action">The action</param>
-        /// <param name="targetChoice">The target choice</param>
-        private void CreateTargetChoiceButtons(BattleAction action, BaseBattleDriver[] targetChoice)
-        {
-            foreach (BaseBattleDriver target in targetChoice)
+            BaseBattleDriver[][] targetChoices = action.GetTargets();
+
+            for (int targetIndex = 0; targetIndex < targetChoices.Length; targetIndex++)
             {
-                ButtonController targetButton = MonoBehaviour.Instantiate(GenericPrefab.WorldButton, this.targetButtonHolder.transform);
-                targetButton.SetText(action.GetTargetLabel());
-                
-                targetButton.SetupButtonController(target.transform, 0.5f);
+                BaseBattleDriver[] targetChoice = targetChoices[targetIndex];
+
+                Button targetButton = MonoBehaviour.Instantiate(GenericPrefab.Button, this.targetButtonHolder.transform);
+                targetButton.SetText(action.GetTargetLabel(targetChoice));
+
+                targetButton.SetAnchoredPosition3D(
+                    new Vector3(PlayerBattleDriver.ButtonWidth, (targetChoices.Length - targetIndex) * PlayerBattleDriver.ButtonHeight, 0.0f),
+                    PlayerBattleDriver.ButtonAnchorPoint);
 
                 // Button to finalize a selection
-                targetButton.OnClick.AddListener(delegate
+                targetButton.onClick.AddListener(delegate
                 {
                     MonoBehaviour.Destroy(this.targetButtonHolder);
 

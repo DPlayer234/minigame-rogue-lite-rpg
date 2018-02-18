@@ -228,7 +228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b07416d721d544fa5fcedec49070f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusDisplay: {fileID: 1643258868717906, guid: d9c1f15b947b4c348afe2a25c118bfdf,
+  statusDisplayPlayer: {fileID: 114064630620726206, guid: 54580319008e4544fb5160fef059cdfd,
+    type: 2}
+  statusDisplayEnemy: {fileID: 114484948493517872, guid: db3bf3d3a24688e4382e7c6463c98cee,
     type: 2}
   panel: {fileID: 1946340372102298, guid: 7fd1ac204dd03534296d59d2ab0e1f3d, type: 2}
   button: {fileID: 114923387856055884, guid: 4920f6b598ed3504fa66bea125bfa0cf, type: 2}

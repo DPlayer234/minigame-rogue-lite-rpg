@@ -16,7 +16,7 @@
         ///     The average amount of enemies per room.
         ///     Relevant for enemy level calculations
         /// </summary>
-        public const float AverageEnemyCountPerRoom = 1.4f;
+        public const float AverageEnemyCountPerRoom = 3.0f;
 
         /// <summary> Tag used by Player Spawn Points </summary>
         private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
