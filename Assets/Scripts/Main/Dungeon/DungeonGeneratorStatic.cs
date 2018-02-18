@@ -93,7 +93,7 @@
         {
             if (DungeonGenerator.Instance == null)
             {
-                throw new Exceptions.DungeonGeneratorException("There is no active instance of the dungeon generator.");
+                throw new RPGException(RPGException.Cause.DungeonNoActiveInstance);
             }
 
             if (!DungeonGenerator.isGeneratingFloor)
@@ -112,12 +112,12 @@
         {
             if (DungeonGenerator.Instance == null)
             {
-                throw new Exceptions.DungeonGeneratorException("There is no active instance of the dungeon generator.");
+                throw new RPGException(RPGException.Cause.DungeonNoActiveInstance);
             }
 
             if (DungeonGenerator.Instance.floorTransitionBlockingWall == null)
             {
-                throw new Exceptions.DungeonGeneratorException("There is no position for the floor transition set!");
+                throw new RPGException(RPGException.Cause.DungeonNoFloorTransition);
             }
 
             // Spawn floor transition

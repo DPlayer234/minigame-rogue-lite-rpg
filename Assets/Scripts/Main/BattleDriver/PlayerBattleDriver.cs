@@ -125,19 +125,19 @@
         {
             this.DestroyActionButtons();
 
-            this.actionButtonHolder = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
+            this.actionButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, MainManager.WorldCanvas.transform);
 
             for (int actionIndex = 0; actionIndex < this.actions.Length; actionIndex++)
             {
                 BattleAction action = this.actions[actionIndex];
 
-                Button actionButton = MonoBehaviour.Instantiate(MainManager.GenericButtonPrefab, this.actionButtonHolder.transform);
+                ButtonController actionButton = MonoBehaviour.Instantiate(GenericPrefab.WorldButton, this.actionButtonHolder.transform);
                 actionButton.SetText(string.Format("{0} [{1} AP]", action.Name, action.AttackPointCost));
                 
                 actionButton.SetupButtonController(this.transform, actionIndex * PlayerBattleDriver.ButtonDistance + PlayerBattleDriver.ButtonBaseHeight);
 
                 // Action Selection
-                actionButton.onClick.AddListener(delegate
+                actionButton.OnClick.AddListener(delegate
                 {
                     this.CreateTargetButtons(action);
                 });
@@ -152,7 +152,7 @@
         {
             if (this.targetButtonHolder != null) MonoBehaviour.Destroy(this.targetButtonHolder);
 
-            this.targetButtonHolder = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
+            this.targetButtonHolder = MonoBehaviour.Instantiate(GenericPrefab.Panel, MainManager.WorldCanvas.transform);
             
             foreach (BaseBattleDriver[] targetChoice in action.GetTargets())
             {
@@ -169,13 +169,13 @@
         {
             foreach (BaseBattleDriver target in targetChoice)
             {
-                Button targetButton = MonoBehaviour.Instantiate(MainManager.GenericButtonPrefab, this.targetButtonHolder.transform);
+                ButtonController targetButton = MonoBehaviour.Instantiate(GenericPrefab.WorldButton, this.targetButtonHolder.transform);
                 targetButton.SetText(action.GetTargetLabel());
                 
                 targetButton.SetupButtonController(target.transform, 0.5f);
 
                 // Button to finalize a selection
-                targetButton.onClick.AddListener(delegate
+                targetButton.OnClick.AddListener(delegate
                 {
                     MonoBehaviour.Destroy(this.targetButtonHolder);
 

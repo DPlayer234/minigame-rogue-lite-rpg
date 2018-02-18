@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Menu
+﻿namespace SAE.RoguePG.Menu.MainMenu
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -12,10 +12,10 @@
     /// <summary>
     ///     Any functions used within the character creation menu.
     /// </summary>
-    public class CharacterCreationMenu : AnyMenu
+    public class CharacterCreationMenu : AnyMainMenu
     {
         /// <summary> The prefabs used for classes </summary>
-        public Main.Driver.PlayerDriver[] characterPrefabs;
+        public PlayerDriver[] characterPrefabs;
 
         /// <summary> The index of the wizard </summary>
         public int wizardIndex = 0;
@@ -26,12 +26,16 @@
         /// <summary> The index of the assassin </summary>
         public int assassinIndex = 2;
 
+        /// <summary> The UI Text for displaying the first bonus stat </summary>
         public Text bonusStat1Text;
 
+        /// <summary> The UI Text for displaying the second bonus stat </summary>
         public Text bonusStat2Text;
 
-        public Transform playerPreviewPosition;
+        /// <summary> The player preview root </summary>
+        public Transform playerPreviewRoot;
 
+        /// <summary> The current previewed player </summary>
         private PlayerDriver playerPreview;
 
         /// <summary>
@@ -92,7 +96,7 @@
                 MonoBehaviour.Destroy(this.playerPreview.gameObject);
             }
 
-            this.playerPreview = MonoBehaviour.Instantiate(Storage.SelectedPlayerPrefab, this.playerPreviewPosition);
+            this.playerPreview = MonoBehaviour.Instantiate(Storage.SelectedPlayerPrefab, this.playerPreviewRoot);
             
             this.DisableBehaviour<PlayerDriver>(this.playerPreview);
             this.DisableBehaviour<SpriteManager>(this.playerPreview);

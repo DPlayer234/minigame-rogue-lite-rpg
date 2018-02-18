@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Menu
+﻿namespace SAE.RoguePG.Menu.MainMenu
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     ///     Manages the menus
     /// </summary>
     [DisallowMultipleComponent]
-    public class MenuManager : MonoBehaviour
+    public class MainMenuManager : MonoBehaviour
     {
         [Header("List Of Menus")]
 
@@ -24,7 +24,7 @@
 
         /// <summary> The index for the main menu </summary>
         [SerializeField]
-        private int mainMenuIndex;
+        private int titleMenuIndex;
 
         /// <summary> The index for the character creation menu </summary>
         [SerializeField]
@@ -39,16 +39,16 @@
         private int creditsScreenIndex;
 
         /// <summary>
-        ///     The global instance of the <see cref="MenuManager"/>.
+        ///     The global instance of the <see cref="MainMenuManager"/>.
         /// </summary>
-        public static MenuManager Instance { get; private set; }
+        public static MainMenuManager Instance { get; private set; }
 
         /// <summary> The index for the main menu </summary>
-        public static int MainMenuIndex
+        public static int TitleMenuIndex
         {
             get
             {
-                return MenuManager.Instance.mainMenuIndex;
+                return MainMenuManager.Instance.titleMenuIndex;
             }
         }
 
@@ -57,7 +57,7 @@
         {
             get
             {
-                return MenuManager.Instance.characterCreationMenuIndex;
+                return MainMenuManager.Instance.characterCreationMenuIndex;
             }
         }
 
@@ -66,7 +66,7 @@
         {
             get
             {
-                return MenuManager.Instance.howToPlayScreenIndex;
+                return MainMenuManager.Instance.howToPlayScreenIndex;
             }
         }
 
@@ -75,7 +75,7 @@
         {
             get
             {
-                return MenuManager.Instance.creditsScreenIndex;
+                return MainMenuManager.Instance.creditsScreenIndex;
             }
         }
 
@@ -85,41 +85,31 @@
         /// <param name="index">The index of the menu within the menu list</param>
         public static void SetMenu(int index)
         {
-            for (int i = 0; i < MenuManager.Instance.menus.Length; i++)
+            for (int i = 0; i < MainMenuManager.Instance.menus.Length; i++)
             {
-                MenuManager.Instance.menus[i].SetActive(i == index);
+                MainMenuManager.Instance.menus[i].SetActive(i == index);
             }
         }
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="MenuManager"/> whether it is or is not active.
+        ///     Called by Unity to initialize the <seealso cref="MainMenuManager"/> whether it is or is not active.
         /// </summary>
         private void Awake()
         {
-            if (MenuManager.Instance != null)
+            if (MainMenuManager.Instance != null)
             {
-                Debug.LogWarning("There was an additional active MenuManager. The new instance was destroyed.");
+                Debug.LogWarning("There was an additional active MainMenuManager. The new instance was destroyed.");
                 MonoBehaviour.Destroy(this);
                 return;
             }
 
-            MenuManager.Instance = this;
+            MainMenuManager.Instance = this;
 
-            this.ValidateSetup();
-
-            MenuManager.SetMenu(this.firstOpenedMenuIndex);
+            MainMenuManager.SetMenu(this.firstOpenedMenuIndex);
 
 #if UNITY_EDITOR
             // Debug code... or something goes here
 #endif
-        }
-
-        /// <summary>
-        ///     Validates that everything is correctly setup and throws an exception otherwise.
-        /// </summary>
-        private void ValidateSetup()
-        {
-
         }
     }
 }

@@ -16,7 +16,7 @@
         ///     The average amount of enemies per room.
         ///     Relevant for enemy level calculations
         /// </summary>
-        public const int AverageEnemyCountPerRoom = 2;
+        public const float AverageEnemyCountPerRoom = 1.4f;
 
         /// <summary> Tag used by Player Spawn Points </summary>
         private const string PlayerSpawnPointTag = "PlayerSpawnPoint";
@@ -38,19 +38,27 @@
 
         /// <summary>
         ///     What level are enemies supposed to be?
+        /// </summary>
+        private int enemyLevelBase = -1;
+
+        /// <summary>
+        ///     What level are enemies supposed to be?
         ///     Slight variation.
         /// </summary>
         private int EntityLevel
         {
             get
             {
-                int entityLevel = Mathf.RoundToInt(
-                    VariousCommon.SumFuncRange(
-                        DungeonGenerator.GetTotalFloorSize,
-                        1,
-                        this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom + Random.Range(-1, 2));
+                if (this.enemyLevelBase < 0)
+                {
+                    this.enemyLevelBase = Mathf.RoundToInt(
+                        VariousCommon.SumFuncRange(
+                            DungeonGenerator.GetTotalFloorSize,
+                            1,
+                            this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom);
+                }
 
-                return Mathf.Max(1, entityLevel);
+                return Mathf.Max(1, this.enemyLevelBase + Random.Range(-1, 2));
             }
         }
 
@@ -65,7 +73,7 @@
 
             if (playerSpawnPoints.Length == 0)
             {
-                throw new Exceptions.DungeonGeneratorException("There is no player spawn point!");
+                throw new RPGException(RPGException.Cause.DungeonNoPlayerSpawnPoint);
             }
             else if (playerSpawnPoints.Length > 1)
             {

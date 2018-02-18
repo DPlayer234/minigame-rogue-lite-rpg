@@ -61,15 +61,15 @@
         {
             this.DestroyRecruitmentUI();
 
-            this.recruitUI = MonoBehaviour.Instantiate(MainManager.GenericPanelPrefab, MainManager.WorldCanvas.transform);
+            this.recruitUI = MonoBehaviour.Instantiate(GenericPrefab.Panel, MainManager.WorldCanvas.transform);
 
-            Button recruitButton = MonoBehaviour.Instantiate(MainManager.GenericButtonPrefab, this.recruitUI.transform);
+            ButtonController recruitButton = MonoBehaviour.Instantiate(GenericPrefab.WorldButton, this.recruitUI.transform);
 
             recruitButton.SetText("Recruit");
 
             recruitButton.SetupButtonController(this.transform, RecruitablePlayer.ButtonHeight);
 
-            recruitButton.onClick.AddListener(this.Recruit);
+            recruitButton.OnClick.AddListener(this.Recruit);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@
             {
                 Debug.Log("Cannot recruit as the party is already full.");
 
-                Text3DController floatingText = MonoBehaviour.Instantiate(MainManager.Generic3DTextPrefab);
+                Text3DController floatingText = MonoBehaviour.Instantiate(GenericPrefab.Text3D);
                 floatingText.Text = "Cannot recruit.\nYour Party is full!";
                 floatingText.transform.position = this.transform.position + new Vector3(0.0f, TextHeight, 0.0f);
                 return;

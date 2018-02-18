@@ -14,6 +14,11 @@
     /// </summary>
     public abstract partial class BaseBattleDriver
     {
+        // Integer overflow for health HIGHLY unlikely until floor ~8,700.
+        // It's safe to assume, that this is never going to happen.
+        // If it does, enjoy negative BOSS HP.
+        // Negative regular HP shouldn't occur until floor ~27,000.
+
         /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
         public const float MaximumAttackPoints = 10.0f;
 
@@ -111,7 +116,7 @@
                 case Stat.TurnSpeed:
                     return this.TurnSpeed;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot get stat" + stat.ToString());
+                    throw new RPGException(RPGException.Cause.StatInvalid);
             }
         }
 
@@ -134,7 +139,7 @@
                 case Stat.TurnSpeed:
                     return this.TurnSpeed = value;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot set stat" + stat.ToString());
+                    throw new RPGException(RPGException.Cause.StatInvalid);
             }
         }
 
@@ -158,7 +163,7 @@
                 case Stat.TurnSpeed:
                     return this.speedBase;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot get base stat" + stat.ToString());
+                    throw new RPGException(RPGException.Cause.StatInvalid);
             }
         }
 
@@ -183,7 +188,7 @@
                 case Stat.TurnSpeed:
                     return this.speedBase = value;
                 default:
-                    throw new Exceptions.EntityDriverException("Cannot set base stat" + stat.ToString());
+                    throw new RPGException(RPGException.Cause.StatInvalid);
             }
         }
 

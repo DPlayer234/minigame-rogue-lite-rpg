@@ -46,7 +46,9 @@
 
             Rigidbody rigidbody = this.User.GetComponent<Rigidbody>();
 
-            Vector3 lookAt = (target.transform.position - this.User.transform.position) * this.velocityMultiplier;
+            Vector3 lookAt = (target.transform.position - this.User.transform.position);
+            lookAt.Normalize();
+            lookAt *= this.velocityMultiplier;
 
             rigidbody.velocity = lookAt + new Vector3(0.0f, this.yVelocity, 0.0f);
 

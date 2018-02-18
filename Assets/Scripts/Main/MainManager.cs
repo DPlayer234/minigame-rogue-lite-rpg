@@ -22,29 +22,9 @@
         [Tooltip("Do not set this. It is easier to debug with something in the editor.")]
         public List<PlayerDriver> playerPartyDebug;
 
-        /// <summary> Prefab for player health bars </summary>
-        public GameObject statusDisplayPrefab;
-
-        /// <summary> Prefab for an empty panel </summary>
-        public GameObject genericPanelPrefab;
-
-        /// <summary> Prefab for buttons </summary>
-        public Button genericButtonPrefab;
-
-        /// <summary> Prefab for 3D Text </summary>
-        public Text3DController generic3DTextPrefab;
-
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
         [SerializeField]
         private Camera mainCamera;
-
-        /// <summary> The parent object for the exploration HUD. </summary>
-        [SerializeField]
-        private GameObject exploreHud;
-
-        /// <summary> The parent object for the battle HUD. </summary>
-        [SerializeField]
-        private GameObject battleHud;
 
         /// <summary> The canvas that is in world space. </summary>
         [SerializeField]
@@ -61,34 +41,9 @@
         public static CameraController CameraController { get; private set; }
 
         /// <summary>
-        ///     The parent object for the exploration HUD.
-        /// </summary>
-        public static GameObject ExploreHud { get { return MainManager.Instance.exploreHud; } }
-
-        /// <summary>
-        ///     The parent object for the battle HUD.
-        /// </summary>
-        public static GameObject BattleHud { get { return MainManager.Instance.battleHud; } }
-
-        /// <summary>
         ///     The canvas that is in world space.
         /// </summary>
         public static Canvas WorldCanvas { get { return MainManager.Instance.worldCanvas; } }
-
-        /// <summary>
-        ///     Prefab for any UI panel.
-        /// </summary>
-        public static GameObject GenericPanelPrefab { get { return MainManager.Instance.genericPanelPrefab; } }
-
-        /// <summary>
-        ///     Prefab for buttons.
-        /// </summary>
-        public static Button GenericButtonPrefab { get { return MainManager.Instance.genericButtonPrefab; } }
-
-        /// <summary>
-        ///     Prefab for 3D Text.
-        /// </summary>
-        public static Text3DController Generic3DTextPrefab { get { return MainManager.Instance.generic3DTextPrefab; } }
 
         /// <summary>
         ///     Spawns an entity based on a prefab with a bonus
@@ -148,9 +103,6 @@
 
             MainManager.CameraController = this.mainCamera.GetComponent<CameraController>();
 
-            MainManager.ExploreHud.SetActive(true);
-            MainManager.BattleHud.SetActive(false);
-
             PlayerDriver.CreateNewParty();
 
 #if UNITY_EDITOR
@@ -163,9 +115,7 @@
         /// </summary>
         private void ValidateSetup()
         {
-            if (this.mainCamera == null) throw new Exceptions.MainManagerException("There is no MainCamera set!");
-            if (MainManager.ExploreHud == null) throw new Exceptions.MainManagerException("There is no ExploreHud set!");
-            if (MainManager.BattleHud == null) throw new Exceptions.MainManagerException("There is no BattleHud set!");
+            if (this.mainCamera == null) throw new RPGException(RPGException.Cause.MainManagerNoCamera);
 
             if (this.mainCamera.GetComponent<CameraController>() == null)
             {

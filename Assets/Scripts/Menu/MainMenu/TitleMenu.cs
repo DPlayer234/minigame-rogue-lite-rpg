@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Menu
+﻿namespace SAE.RoguePG.Menu.MainMenu
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -7,14 +7,14 @@
     /// <summary>
     ///     Any functions used within the main menu.
     /// </summary>
-    public class MainMenu : AnyMenu
+    public class TitleMenu : AnyMainMenu
     {
         /// <summary>
         ///     Switches to the character creation menu.
         /// </summary>
         public void GoToCharacterCreation()
         {
-            MenuManager.SetMenu(MenuManager.CharacterCreationMenuIndex);
+            MainMenuManager.SetMenu(MainMenuManager.CharacterCreationMenuIndex);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@
         /// </summary>
         public void GoToHowToPlay()
         {
-            MenuManager.SetMenu(MenuManager.HowToPlayScreenIndex);
+            MainMenuManager.SetMenu(MainMenuManager.HowToPlayScreenIndex);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
         /// </summary>
         public void GoToCredits()
         {
-            MenuManager.SetMenu(MenuManager.CreditsScreenIndex);
+            MainMenuManager.SetMenu(MainMenuManager.CreditsScreenIndex);
         }
 
         /// <summary>

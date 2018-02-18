@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1836287730185326}
   m_IsPrefabParent: 1
+--- !u!1 &1005523360962602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4378394287529196}
+  - component: {fileID: 114364388977001506}
+  m_Layer: 0
+  m_Name: GenericPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1176531621940502
 GameObject:
   m_ObjectHideFlags: 1
@@ -52,7 +68,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4602083647789128}
   - component: {fileID: 114189667555850322}
-  - component: {fileID: 114862857760589262}
   - component: {fileID: 114863674862582132}
   m_Layer: 0
   m_Name: MainManager
@@ -74,6 +89,19 @@ Transform:
   m_Father: {fileID: 4814765864297316}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -45, y: -135, z: 0}
+--- !u!4 &4378394287529196
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1005523360962602}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4602083647789128}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4602083647789128
 Transform:
   m_ObjectHideFlags: 1
@@ -85,6 +113,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4814765864297316}
+  - {fileID: 4378394287529196}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -186,31 +215,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPartyDebug: []
-  statusDisplayPrefab: {fileID: 1643258868717906, guid: d9c1f15b947b4c348afe2a25c118bfdf,
-    type: 2}
-  genericPanelPrefab: {fileID: 1946340372102298, guid: 7fd1ac204dd03534296d59d2ab0e1f3d,
-    type: 2}
-  genericButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
-    type: 2}
-  generic3DTextPrefab: {fileID: 114570685099983448, guid: fa3f6f80a066ac841afa54318d20db63,
-    type: 2}
   mainCamera: {fileID: 0}
-  exploreHud: {fileID: 0}
-  battleHud: {fileID: 0}
   worldCanvas: {fileID: 0}
---- !u!114 &114862857760589262
+--- !u!114 &114364388977001506
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1836287730185326}
+  m_GameObject: {fileID: 1005523360962602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 475c40e50fe4f1f48843dbcc4352b5cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 20b07416d721d544fa5fcedec49070f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPlayerPrefab: {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac,
+  statusDisplay: {fileID: 1643258868717906, guid: d9c1f15b947b4c348afe2a25c118bfdf,
     type: 2}
+  panel: {fileID: 1946340372102298, guid: 7fd1ac204dd03534296d59d2ab0e1f3d, type: 2}
+  button: {fileID: 114923387856055884, guid: 4920f6b598ed3504fa66bea125bfa0cf, type: 2}
+  worldButton: {fileID: 114931120194120456, guid: a9f53fe91e910de429ed6f0c03b2748c,
+    type: 2}
+  text: {fileID: 114145989067190004, guid: 0bbb97486525d0c4f9a5472ffb4404d6, type: 2}
+  text3D: {fileID: 114570685099983448, guid: fa3f6f80a066ac841afa54318d20db63, type: 2}
 --- !u!114 &114863674862582132
 MonoBehaviour:
   m_ObjectHideFlags: 1

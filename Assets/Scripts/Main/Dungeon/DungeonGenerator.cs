@@ -62,16 +62,6 @@
         private List<Behaviour> limitedRangeBehaviours;
 
         /// <summary>
-        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
-        /// </summary>
-        /// <param name="floorNumber">The floor number</param>
-        /// <returns>The floor size</returns>
-        private static int GetTotalFloorSize(int floorNumber)
-        {
-            return Mathf.CeilToInt(floorNumber * 2 + 4);
-        }
-
-        /// <summary>
         ///     Called by Unity to initialize the <seealso cref="DungeonGenerator"/>
         /// </summary>
         private void Start()

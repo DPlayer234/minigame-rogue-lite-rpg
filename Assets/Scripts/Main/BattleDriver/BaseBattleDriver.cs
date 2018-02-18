@@ -191,7 +191,7 @@
 
             this.AttackPoints = BaseBattleDriver.MaximumAttackPoints;
 
-            this.statusDisplay = MonoBehaviour.Instantiate(MainManager.Instance.statusDisplayPrefab, this.spriteManager.rootTransform);
+            this.statusDisplay = MonoBehaviour.Instantiate(GenericPrefab.StatusDisplay, this.spriteManager.rootTransform);
             this.statusDisplay.transform.localPosition = new Vector3(0.0f, this.statusDisplayHeight, 0.0f);
 
             this.waitingOnAnimationCount = 0;

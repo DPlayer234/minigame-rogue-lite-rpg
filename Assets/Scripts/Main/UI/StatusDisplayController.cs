@@ -103,13 +103,12 @@
         /// </summary>
         private void Validate()
         {
-            if (this.label == null) throw new Exceptions.StatusDisplayException("The StatusDisplay is missing a label!");
-            if (this.healthBar == null) throw new Exceptions.StatusDisplayException("The StatusDisplay is missing a health bar!");
-            if (this.healthLabel == null) throw new Exceptions.StatusDisplayException("The StatusDisplay is missing a health bar label!");
-            if (this.apBar == null) throw new Exceptions.StatusDisplayException("The StatusDisplay is missing an AP bar!");
-            if (this.apLabel == null) throw new Exceptions.StatusDisplayException("The StatusDisplay is missing an AP label!");
+            if (this.label == null || this.healthBar == null || this.healthLabel == null || this.apBar == null || this.apLabel == null)
+            {
+                throw new RPGException(RPGException.Cause.StatusDisplayMissingComponent);
+            }
 
-            if (this.battleDriver == null) throw new Exceptions.StatusDisplayException("The StatusDisplay has no assigned BattleDriver!");
+            if (this.battleDriver == null) throw new RPGException(RPGException.Cause.StatusDisplayNoBattleDriver);
         }
 
         /// <summary>

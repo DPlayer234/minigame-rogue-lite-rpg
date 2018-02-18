@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 102240457946352800}
   - component: {fileID: 114570685099983448}
   m_Layer: 0
-  m_Name: Generic3DText
+  m_Name: Text3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

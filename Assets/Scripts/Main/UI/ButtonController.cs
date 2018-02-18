@@ -29,6 +29,40 @@
         private const float CloserBy = 0.25f;
 
         /// <summary>
+        ///     Unity event that is triggered when the button is clicked
+        /// </summary>
+        public Button.ButtonClickedEvent OnClick
+        {
+            get
+            {
+                return this.GetComponent<Button>().onClick;
+            }
+        }
+
+        /// <summary>
+        ///     Sets the text on a button
+        /// </summary>
+        /// <param name="text">The text</param>
+        public void SetText(string text)
+        {
+            this.GetComponentInChildren<Text>().text = text;
+        }
+
+        /// <summary>
+        ///     Sets up (or assigns) a <seealso cref="ButtonController"/> to the button.
+        /// </summary>
+        /// <param name="targetTransform">The target transform to move relative to</param>
+        /// <param name="height">The relative height</param>
+        public void SetupButtonController(Transform targetTransform, float height)
+        {
+            this.reference = targetTransform;
+            this.positionOffset = new Vector3(
+                0.0f,
+                height,
+                0.0f);
+        }
+
+        /// <summary>
         ///     Called by Unity every fixed update to update the <seealso cref="ButtonController"/>
         /// </summary>
         private void FixedUpdate()

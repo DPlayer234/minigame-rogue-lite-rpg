@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224955079828407160}
   - component: {fileID: 222644642770236894}
   m_Layer: 5
-  m_Name: GenericPanel
+  m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

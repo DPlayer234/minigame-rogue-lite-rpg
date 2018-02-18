@@ -94,14 +94,24 @@
         }
 
         /// <summary>
+        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
+        /// </summary>
+        /// <param name="floorNumber">The floor number</param>
+        /// <returns>The floor size</returns>
+        public static int GetTotalFloorSize(int floorNumber)
+        {
+            return Mathf.CeilToInt(floorNumber * 2 + 4);
+        }
+
+        /// <summary>
         ///     Defines the floor layout
         /// </summary>
         private void DefineLayout()
         {
             this.floorLayout = new Dictionary<Vector2Int, RoomType>();
 
-            Vector2Int coordinate = new Vector2Int(0, 0);
-            this.floorLayout[coordinate] = RoomType.Start;
+            Vector2Int coordinate = Vector2Int.zero;
+            this.floorLayout[Vector2Int.zero] = RoomType.Start;
 
             // Common Rooms
             for (int i = 0; i < this.TotalFloorSize; i++)
@@ -118,7 +128,7 @@
 
                 this.floorLayout[coordinate] = RoomType.Common;
             }
-
+            
             this.DefineSpecialRoomLayout();
         }
 
@@ -174,6 +184,8 @@
         /// <returns>Whether the given position is valid for a special room</returns>
         private bool IsValidSpecialRoomLocation(Vector2Int position)
         {
+            if (this.floorLayout.ContainsKey(position)) return false;
+
             int adjacent = 0;
 
             foreach (Vector2Int offset in DungeonGenerator.roomOffsets)
@@ -196,9 +208,12 @@
             this.typeToPrefabs[RoomType.Boss] = this.parts.bossRooms;
             this.typeToPrefabs[RoomType.Treasure] = this.parts.treasureRooms;
 
+            int index = 0;
             foreach (KeyValuePair<Vector2Int, RoomType> roomData in this.floorLayout)
             {
-                this.SpawnRoom(roomData.Key, roomData.Value);
+                GameObject room = this.SpawnRoom(roomData.Key, roomData.Value);
+
+                room.name = room.name + "#" + index++;
             }
         }
 
@@ -207,7 +222,7 @@
         /// </summary>
         /// <param name="position">The position of the room on the grid</param>
         /// <param name="roomType">The type of the room</param>
-        private void SpawnRoom(Vector2Int position, RoomType roomType)
+        private GameObject SpawnRoom(Vector2Int position, RoomType roomType)
         {
             GameObject newRoom = MonoBehaviour.Instantiate(this.typeToPrefabs[roomType].GetRandomItem(), this.roomParent);
 
@@ -229,6 +244,8 @@
             }
 
             this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+
+            return newRoom;
         }
 
         /// <summary>

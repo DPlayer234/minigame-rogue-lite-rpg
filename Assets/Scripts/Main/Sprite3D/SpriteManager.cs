@@ -121,7 +121,7 @@
                 }
             }
 
-            if (this.rootTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Root/Hierarchy.");
+            if (this.rootTransform == null) throw new RPGException(RPGException.Cause.SpriteNoRootHierarchy);
 
             // Finding Sprite Body
             for (int i = 0; i < this.rootTransform.childCount; i++)
@@ -134,8 +134,8 @@
                 }
             }
 
-            if (this.bodyTransform == null) throw new Exceptions.SpriteManagerException("This GameObject is lacking a Sprite Body.");
-            
+            if (this.bodyTransform == null) throw new RPGException(RPGException.Cause.SpriteNoBody);
+
             this.animatedTransforms = this.bodyTransform.GetComponentsInChildren<Transform>();
         }
 

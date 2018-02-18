@@ -71,7 +71,7 @@
         /// <param name="leaderEnemy">The leading enemy</param>
         public static void StartBattleMode(PlayerBattleDriver leaderPlayer, EnemyBattleDriver leaderEnemy)
         {
-            if (MainManager.Instance == null) throw new Exceptions.MainManagerException("Cannot start battle mode without an Instance of MainManager!");
+            if (MainManager.Instance == null) throw new RPGException(RPGException.Cause.MainManagerNoActiveInstance);
             if (BattleManager.Instance != null) return;
 
             BattleManager.Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
@@ -84,7 +84,7 @@
         /// </summary>
         public static void EndBattleMode()
         {
-            if (BattleManager.Instance == null) throw new Exceptions.MainManagerException("Cannot end battle mode without an Instance of MainManager!");
+            if (BattleManager.Instance == null) throw new RPGException(RPGException.Cause.BattleManagerNoActiveInstance);
 
             BattleManager.Instance.EndBattleModeInstanced();
         }
@@ -284,10 +284,6 @@
 
             BaseBattleDriver.HighestTurnSpeed = this.GetHighestTurnSpeed();
 
-            // HUD
-            MainManager.ExploreHud.SetActive(false);
-            MainManager.BattleHud.SetActive(true);
-
             foreach (BaseBattleDriver battleDriver in this.fightingEntities)
             {
                 battleDriver.OnBattleStart();
@@ -321,9 +317,6 @@
 
                 this.deactivatedGameObjects = null;
             }
-
-            MainManager.ExploreHud.SetActive(true);
-            MainManager.BattleHud.SetActive(false);
 
             MonoBehaviour.Destroy(this);
         }

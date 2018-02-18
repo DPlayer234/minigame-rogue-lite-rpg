@@ -1,21 +1,21 @@
-﻿namespace SAE.RoguePG.Menu
+﻿namespace SAE.RoguePG.Menu.MainMenu
 {
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
     /// <summary>
-    ///     Base class for any menu.
+    ///     Base class for any main menu section.
     /// </summary>
     [DisallowMultipleComponent]
-    public class AnyMenu : MonoBehaviour
+    public class AnyMainMenu : MonoBehaviour
     {
         /// <summary>
         ///     Changes to the main menu
         /// </summary>
         public void GoToMainMenu()
         {
-            MenuManager.SetMenu(MenuManager.MainMenuIndex);
+            MainMenuManager.SetMenu(MainMenuManager.TitleMenuIndex);
         }
     }
 }
