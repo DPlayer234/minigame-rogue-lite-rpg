@@ -399,6 +399,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8626dce526854344498c1e0a18ebf2c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possibleBattleNames:
+  - Great Goblin
   battleName: Enemy
   statusDisplayHeight: 2
   actionClasses: 05000000
@@ -427,8 +429,6 @@ MonoBehaviour:
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
   movementSpeed: 1
-  leader: {fileID: 0}
-  following: {fileID: 0}
   targetRange: 4
   defeated: 0
 --- !u!114 &114750950273462146

@@ -414,8 +414,6 @@ MonoBehaviour:
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
   movementSpeed: 1.5
-  leader: {fileID: 0}
-  following: {fileID: 0}
 --- !u!114 &114788792400001820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -427,6 +425,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869b876af809cf042b916fcae23cd81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possibleBattleNames:
+  - Ezio
+  - Monty
+  - Belladonna
+  - Zero
   battleName: Player
   statusDisplayHeight: 1.3
   actionClasses: 050000000600000002000000
@@ -439,8 +442,6 @@ MonoBehaviour:
   magicalBase: 14
   defenseBase: 7
   speedBase: 15
-  actionButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
-    type: 2}
 --- !u!114 &114986919625710496
 MonoBehaviour:
   m_ObjectHideFlags: 1

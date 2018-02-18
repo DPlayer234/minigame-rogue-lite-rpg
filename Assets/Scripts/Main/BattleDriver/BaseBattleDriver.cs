@@ -23,6 +23,9 @@
         /// <summary> The multiplier for the base stat when it gets a bonus </summary>
         public const float BonusStatMultiplier = 1.15f;
 
+        /// <summary> An array of possible battle names. </summary>
+        public string[] possibleBattleNames;
+
         /// <summary> The name displayed in battle </summary>
         public string battleName;
 
@@ -286,6 +289,8 @@
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
             this.entityDriver = this.GetComponent<BaseDriver>();
+
+            this.battleName = this.possibleBattleNames != null ? this.possibleBattleNames.GetRandomItem() : this.battleName;
         }
         
         /// <summary>

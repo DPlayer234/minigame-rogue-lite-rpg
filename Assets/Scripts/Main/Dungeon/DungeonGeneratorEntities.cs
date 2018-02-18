@@ -38,19 +38,19 @@
 
         /// <summary>
         ///     What level are enemies supposed to be?
-        ///     Slightly variation.
+        ///     Slight variation.
         /// </summary>
-        private int EnemyLevel
+        private int EntityLevel
         {
             get
             {
-                int enemyLevel = Mathf.RoundToInt(
+                int entityLevel = Mathf.RoundToInt(
                     VariousCommon.SumFuncRange(
                         DungeonGenerator.GetTotalFloorSize,
                         1,
                         this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom + Random.Range(-1, 2));
 
-                return Mathf.Max(1, enemyLevel);
+                return Mathf.Max(1, entityLevel);
             }
         }
 
@@ -89,10 +89,17 @@
                 PlayerDriver.Party.Add(player);
             }
 
+            // Move the players
             foreach (PlayerDriver player in PlayerDriver.Party)
             {
-                player.transform.position = playerSpawnPoint.transform.position;
+                player.transform.position = playerSpawnPoint.transform.position + new Vector3(
+                    Random.value * 2.0f - 1.0f,
+                    0.0f,
+                    Random.value * 2.0f - 1.0f);
             }
+
+            // Move the camera
+            MainManager.CameraController.transform.position = playerSpawnPoint.transform.position;
 
             MonoBehaviour.Destroy(playerSpawnPoint);
         }
@@ -114,6 +121,8 @@
 
                 recruit.transform.parent = this.entityParent;
                 recruit.transform.position = recruitSpawnPoint.transform.position;
+
+                recruit.battleDriver.Level = this.EntityLevel;
 
                 recruit.name = string.Format("Recruit #{0}", recruitIndex);
 
@@ -166,7 +175,7 @@
             EnemyDriver newEnemy = MonoBehaviour.Instantiate(this.enemyPrefabs.GetRandomItem(), this.entityParent);
             newEnemy.transform.position = position;
 
-            newEnemy.battleDriver.Level = this.EnemyLevel;
+            newEnemy.battleDriver.Level = this.EntityLevel;
             
             newEnemy.SetLeaderAndFollowing(leaderEnemy, followEnemy);
 
@@ -188,7 +197,7 @@
             EnemyDriver boss = MonoBehaviour.Instantiate(this.bossPrefabs.GetRandomItem(), this.entityParent);
             boss.transform.position = bossSpawnPoint.transform.position;
 
-            boss.battleDriver.Level = Mathf.FloorToInt(this.EnemyLevel * DungeonGenerator.BossLevelMultiplier);
+            boss.battleDriver.Level = Mathf.FloorToInt(this.EntityLevel * DungeonGenerator.BossLevelMultiplier);
 
             this.limitedRangeObjects.Add(boss.gameObject);
 
