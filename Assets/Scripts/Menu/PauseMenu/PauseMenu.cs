@@ -49,6 +49,8 @@
         /// </summary>
         public void CreateMenu()
         {
+            this.updatedCount = PlayerDriver.Party.Count;
+
             // Remove old menu
             if (this.partyMemberDisplays != null)
             {
@@ -69,7 +71,9 @@
 
             foreach (PlayerDriver player in PlayerDriver.Party)
             {
-                var partyMemberDisplay = MonoBehaviour.Instantiate(this.partyMemberDisplayPrefab, this.pauseMenu.transform);
+                if (player == null) continue;
+
+                PartyMemberDisplay partyMemberDisplay = MonoBehaviour.Instantiate(this.partyMemberDisplayPrefab, this.pauseMenu.transform);
 
                 partyMemberDisplay.battleDriver = player.battleDriver;
                 partyMemberDisplay.pauseMenu = this;
@@ -81,8 +85,6 @@
                 this.partyMemberDisplays[index++] = partyMemberDisplay;
                 height -= PartyMemberDisplay.Height;
             }
-
-            this.updatedCount = PlayerDriver.Party.Count;
         }
 
         /// <summary>

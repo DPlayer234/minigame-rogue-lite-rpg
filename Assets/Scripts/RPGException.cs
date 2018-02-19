@@ -3,6 +3,10 @@
     using System;
     using System.Collections.Generic;
 
+    // I'm fully aware that this is not the most elegant solution.
+    // Or the best I could come up with.
+    // Honestly, I just wanted everything to be in one file.
+    // (Also, nobody looks at the exception type; the message matters much more.)
     /// <summary>
     ///     An exception in relation to the project.
     /// </summary>
@@ -59,6 +63,8 @@
                 { Cause.MainManagerNoCamera, "There is no Main Camera set!" },
                 { Cause.MainManagerNoActiveInstance, "There is no active MainManager instance!" },
                 { Cause.BattleManagerNoActiveInstance, "There is no active BattleManager instance!" },
+                { Cause.BattleManagerCantStartInitialized, "You cannot start a battle on an initialized instance!" },
+                { Cause.BattleManagerCantEndUninitialized, "You cannot stop a battle when there has not even been initialized one!" },
 
                 { Cause.MiniMapNoInstance, "There is no MiniMap instance!" },
 
@@ -96,6 +102,8 @@
             MainManagerNoCamera,
             MainManagerNoActiveInstance,
             BattleManagerNoActiveInstance,
+            BattleManagerCantStartInitialized,
+            BattleManagerCantEndUninitialized,
 
             MiniMapNoInstance,
 

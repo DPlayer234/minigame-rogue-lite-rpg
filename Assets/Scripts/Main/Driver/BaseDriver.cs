@@ -205,21 +205,5 @@
                 }
             }
         }
-
-        /// <summary>
-        ///     Removes this <seealso cref="BaseDriver"/> and the <seealso cref="BaseBattleDriver"/> also attached to this GameObject
-        ///     and adds a new component of type <typeparamref name="T"/>
-        /// </summary>
-        /// <typeparam name="T">The new type of component to add</typeparam>
-        /// <returns>The new component</returns>
-        private T Replace<T>() where T : Component
-        {
-            MonoBehaviour.Destroy(this);
-
-            BaseBattleDriver battleDriver = this.GetComponent<BaseBattleDriver>();
-            if (battleDriver != null) MonoBehaviour.Destroy(battleDriver);
-
-            return this.gameObject.AddComponent<T>();
-        }
     }
 }

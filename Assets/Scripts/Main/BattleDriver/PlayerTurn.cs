@@ -149,12 +149,12 @@
                 {
                     this.DestroyTargetButtons();
 
-                    action.Use(targetChoice);
-
                     foreach (Button actionButton in this.actionButtons)
                     {
                         actionButton.interactable = true;
                     }
+
+                    action.Use(targetChoice);
                 });
 
                 this.targetButtons[choiceIndex] = targetButton;

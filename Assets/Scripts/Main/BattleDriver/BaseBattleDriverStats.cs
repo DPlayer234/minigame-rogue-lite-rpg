@@ -93,7 +93,10 @@
         /// </summary>
         public float AttackPoints { get; set; }
 
-        /// <summary> The highest turn speed in the current battle </summary>
+        /// <summary>
+        ///     The highest turn speed in the current battle.
+        ///     Set during battle initialization.
+        /// </summary>
         public static float HighestTurnSpeed { get; set; }
 
         /// <summary>

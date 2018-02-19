@@ -53,7 +53,7 @@
         }
 
         /// <summary>
-        ///     Deduplicates battle names by suffixing #Number
+        ///     Sets the name index where needed
         /// </summary>
         public void DeduplicateBattleNamesInAllies()
         {
@@ -85,7 +85,7 @@
                         namesYet.Add(ally.battleName, 0);
                     }
 
-                    ally.battleName = ally.battleName + " #" + (++namesYet[ally.battleName]);
+                    ally.battleNameIndex = ++namesYet[ally.battleName];
                 }
             }
         }

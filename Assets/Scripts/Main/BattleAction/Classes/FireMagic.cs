@@ -36,6 +36,8 @@
         /// <param name="target">The target battle driver</param>
         protected override void Use(BaseBattleDriver target)
         {
+            this.DealDamage(target);
+
             new FireDebuff().Apply(target);
         }
 

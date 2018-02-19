@@ -133,6 +133,13 @@
 
             foreach (BaseBattleDriver target in targets)
             {
+                // Highlight the target
+                if (!target.TakingTurn)
+                {
+                    target.HighlightAsTarget();
+                }
+
+                // Actually apply action
                 this.Use(target);
             }
         }
@@ -228,7 +235,7 @@
                 case ActionTargetOption.Anyone:
                 case ActionTargetOption.OneAlly:
                 case ActionTargetOption.OneOpponent:
-                    return targetChoice[0].battleName;
+                    return targetChoice[0].BattleName;
 
                 case ActionTargetOption.Everybody:
                     return BattleAction.EverybodyLabel;

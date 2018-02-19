@@ -53,10 +53,11 @@
         {
             if (this.battleDriver == null || this.pauseMenu == null) throw new RPGException(RPGException.Cause.MenuMissingComponent);
 
-            this.memberName.text = this.battleDriver.battleName;
+            this.memberName.text = this.battleDriver.BattleName;
 
             PlayerDriver player = this.battleDriver.entityDriver as PlayerDriver;
 
+            // Dismiss Button
             if (PlayerDriver.Party.Count > 1)
             {
                 this.dismissalButton.onClick.AddListener(delegate
@@ -70,9 +71,10 @@
             {
                 this.dismissalButton.interactable = false;
             }
-
+            
             int partyIndex = PlayerDriver.Party.IndexOf(player);
 
+            // Move up button
             if (partyIndex > 0)
             {
                 this.moveUpButton.onClick.AddListener(delegate
@@ -87,6 +89,7 @@
                 this.moveUpButton.interactable = false;
             }
 
+            // Move down button
             if (partyIndex < PlayerDriver.Party.Count - 1)
             {
                 this.moveDownButton.onClick.AddListener(delegate
@@ -100,6 +103,9 @@
             {
                 this.moveDownButton.interactable = false;
             }
+
+            // Statistics
+            // TODO
         }
 
         /// <summary>

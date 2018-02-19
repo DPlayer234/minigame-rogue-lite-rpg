@@ -25,11 +25,11 @@
         /// <summary> The multiplier for the base stat when it gets a bonus </summary>
         public const float BonusStatMultiplier = 1.15f;
 
+        /// <summary> The duration for targetting highlights in seconds </summary>
+        public const float TargetHighlightDuration = 0.5f;
+
         /// <summary> An array of possible battle names. </summary>
         public string[] possibleBattleNames;
-
-        /// <summary> The name displayed in battle </summary>
-        public string battleName;
 
         /// <summary> An array of the used <seealso cref="BattleAction.ActionClass"/>es </summary>
         public BattleAction.ActionClass[] actionClasses;
@@ -59,6 +59,16 @@
         /// <summary> Whether it's this thing's turn </summary>
         private bool takingTurn;
 
+        /// <summary> The name displayed in battle </summary>
+        [SerializeField]
+        private string battleName = "Fighter";
+
+        /// <summary> The name is the #th occurence within its allies </summary>
+        private int battleNameIndex = 0;
+
+        /// <summary> The buffer for the displayed battle name. </summary>
+        private string battleNameBuffer;
+
         /// <summary> Current level; use the property <seealso cref="Level"/> instead </summary>
         [SerializeField]
         private int level = 1;
@@ -71,6 +81,20 @@
         /// </summary>
         /// <returns>Whether to remove the action</returns>
         public delegate bool TurnAction();
+
+        /// <summary> The name displayed in battle </summary>
+        public string BattleName
+        {
+            get
+            {
+                if (this.battleNameIndex < 1)
+                {
+                    return this.battleName;
+                }
+                
+                return this.battleNameBuffer ?? (this.battleNameBuffer = this.battleName + " #" + this.battleNameIndex);
+            }
+        }
 
         /// <summary> A list of actions to be called when a turn starts </summary>
         public List<TurnAction> StartTurnActions { get; private set; }
@@ -169,7 +193,7 @@
             this.RegenerateActions();
             this.RecalculateStats();
 
-            this.AttackPoints = BaseBattleDriver.MaximumAttackPoints;
+            this.AttackPoints = 0.0f;
 
             this.waitingOnAnimationCount = 0;
 
@@ -196,6 +220,8 @@
 
             ++this.TurnNumber;
 
+            this.EnableTurnHighlight();
+
             // Handle turn actions
             for (int i = this.StartTurnActions.Count - 1; i >= 0; i--)
             {
@@ -212,6 +238,8 @@
         public virtual void EndTurn()
         {
             this.LogThisAndFormat("End Turn!");
+
+            this.DisableTurnHighlight();
 
             // Handle turn actions
             for (int i = this.EndTurnActions.Count - 1; i >= 0; i--)
@@ -254,6 +282,14 @@
         }
 
         /// <summary>
+        ///     Highlights this driver as a target
+        /// </summary>
+        public void HighlightAsTarget()
+        {
+            this.highlight.Enable(Highlighter.TargetColor, BaseBattleDriver.TargetHighlightDuration);
+        }
+
+        /// <summary>
         ///     Called by Unity when the Behaviour is enabled
         /// </summary>
         protected virtual void OnEnable()
@@ -278,6 +314,25 @@
             this.highlight = this.GetComponent<Highlighter>();
 
             this.battleName = this.possibleBattleNames != null ? this.possibleBattleNames.GetRandomItem() : this.battleName;
+        }
+
+        /// <summary>
+        ///     Enables the highlight for taking a turn
+        /// </summary>
+        private void EnableTurnHighlight()
+        {
+            this.highlight.Enable(Highlighter.ActiveColor);
+        }
+
+        /// <summary>
+        ///     Disables the highlight for having a turn
+        /// </summary>
+        private void DisableTurnHighlight()
+        {
+            if (this.highlight.Color == Highlighter.ActiveColor)
+            {
+                this.highlight.Disable();
+            }
         }
     }
 }

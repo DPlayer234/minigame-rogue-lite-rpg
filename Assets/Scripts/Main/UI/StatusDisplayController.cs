@@ -134,7 +134,7 @@
         {
             if (this.battleDriver != null)
             {
-                this.label.text = string.Format("{0} Lv. {1}", this.battleDriver.battleName, this.battleDriver.Level);
+                this.label.text = string.Format("{0} Lv. {1}", this.battleDriver.BattleName, this.battleDriver.Level);
 
                 this.UpdateBar(this.healthBar, this.healthLabel, this.battleDriver.CurrentHealth, this.battleDriver.MaximumHealth);
                 this.UpdateBar(this.apBar, this.apLabel, this.battleDriver.AttackPoints, BaseBattleDriver.MaximumAttackPoints);
