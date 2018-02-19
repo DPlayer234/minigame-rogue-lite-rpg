@@ -60,11 +60,19 @@
                 { Cause.MainManagerNoActiveInstance, "There is no active MainManager instance!" },
                 { Cause.BattleManagerNoActiveInstance, "There is no active BattleManager instance!" },
 
+                { Cause.MiniMapNoInstance, "There is no MiniMap instance!" },
+
                 { Cause.MenuNoPause, "There is no pause menu attached to the PauseMenu!" },
                 { Cause.MenuMissingComponent, "The menu does not have all required components! Please check the setup." },
 
                 { Cause.SpriteNoRootHierarchy, "This GameObject is lacking a Sprite Root/Hierarchy." },
                 { Cause.SpriteNoBody, "This GameObject is lacking a Sprite Body." },
+
+                { Cause.BattleDriverNotLeader, "This function can only be called on the leader of a party. (IsLeader)" },
+
+                { Cause.HighlightNoLight, "There is no Light for this Highlight." },
+                { Cause.HighlightOnGameObject, "The Highlight Component must be attached to a parenting GameObject." },
+                { Cause.HighlightNotFound, "There was no Highlight found." },
 
                 { Cause.StatusDisplayMissingComponent, "The StatusDisplay is missing a component! Please check the setup." },
                 { Cause.StatusDisplayNoBattleDriver, "The StatusDisplay has no assigned BattleDriver!" },
@@ -89,11 +97,19 @@
             MainManagerNoActiveInstance,
             BattleManagerNoActiveInstance,
 
+            MiniMapNoInstance,
+
             MenuNoPause,
             MenuMissingComponent,
 
             SpriteNoRootHierarchy,
             SpriteNoBody,
+
+            BattleDriverNotLeader,
+
+            HighlightNoLight,
+            HighlightOnGameObject,
+            HighlightNotFound,
 
             StatusDisplayMissingComponent,
             StatusDisplayNoBattleDriver

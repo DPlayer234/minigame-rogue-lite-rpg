@@ -1313,6 +1313,10 @@ MonoBehaviour:
   - {fileID: 114249859629316054, guid: 993cf002a82adb945af22dcabfce1681, type: 2}
   - {fileID: 114673902638022314, guid: 13a9f53de7ee22945b0fb77afa47ce3c, type: 2}
   - {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac, type: 2}
+  characterButtons:
+  - {fileID: 114953272695839586}
+  - {fileID: 114841406410736568}
+  - {fileID: 114936153406830434}
   wizardIndex: 0
   paladinIndex: 1
   assassinIndex: 2

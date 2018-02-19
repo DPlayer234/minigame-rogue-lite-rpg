@@ -17,6 +17,13 @@
         /// <summary> The prefabs used for classes </summary>
         public PlayerDriver[] characterPrefabs;
 
+        /// <summary>
+        ///     The buttons for the character selection.
+        ///     <seealso cref="characterButtons"/> and <seealso cref="characterPrefabs"/>
+        ///     indices must match.
+        /// </summary>
+        public Button[] characterButtons;
+
         /// <summary> The index of the wizard </summary>
         public int wizardIndex = 0;
 
@@ -108,6 +115,12 @@
 
             this.playerPreview.transform.localPosition = Vector3.zero;
             this.playerPreview.transform.localRotation = Quaternion.identity;
+
+            // Deactivate/Activate buttons
+            for (int i = 0; i < this.characterButtons.Length; i++)
+            {
+                this.characterButtons[i].interactable = i != classIndex;
+            }
         }
 
         /// <summary>

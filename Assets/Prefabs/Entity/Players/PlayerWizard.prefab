@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114939067441574914}
   - component: {fileID: 114249859629316054}
   - component: {fileID: 114057862401650244}
+  - component: {fileID: 114055929774071336}
   - component: {fileID: 210158704626191152}
   - component: {fileID: 114371571522408388}
   m_Layer: 8
@@ -156,11 +157,11 @@ GameObject:
   - component: {fileID: 108861001996912028}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1875124528901348
 GameObject:
   m_ObjectHideFlags: 1
@@ -387,6 +388,17 @@ MonoBehaviour:
   - {fileID: 4303642376007784}
   rootTransform: {fileID: 4740285560681618}
   bodyTransform: {fileID: 4667218599855874}
+--- !u!114 &114055929774071336
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1094456250737760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114057862401650244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -404,11 +416,11 @@ MonoBehaviour:
   - Gundolf
   - Hans
   battleName: Player
-  statusDisplayHeight: 1.3
-  actionClasses: 020000000400000003000000
+  actionClasses: 02000000040000000300000007000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 2
   healthBase: 10
   physicalBase: 6
@@ -429,7 +441,8 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  movementSpeed: 1.5
+  highlight: {fileID: 0}
+  movementSpeed: 2.5
 --- !u!114 &114371571522408388
 MonoBehaviour:
   m_ObjectHideFlags: 1

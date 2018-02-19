@@ -48,18 +48,17 @@
         public EnemyDriver[] bossPrefabs;
 
         /// <summary>
+        ///     Viable design for the dungeon
+        /// </summary>
+        public DungeonDesign[] designs;
+
+        /// <summary>
         ///     The design of the dungeon
         /// </summary>
-        public DungeonDesign design;
+        private DungeonDesign design;
 
         /// <summary> Tag used for anything to be deleted on the next floor </summary>
         private const string DeleteOnNextFloorTag = "DeleteOnNextFloor";
-
-        /// <summary> A referrence copy of <seealso cref="CameraController.LimitedRangeObjects"/> </summary>
-        private List<GameObject> limitedRangeObjects;
-
-        /// <summary> A referrence copy of <seealso cref="CameraController.LimitedRangeBehaviours"/> </summary>
-        private List<Behaviour> limitedRangeBehaviours;
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="DungeonGenerator"/>
@@ -74,9 +73,7 @@
         /// </summary>
         private void GenerateFloor()
         {
-            this.limitedRangeObjects = MainManager.CameraController.LimitedRangeObjects;
-            this.limitedRangeBehaviours = MainManager.CameraController.LimitedRangeBehaviours;
-
+            this.ResetGenerator();
             this.DeleteLastFloor();
             this.CreateParents();
 
@@ -90,6 +87,17 @@
             this.SpawnBoss();
 
             this.InitializeStatic();
+
+            MainManager.CameraController.UpdateAndRestartRangeActivityCheck();
+        }
+
+        /// <summary>
+        ///     Resets values required to regenerate the values.
+        /// </summary>
+        private void ResetGenerator()
+        {
+            this.enemyLevelBase = -1;
+            this.totalFloorSize = -1;
         }
 
         /// <summary>
@@ -116,6 +124,50 @@
 
             this.entityParent.position = Vector3.zero;
             this.roomParent.position = Vector3.zero;
+        }
+
+        /// <summary>
+        ///     Adds a behaviour to be only active in a limited range
+        /// </summary>
+        /// <param name="behaviour">The behaviour</param>
+        private void AddLimitedRange(Behaviour behaviour)
+        {
+            behaviour.enabled = false;
+            MainManager.CameraController.LimitedRangeBehaviours.Add(behaviour);
+        }
+
+        /// <summary>
+        ///     Adds a GameObject to be only active in a limited range
+        /// </summary>
+        /// <param name="gameObject">The GameObject</param>
+        private void AddLimitedRange(GameObject gameObject)
+        {
+            gameObject.SetActive(false);
+            MainManager.CameraController.LimitedRangeObjects.Add(gameObject);
+        }
+
+        /// <summary>
+        ///     Adds behaviours to be only active in a limited range
+        /// </summary>
+        /// <param name="behaviours">The behaviours</param>
+        private void AddLimitedRange(Behaviour[] behaviours)
+        {
+            foreach (Behaviour behaviour in behaviours)
+            {
+                this.AddLimitedRange(behaviour);
+            }
+        }
+
+        /// <summary>
+        ///     Adds GameObjects to be only active in a limited range
+        /// </summary>
+        /// <param name="gameObjects">The GameObjects</param>
+        private void AddLimitedRange(GameObject[] gameObjects)
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                this.AddLimitedRange(gameObject);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
     /// <summary>
     ///     Makes battles work.
     /// </summary>
+    [RequireComponent(typeof(BaseDriver))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SpriteManager))]
     [RequireComponent(typeof(SpriteAnimator))]
@@ -45,6 +46,10 @@
         [HideInInspector]
         public BaseDriver entityDriver;
 
+        /// <summary> The <seealso cref="Highlighter"/> also attached to this <seealso cref="GameObject"/> </summary>
+        [HideInInspector]
+        public Highlighter highlight;
+
         /// <summary> An array of <seealso cref="BattleAction"/>s; generated from <seealso cref="actionClasses"/> </summary>
         protected BattleAction[] actions;
 
@@ -74,36 +79,13 @@
         public List<TurnAction> EndTurnActions { get; private set; }
 
         /// <summary> All of its allies, including itself </summary>
-        public BaseBattleDriver[] Allies { get; set; }
+        public List<BaseBattleDriver> Allies { get; set; }
 
         /// <summary> All of its opponents </summary>
-        public BaseBattleDriver[] Opponents { get; set; }
+        public List<BaseBattleDriver> Opponents { get; set; }
 
-        /// <summary>
-        ///     All of its allies and opponents.
-        ///     This is potentially slow if called repeatedly as it creates a new array everytime.
-        /// </summary>
-        public BaseBattleDriver[] AlliesAndOpponents
-        {
-            get
-            {
-                var alliesAndOpponents = new BaseBattleDriver[this.Allies.Length + this.Opponents.Length];
-
-                int i = 0;
-
-                foreach (BaseBattleDriver ally in this.Allies)
-                {
-                    alliesAndOpponents[i++] = ally;
-                }
-
-                foreach (BaseBattleDriver opponent in this.Opponents)
-                {
-                    alliesAndOpponents[i++] = opponent;
-                }
-
-                return alliesAndOpponents;
-            }
-        }
+        /// <summary> All of its allies and opponents. </summary>
+        public List<BaseBattleDriver> AlliesAndOpponents { get; set; }
 
         /// <summary>
         ///     Gets whether it is waiting on any animation.
@@ -165,35 +147,6 @@
 
         /// <summary> The number of turns that this driver has already taken </summary>
         public int TurnNumber { get; protected set; }
-
-        /// <summary>
-        ///     Creates status bars for a set of battle drivers.
-        /// </summary>
-        /// <param name="battleDrivers">The battle drivers to generate them for</param>
-        /// <param name="parent">The transform to parent them to</param>
-        public static void CreateStatusBars(IList<BaseBattleDriver> battleDrivers, Transform parent)
-        {
-            int playerIndex = 0, enemyIndex = 0;
-
-            foreach (BaseBattleDriver battleDriver in battleDrivers)
-            {
-                StatusDisplayController statusDisplay = MonoBehaviour.Instantiate(
-                    battleDriver is PlayerBattleDriver ? GenericPrefab.StatusDisplayPlayer : GenericPrefab.StatusDisplayEnemy,
-                    parent);
-
-                print(battleDriver);
-                statusDisplay.battleDriver = battleDriver;
-
-                RectTransform rectTransform = statusDisplay.GetComponent<RectTransform>();
-                if (rectTransform != null)
-                {
-                    rectTransform.anchoredPosition3D = new Vector3(
-                        0.0f,
-                        -StatusDisplayController.Height * (battleDriver is PlayerBattleDriver ? playerIndex++ : enemyIndex++),
-                        0.0f);
-                }
-            }
-        }
 
         /// <summary>
         ///     Regenerates (updates) the <seealso cref="actions"/> from <seealso cref="actionClasses"/>
@@ -273,10 +226,7 @@
         /// <summary>
         ///     Updates the Entity's turn once a frame
         /// </summary>
-        public virtual void UpdateTurn()
-        {
-
-        }
+        public virtual void UpdateTurn() { }
 
         /// <summary>
         ///     Updates the Entity once a frame while nothing is taking a turn
@@ -287,39 +237,20 @@
         }
 
         /// <summary>
-        ///     Deduplicates battle names by suffixing #Number
+        ///     Leaves the party from the battle.
+        ///     The last party member will never leave.
         /// </summary>
-        public void DeduplicateBattleNamesInAllies()
+        public virtual bool LeaveParty()
         {
-            // Count every occurence
-            Dictionary<string, int> names = new Dictionary<string, int>();
-
-            foreach (BaseBattleDriver ally in this.Allies)
+            if (this.Allies.Count > 1)
             {
-                if (names.ContainsKey(ally.battleName))
-                {
-                    names[ally.battleName] += 1;
-                    continue;
-                }
+                this.Allies.Remove(this);
+                this.AlliesAndOpponents.Remove(this);
 
-                names.Add(ally.battleName, 1);
+                return true;
             }
 
-            // Add #N where needed
-            Dictionary<string, int> namesYet = new Dictionary<string, int>();
-
-            foreach (BaseBattleDriver ally in this.Allies)
-            {
-                if (names[ally.battleName] > 1)
-                {
-                    if (!namesYet.ContainsKey(ally.battleName))
-                    {
-                        namesYet.Add(ally.battleName, 0);
-                    }
-
-                    ally.battleName = ally.battleName + " #" + (++namesYet[ally.battleName]);
-                }
-            }
+            return false;
         }
 
         /// <summary>
@@ -344,6 +275,7 @@
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
             this.entityDriver = this.GetComponent<BaseDriver>();
+            this.highlight = this.GetComponent<Highlighter>();
 
             this.battleName = this.possibleBattleNames != null ? this.possibleBattleNames.GetRandomItem() : this.battleName;
         }

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114632991243124272}
   - component: {fileID: 114515041225683976}
   - component: {fileID: 114957088076478954}
+  - component: {fileID: 114985581968737760}
   - component: {fileID: 210065863280938794}
   - component: {fileID: 114437875073185250}
   m_Layer: 8
@@ -140,11 +141,11 @@ GameObject:
   - component: {fileID: 108166189240976904}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1876811094376680
 GameObject:
   m_ObjectHideFlags: 1
@@ -422,7 +423,8 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  movementSpeed: 1
+  highlight: {fileID: 0}
+  movementSpeed: 1.75
   targetRange: 4
   defeated: 0
 --- !u!114 &114632991243124272
@@ -450,11 +452,11 @@ MonoBehaviour:
   possibleBattleNames:
   - Goblin
   battleName: Enemy
-  statusDisplayHeight: 1.3
   actionClasses: 05000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 1
   healthBase: 10
   physicalBase: 10
@@ -462,6 +464,17 @@ MonoBehaviour:
   defenseBase: 10
   speedBase: 10
   isBoss: 0
+--- !u!114 &114985581968737760
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1210841631718850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &136318258392739730
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -21,7 +21,8 @@
             MajorHeal,
             MinorHeal,
             Smash,
-            QuickSlash
+            QuickSlash,
+            NoAction
         }
 
         /// <summary>
@@ -48,6 +49,8 @@
                     return new Smash(user);
                 case ActionClass.QuickSlash:
                     return new QuickSlash(user);
+                case ActionClass.NoAction:
+                    return new NoAction(user);
                 default:
                     // Default to smash
                     return new Smash(user);

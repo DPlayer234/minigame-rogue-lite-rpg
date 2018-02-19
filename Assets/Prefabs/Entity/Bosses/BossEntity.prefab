@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114760422077011260}
   - component: {fileID: 114564269431979132}
   - component: {fileID: 114468957083973386}
+  - component: {fileID: 114729596598168166}
   - component: {fileID: 210804524931184410}
   - component: {fileID: 114151461962779304}
   m_Layer: 8
@@ -77,11 +78,11 @@ GameObject:
   - component: {fileID: 108214012954237688}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1570836444810538
 GameObject:
   m_ObjectHideFlags: 1
@@ -402,11 +403,11 @@ MonoBehaviour:
   possibleBattleNames:
   - Great Goblin
   battleName: Enemy
-  statusDisplayHeight: 2
   actionClasses: 05000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 1
   healthBase: 100
   physicalBase: 10
@@ -428,9 +429,21 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  movementSpeed: 1
-  targetRange: 4
+  highlight: {fileID: 0}
+  movementSpeed: 1.25
+  targetRange: 1.5
   defeated: 0
+--- !u!114 &114729596598168166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1021764131925648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114750950273462146
 MonoBehaviour:
   m_ObjectHideFlags: 1

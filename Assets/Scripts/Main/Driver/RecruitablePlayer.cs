@@ -50,6 +50,8 @@
             {
                 PlayerDriver partyLeader = PlayerDriver.Party.GetLeader();
 
+                if (partyLeader == null) return false;
+
                 return (this.transform.position - partyLeader.transform.position).sqrMagnitude < RecruitablePlayer.RecruitmentRange * RecruitablePlayer.RecruitmentRange;
             }
         }

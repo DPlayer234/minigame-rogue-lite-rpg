@@ -38,11 +38,11 @@ GameObject:
   - component: {fileID: 108359612335127468}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1387980222457292
 GameObject:
   m_ObjectHideFlags: 1
@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 114972085556988990}
   - component: {fileID: 114673902638022314}
   - component: {fileID: 114414264532589784}
+  - component: {fileID: 114470801516523730}
   - component: {fileID: 210202857573754086}
   - component: {fileID: 114534614933772268}
   m_Layer: 8
@@ -384,17 +385,28 @@ MonoBehaviour:
   - The Great
   - Neptune
   battleName: Player
-  statusDisplayHeight: 1.3
-  actionClasses: 050000000100000000000000
+  actionClasses: 05000000010000000000000007000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 2
   healthBase: 17
   physicalBase: 7
   magicalBase: 7
   defenseBase: 18
   speedBase: 8
+--- !u!114 &114470801516523730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1986548994095340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114534614933772268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -430,7 +442,8 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  movementSpeed: 1.5
+  highlight: {fileID: 0}
+  movementSpeed: 2.5
 --- !u!114 &114911065073348448
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114092116018126648}
   - component: {fileID: 114320421902846042}
   - component: {fileID: 114980774361346796}
+  - component: {fileID: 114962940223419606}
   - component: {fileID: 210270448745800344}
   - component: {fileID: 114736629462145688}
   m_Layer: 8
@@ -76,11 +77,11 @@ GameObject:
   - component: {fileID: 108792148508668488}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1660828460795430
 GameObject:
   m_ObjectHideFlags: 1
@@ -392,9 +393,8 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
+  highlight: {fileID: 0}
   movementSpeed: 1.5
-  leader: {fileID: 0}
-  following: {fileID: 0}
 --- !u!114 &114728932323654356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -436,6 +436,17 @@ MonoBehaviour:
   - {fileID: 21300004, guid: d97d1b66614f1954e912a6b03effaf9f, type: 3}
   material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   update: 0
+--- !u!114 &114962940223419606
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1370353553739914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114980774361346796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -447,20 +458,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869b876af809cf042b916fcae23cd81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possibleBattleNames: []
   battleName: Player
-  statusDisplayHeight: 1.3
   actionClasses: 05000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 2
   healthBase: 10
   physicalBase: 10
   magicalBase: 10
   defenseBase: 10
   speedBase: 10
-  actionButtonPrefab: {fileID: 114696038370172830, guid: a9f53fe91e910de429ed6f0c03b2748c,
-    type: 2}
 --- !u!136 &136678512351905584
 CapsuleCollider:
   m_ObjectHideFlags: 1

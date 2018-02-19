@@ -90,6 +90,15 @@
         }
 
         /// <summary>
+        ///     Restarts the range activity check and immediately performs one.
+        /// </summary>
+        public void UpdateAndRestartRangeActivityCheck()
+        {
+            this.StopAllCoroutines();
+            this.StartCoroutine(this.UpdateRangeActivity());
+        }
+
+        /// <summary>
         ///     Called by Unity to initialize the <see cref="CameraController"/> whether it is enabled or not.
         /// </summary>
         private void Awake()
@@ -105,7 +114,7 @@
         /// </summary>
         private void Start()
         {
-            this.StartCoroutine(this.UpdateRangeActivity());
+            this.UpdateAndRestartRangeActivityCheck();
         }
 
         /// <summary>
@@ -122,9 +131,6 @@
 
             while (true)
             {
-                yield return new WaitForSecondsRealtime(CameraController.ActivityUpdateRate);
-                yield return new WaitWhile(waitWhileBattleActive);
-
                 foreach (GameObject gameObject in this.LimitedRangeObjects)
                 {
                     if (gameObject == null)
@@ -153,6 +159,13 @@
                     {
                         behaviour.enabled = shouldBeEnabled;
                     }
+                }
+
+                yield return new WaitForSecondsRealtime(CameraController.ActivityUpdateRate);
+
+                if (waitWhileBattleActive())
+                {
+                    yield return new WaitWhile(waitWhileBattleActive);
                 }
             }
         }

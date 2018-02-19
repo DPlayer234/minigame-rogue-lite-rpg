@@ -13,6 +13,21 @@
     public partial class DungeonGenerator
     {
         /// <summary>
+        ///     Amount of Rooms: |RoomCountMultiplier * floorNumber + RoomCountAdd|
+        /// </summary>
+        private const float RoomCountMultiplier = 1.33f;
+
+        /// <summary>
+        ///     Amount of Rooms: |RoomCountMultiplier * floorNumber + RoomCountAdd|
+        /// </summary>
+        private const float RoomCountAdd = 3.0f;
+
+        /// <summary>
+        ///     Variation to the relative floor size.
+        /// </summary>
+        private const float RoomCountVariation = 0.1f;
+
+        /// <summary>
         ///     The amount of treasure rooms in relation to regular rooms.
         /// </summary>
         private const float TreasureRoomMultiplier = 0.05f;
@@ -58,8 +73,8 @@
         private Transform roomParent;
 
         /// <summary>
-        ///     How many rooms does this floor have?
-        ///     Not necessarily equal to <seealso cref="DungeonGenerator.GetTotalFloorSize(int)"/>.
+        ///     Gets the size of this floor.
+        ///     The first access will add a little variation.
         /// </summary>
         private int TotalFloorSize
         {
@@ -67,30 +82,14 @@
             {
                 // Generate value on first demand
                 return this.totalFloorSize < 0 ?
-                    this.totalFloorSize = DungeonGenerator.GetTotalFloorSize(this.floorNumber) + Random.Range(-1, 1) :
+                    this.totalFloorSize =
+                        DungeonGenerator.GetTotalFloorSize(
+                            this.floorNumber,
+                            Random.Range(
+                                1.0f - DungeonGenerator.RoomCountVariation,
+                                1.0f + DungeonGenerator.RoomCountVariation)) :
                     this.totalFloorSize;
             }
-        }
-
-        /// <summary>
-        ///     Defines common room types
-        /// </summary>
-        public enum RoomType
-        {
-            /// <summary> There is no room </summary>
-            None = -1,
-
-            /// <summary> The starting room </summary>
-            Start,
-
-            /// <summary> A room without any special features </summary>
-            Common,
-
-            /// <summary> The boss room, containing the boss and the path to the next floor </summary>
-            Boss,
-
-            /// <summary> A room with 'treasure' of some kind </summary>
-            Treasure
         }
 
         /// <summary>
@@ -100,7 +99,19 @@
         /// <returns>The floor size</returns>
         public static int GetTotalFloorSize(int floorNumber)
         {
-            return Mathf.CeilToInt(floorNumber * 2 + 4);
+            return DungeonGenerator.GetTotalFloorSize(floorNumber, 1.0f);
+        }
+
+        /// <summary>
+        ///     Gets the size of a floor in <paramref name="floorNumber"/> without variation
+        /// </summary>
+        /// <param name="floorNumber">The floor number</param>
+        /// <param name="multiplier">Size multiplier</param>
+        /// <returns>The floor size</returns>
+        public static int GetTotalFloorSize(int floorNumber, float multiplier)
+        {
+            return Mathf.FloorToInt(
+                (floorNumber * DungeonGenerator.RoomCountMultiplier + DungeonGenerator.RoomCountAdd) * multiplier);
         }
 
         /// <summary>
@@ -243,7 +254,7 @@
                 this.floorTransitionBlockingWall.transform.parent = this.roomParent;
             }
 
-            this.limitedRangeBehaviours.AddRange(newRoom.GetComponentsInChildren<Light>());
+            this.AddLimitedRange(newRoom.GetComponentsInChildren<Light>());
 
             return newRoom;
         }
@@ -292,6 +303,8 @@
         /// <param name="transform">The transform parent</param>
         private void ApplyDesign(Transform transform)
         {
+            this.design = this.designs.GetRandomItem();
+
             foreach (Light light in transform.GetComponentsInChildren<Light>())
             {
                 if (light.type == LightType.Point)
@@ -321,5 +334,26 @@
                 }
             }
         }
+    }
+
+    /// <summary>
+    ///     Defines common room types
+    /// </summary>
+    public enum RoomType
+    {
+        /// <summary> There is no room </summary>
+        None = -1,
+
+        /// <summary> The starting room </summary>
+        Start,
+
+        /// <summary> A room without any special features </summary>
+        Common,
+
+        /// <summary> The boss room, containing the boss and the path to the next floor </summary>
+        Boss,
+
+        /// <summary> A room with 'treasure' of some kind </summary>
+        Treasure
     }
 }

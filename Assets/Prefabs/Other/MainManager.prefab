@@ -275,12 +275,12 @@ MonoBehaviour:
   - {fileID: 114515041225683976, guid: 592012ba3e185a642b02e6e4c33993db, type: 2}
   bossPrefabs:
   - {fileID: 114564269431979132, guid: 550503ae9d1325c479b532d990842bf2, type: 2}
-  design:
-    pointLightIntensity: 3
+  designs:
+  - pointLightIntensity: 3
     materials:
-    - tag: Wall
-      material: {fileID: 2100000, guid: 0c9e2d09136d3fe48af787cfa4628ee2, type: 2}
     - tag: Floor
       material: {fileID: 2100000, guid: 6fed9c5b6e5d6de4abb31743a2b1d52e, type: 2}
     - tag: Roof
       material: {fileID: 2100000, guid: 0846ac1727f8b2147816408b374531ac, type: 2}
+    - tag: Wall
+      material: {fileID: 2100000, guid: 0c9e2d09136d3fe48af787cfa4628ee2, type: 2}

@@ -178,13 +178,13 @@
         ///     containing solely one item of the original array.
         /// </summary>
         /// <typeparam name="T">The type of items of the original array</typeparam>
-        /// <param name="originalArray">The original array</param>
+        /// <param name="originalArray">The original array (or IList)</param>
         /// <returns>A new array</returns>
-        public static T[][] SplitIntoArrayOfLenghtOneArrays<T>(T[] originalArray)
+        public static T[][] SplitIntoArrayOfLenghtOneArrays<T>(IList<T> originalArray)
         {
-            T[][] newArray = new T[originalArray.Length][];
+            T[][] newArray = new T[originalArray.Count][];
 
-            for (int i = 0; i < originalArray.Length; i++)
+            for (int i = 0; i < originalArray.Count; i++)
             {
                 newArray[i] = new T[]
                 {

@@ -16,9 +16,6 @@
         [SerializeField]
         private bool isBoss = false;
 
-        /// <summary> Whether this has already granted experience/levels </summary>
-        private bool grantedExperience = false;
-
         /// <summary> How long to wait before taking the next action </summary>
         private float waitTime = 0.0f;
 
@@ -34,14 +31,14 @@
             {
                 this.currentHealth = Mathf.Clamp(value, 0, this.MaximumHealth);
 
-                if (this.currentHealth == 0 && !this.grantedExperience)
+                if (this.currentHealth == 0 && this.Allies.Contains(this))
                 {
                     foreach (BaseBattleDriver battleDriver in this.Opponents)
                     {
                         ++battleDriver.Level;
                     }
-
-                    this.grantedExperience = true;
+                    
+                    this.LeaveParty();
                 }
             }
         }
@@ -117,6 +114,21 @@
                     this.TakingTurn = false;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Leaves the party.
+        /// </summary>
+        public override bool LeaveParty()
+        {
+            if (base.LeaveParty())
+            {
+                this.gameObject.SetActive(false);
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

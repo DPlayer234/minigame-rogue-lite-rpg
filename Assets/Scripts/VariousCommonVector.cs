@@ -20,7 +20,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector2 LinearMultiply(Vector2 a, Vector2 b)
+        public static Vector2 VectorMultiply(Vector2 a, Vector2 b)
         {
             return new Vector2(
                 a.x * b.x,
@@ -34,7 +34,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector3 LinearMultiply(Vector3 a, Vector3 b)
+        public static Vector3 VectorMultiply(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.x * b.x,
@@ -49,7 +49,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector2 LinearDivide(Vector2 a, Vector2 b)
+        public static Vector2 VectorDivide(Vector2 a, Vector2 b)
         {
             return new Vector2(
                 a.x / b.x,
@@ -63,7 +63,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector3 LinearDivide(Vector3 a, Vector3 b)
+        public static Vector3 VectorDivide(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.x / b.x,

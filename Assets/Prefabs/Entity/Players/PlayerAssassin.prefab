@@ -37,11 +37,11 @@ GameObject:
   - component: {fileID: 108815556551887168}
   m_Layer: 8
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: Highlight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1143737697411556
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 114434058695580684}
   - component: {fileID: 114536312912142882}
   - component: {fileID: 114788792400001820}
+  - component: {fileID: 114656297856947844}
   - component: {fileID: 210808312824249222}
   - component: {fileID: 114329207102289940}
   m_Layer: 8
@@ -413,7 +414,19 @@ MonoBehaviour:
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
-  movementSpeed: 1.5
+  highlight: {fileID: 0}
+  movementSpeed: 2.5
+--- !u!114 &114656297856947844
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1143737697411556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7355da5461f679b468fbd1620048b77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114788792400001820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -431,11 +444,11 @@ MonoBehaviour:
   - Belladonna
   - Zero
   battleName: Player
-  statusDisplayHeight: 1.3
-  actionClasses: 050000000600000002000000
+  actionClasses: 05000000060000000200000007000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
+  highlight: {fileID: 0}
   level: 2
   healthBase: 8
   physicalBase: 16

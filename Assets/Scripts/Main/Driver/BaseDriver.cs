@@ -12,6 +12,7 @@
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SpriteManager))]
     [RequireComponent(typeof(SpriteAnimator))]
+    [RequireComponent(typeof(Highlighter))]
     [DisallowMultipleComponent]
     public abstract class BaseDriver : MonoBehaviour
     {
@@ -26,6 +27,10 @@
         /// <summary> The <seealso cref="BaseBattleDriver"/> also attached to this <seealso cref="GameObject"/> </summary>
         [HideInInspector]
         public BaseBattleDriver battleDriver;
+
+        /// <summary> The <seealso cref="Highlighter"/> also attached to this <seealso cref="GameObject"/> </summary>
+        [HideInInspector]
+        public Highlighter highlight;
 
         /// <summary>
         ///     Movement Speed
@@ -130,6 +135,7 @@
             this.spriteManager = this.GetComponent<SpriteManager>();
             this.spriteAnimator = this.GetComponent<SpriteAnimator>();
             this.battleDriver = this.GetComponent<BaseBattleDriver>();
+            this.highlight = this.GetComponent<Highlighter>();
             this.rigidbody = this.GetComponent<Rigidbody>();
 
             this.lastVelocity = this.transform.forward;

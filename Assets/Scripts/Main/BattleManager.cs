@@ -31,14 +31,17 @@
         /// <summary> The Entity whose turn it currently is. </summary>
         private BaseBattleDriver currentTurnOf;
 
-        /// <summary> All Entities currently fighting </summary>
-        private BaseBattleDriver[] fightingEntities;
+        /// <summary> All Entities taking part in the fight </summary>
+        private List<BaseBattleDriver> allFightingEntities;
+
+        /// <summary> All Entities which are still fighting </summary>
+        private List<BaseBattleDriver> stillFightingEntities;
 
         /// <summary> All Players currently fighting </summary>
-        private PlayerBattleDriver[] fightingPlayers;
+        private List<BaseBattleDriver> fightingPlayers;
 
         /// <summary> All Enemies currently fighting </summary>
-        private EnemyBattleDriver[] fightingEnemies;
+        private List<BaseBattleDriver> fightingEnemies;
 
         /// <summary> All GameObjects that were disabled to make room for the fighters </summary>
         private List<GameObject> deactivatedGameObjects;
@@ -135,7 +138,7 @@
             float overflow = 0.0f;
 
             // Update drivers
-            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+            foreach (BaseBattleDriver battleDriver in this.stillFightingEntities)
             {
                 try
                 {
@@ -164,7 +167,7 @@
                 // Makes sure that not multiple Entities are initialized as taking a turn
                 bool foundNextTurn = false;
 
-                foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+                foreach (BaseBattleDriver battleDriver in this.stillFightingEntities)
                 {
                     // Reduce
                     battleDriver.AttackPoints -= overflow;
@@ -190,6 +193,15 @@
         {
             if (this.currentTurnOf != null)
             {
+                // Ended turn
+                if (!this.currentTurnOf.TakingTurn)
+                {
+                    this.currentTurnOf = null;
+
+                    this.CheckAndUpdateBattleStatus();
+                    return;
+                }
+
                 try
                 {
                     if (this.currentTurnOf.CanStillFight)
@@ -206,14 +218,6 @@
                     // We don't want any errors to interupt the program flow any more,
                     // but we don't want them to be ignored either.
                     Debug.LogError(e);
-                }
-
-                // Ended turn
-                if (!this.currentTurnOf.TakingTurn)
-                {
-                    this.currentTurnOf = null;
-
-                    this.CheckAndUpdateBattleStatus();
                 }
             }
             else
@@ -281,20 +285,21 @@
             
             this.FindFightingPlayers(leaderPlayer);
             this.FindFightingEnemies(leaderEnemy);
-
             this.AssignFightingEntities();
+
             this.SetupEntities(battleStarts: true);
 
             BaseBattleDriver.HighestTurnSpeed = this.GetHighestTurnSpeed();
 
-            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+            foreach (BaseBattleDriver battleDriver in this.allFightingEntities)
             {
                 battleDriver.OnBattleStart();
             }
 
             this.hudParent = MonoBehaviour.Instantiate(GenericPrefab.Panel, HudManager.BattleHud.transform).transform;
 
-            BaseBattleDriver.CreateStatusBars(this.fightingEntities, this.hudParent);
+            leaderPlayer.CreateStatusBars(this.hudParent, GenericPrefab.StatusDisplayPlayer);
+            leaderEnemy.CreateStatusBars(this.hudParent, GenericPrefab.StatusDisplayEnemy);
 
             leaderPlayer.DeduplicateBattleNamesInAllies();
             leaderEnemy.DeduplicateBattleNamesInAllies();
@@ -307,9 +312,9 @@
         /// </summary>
         private void EndBattleModeInstanced()
         {
-            if (this.fightingEntities != null)
+            if (this.allFightingEntities != null)
             {
-                foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+                foreach (BaseBattleDriver battleDriver in this.allFightingEntities)
                 {
                     battleDriver.OnBattleEnd();
                 }
@@ -359,15 +364,15 @@
         /// <typeparam name="TDriver">The regular driver type</typeparam>
         /// <param name="leaderBattleDriver">The leader of the bunch</param>
         /// <param name="tag">The entity tag associated</param>
-        /// <returns>A list of <typeparamref name="TBattleDriver"/></returns>
-        private TBattleDriver[] FindFighters<TBattleDriver, TDriver>(TBattleDriver leaderBattleDriver, string tag)
+        /// <returns>A list of <seealso cref="BaseBattleDriver"/>s</returns>
+        private List<BaseBattleDriver> FindFighters<TBattleDriver, TDriver>(TBattleDriver leaderBattleDriver, string tag)
             where TBattleDriver : BaseBattleDriver
             where TDriver : BaseDriver
         {
             // Find all GameObjects with that tag
             GameObject[] allFighters = GameObject.FindGameObjectsWithTag(tag);
 
-            List<TBattleDriver> listOfFighters = new List<TBattleDriver>();
+            List<BaseBattleDriver> listOfFighters = new List<BaseBattleDriver>();
 
             TDriver leaderDriver = leaderBattleDriver.GetComponent<TDriver>();
 
@@ -388,22 +393,24 @@
                 }
             }
 
-            return listOfFighters.ToArray();
+            return listOfFighters;
         }
 
         /// <summary>
-        ///     Assigns <seealso cref="fightingEntities"/> using <seealso cref="fightingPlayers"/> and <seealso cref="fightingEnemies"/>
+        ///     Assigns <seealso cref="allFightingEntities"/> using <seealso cref="fightingPlayers"/> and <seealso cref="fightingEnemies"/>
         /// </summary>
         private void AssignFightingEntities()
         {
-            var fightingEntityList = new List<BaseBattleDriver>();
+            this.allFightingEntities = new List<BaseBattleDriver>();
+            this.stillFightingEntities = new List<BaseBattleDriver>();
 
             // Setup for battle
             // For some reason, conversion of 'compatible' lists won't work, but it works with arrays.
-            fightingEntityList.AddRange(this.fightingPlayers);
-            fightingEntityList.AddRange(this.fightingEnemies);
+            this.allFightingEntities.AddRange(this.fightingPlayers);
+            this.allFightingEntities.AddRange(this.fightingEnemies);
 
-            this.fightingEntities = fightingEntityList.ToArray();
+            // Copy
+            this.stillFightingEntities.AddRange(this.allFightingEntities);
         }
 
         /// <summary>
@@ -412,7 +419,7 @@
         /// <param name="battleStarts">Whether the fight starts (true) or ends (false)</param>
         private void SetupEntities(bool battleStarts)
         {
-            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+            foreach (BaseBattleDriver battleDriver in this.allFightingEntities)
             {
                 var entityDriver = battleDriver.entityDriver;
 
@@ -431,6 +438,8 @@
                         battleDriver.Allies = this.fightingEnemies;
                         battleDriver.Opponents = this.fightingPlayers;
                     }
+
+                    battleDriver.AlliesAndOpponents = this.stillFightingEntities;
                 }
             }
         }
@@ -442,7 +451,7 @@
         private float GetHighestTurnSpeed()
         {
             float turnSpeed = 0;
-            foreach (BaseBattleDriver battleDriver in this.fightingEntities)
+            foreach (BaseBattleDriver battleDriver in this.allFightingEntities)
             {
                 turnSpeed = Mathf.Max(battleDriver.TurnSpeed, turnSpeed);
             }

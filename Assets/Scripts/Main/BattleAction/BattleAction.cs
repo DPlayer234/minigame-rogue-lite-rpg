@@ -157,19 +157,19 @@
                 case ActionTargetOption.Everybody:
                     return new BaseBattleDriver[][]
                     {
-                        this.User.AlliesAndOpponents
+                        this.User.AlliesAndOpponents.ToArray()
                     };
 
                 case ActionTargetOption.AllAllies:
                     return new BaseBattleDriver[][]
                     {
-                        this.User.Allies
+                        this.User.Allies.ToArray()
                     };
 
                 case ActionTargetOption.AllOpponents:
                     return new BaseBattleDriver[][]
                     {
-                        this.User.Opponents
+                        this.User.Opponents.ToArray()
                     };
 
                 default:
