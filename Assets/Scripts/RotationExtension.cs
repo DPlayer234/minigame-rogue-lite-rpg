@@ -5,13 +5,13 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Contains various common functions.
+    ///     Contains some functions for working with angles and rotations.
     /// </summary>
     /// <remarks>
     ///     "Magic Numbers" used in functions of this class don't really have any name;
     ///     the functions don't correctly work with any other value.
     /// </remarks>
-    public static partial class VariousCommon
+    public static class RotationExtension
     {
         /// <summary>
         ///     Lerps the first value via an exponential operation.

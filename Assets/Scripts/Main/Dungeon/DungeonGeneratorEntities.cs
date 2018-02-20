@@ -53,7 +53,7 @@
                 if (this.enemyLevelBase < 0)
                 {
                     this.enemyLevelBase = Mathf.RoundToInt(
-                        VariousCommon.SumFuncRange(
+                        MathExtension.SumFuncRange(
                             DungeonGenerator.GetTotalFloorSize,
                             1,
                             this.floorNumber - 1) * DungeonGenerator.AverageEnemyCountPerRoom);

@@ -108,16 +108,16 @@
                     distance = (raycastHit.point - this.following.position).magnitude;
                 }
 
-                Vector3 currentRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
+                Vector3 currentRotation = RotationExtension.WrapDegrees(this.transform.eulerAngles);
                 this.transform.LookAt(this.following);
                 this.transform.position += this.transform.right * Input.GetAxis("CameraHorizontal") * Time.fixedDeltaTime * this.manualControlSpeed;
-                Vector3 targetRotation = VariousCommon.WrapDegrees(this.transform.eulerAngles);
+                Vector3 targetRotation = RotationExtension.WrapDegrees(this.transform.eulerAngles);
 
                 Vector3 thisToFollowing = this.transform.forward;
                 thisToFollowing.y = 0.0f;
                 thisToFollowing.Normalize();
 
-                Vector3 newPosition = VariousCommon.ExponentialLerp(
+                Vector3 newPosition = MathExtension.ExponentialLerp(
                     this.transform.position,
                     this.following.position - thisToFollowing * distance,
                     this.movementSpeedBase,
@@ -126,7 +126,7 @@
                 newPosition.y = this.following.position.y + this.PreferedHeight;
                 this.transform.position = newPosition;
 
-                this.transform.eulerAngles = VariousCommon.ExponentialLerpRotation(
+                this.transform.eulerAngles = RotationExtension.ExponentialLerpRotation(
                     currentRotation,
                     targetRotation,
                     this.rotationSpeedBase,

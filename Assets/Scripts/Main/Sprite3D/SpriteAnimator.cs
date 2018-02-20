@@ -78,7 +78,7 @@
             float[] currentRotations = new float[this.spriteManager.animatedTransforms.Length];
             for (int i = 0; i < this.spriteManager.animatedTransforms.Length; i++)
             {
-                currentRotations[i] = VariousCommon.WrapDegrees(this.spriteManager.animatedTransforms[i].localEulerAngles.z);
+                currentRotations[i] = RotationExtension.WrapDegrees(this.spriteManager.animatedTransforms[i].localEulerAngles.z);
             }
 
             this.startStatus = new SpriteAnimationStatus(
@@ -127,7 +127,7 @@
 
                 // Move Body
                 this.spriteManager.bodyTransform.localPosition =
-                    VariousCommon.SmootherStep(this.startStatus.position, this.endStatus.position, this.progress);
+                    MathExtension.SmootherStep(this.startStatus.position, this.endStatus.position, this.progress);
 
                 // Rotate Absolutely Everything Else
                 int length = Mathf.Min(this.endStatus.rotations.Length, this.startStatus.rotations.Length);
@@ -139,7 +139,7 @@
                     this.spriteManager.animatedTransforms[i].localEulerAngles = new Vector3(
                         localEulerAngles.x,
                         localEulerAngles.y,
-                        VariousCommon.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress));
+                        MathExtension.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress));
                 }
             }
         }

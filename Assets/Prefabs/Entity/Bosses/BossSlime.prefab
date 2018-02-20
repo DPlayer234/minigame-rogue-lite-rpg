@@ -419,7 +419,7 @@ MonoBehaviour:
   highlight: {fileID: 0}
   battleName: Enemy
   level: 1
-  healthBase: 7
+  healthBase: 340
   physicalBase: 7
   magicalBase: 7
   defenseBase: 16

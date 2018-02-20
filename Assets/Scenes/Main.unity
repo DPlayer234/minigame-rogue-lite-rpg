@@ -1039,8 +1039,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedPlayerPrefab: {fileID: 114536312912142882, guid: 5b514d73ef02de04cbf2d839abbc64ac,
     type: 2}
-  bonusStat1: 0
-  bonusStat2: 1
+  bonusStat1: 1
+  bonusStat2: 4
 --- !u!4 &1413468763
 Transform:
   m_ObjectHideFlags: 0

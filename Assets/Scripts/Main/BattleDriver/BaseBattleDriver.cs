@@ -200,6 +200,8 @@
             this.TurnNumber = 0;
             this.StartTurnActions = new List<TurnAction>();
             this.EndTurnActions = new List<TurnAction>();
+
+            this.spriteAnimator.Animation = this.entityDriver.IdleAnimation;
         }
 
         /// <summary>
@@ -221,6 +223,7 @@
             ++this.TurnNumber;
 
             this.EnableTurnHighlight();
+            this.spriteAnimator.Animation = this.entityDriver.WalkingAnimation;
 
             // Handle turn actions
             for (int i = this.StartTurnActions.Count - 1; i >= 0; i--)
@@ -240,6 +243,7 @@
             this.LogThisAndFormat("End Turn!");
 
             this.DisableTurnHighlight();
+            this.spriteAnimator.Animation = this.entityDriver.IdleAnimation;
 
             // Handle turn actions
             for (int i = this.EndTurnActions.Count - 1; i >= 0; i--)

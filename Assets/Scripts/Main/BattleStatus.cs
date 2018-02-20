@@ -65,7 +65,7 @@
         /// <param name="leaderPlayer">The leader player</param>
         private void FindFightingPlayers(PlayerBattleDriver leaderPlayer)
         {
-            this.FightingPlayers = this.FindFighters<PlayerBattleDriver, PlayerDriver>(leaderPlayer);
+            this.FightingPlayers = this.FindFighters(leaderPlayer);
         }
 
         /// <summary>
@@ -75,36 +75,33 @@
         /// <param name="leaderEnemy">The leader enemy</param>
         private void FindFightingEnemies(EnemyBattleDriver leaderEnemy)
         {
-            this.FightingEnemies = this.FindFighters<EnemyBattleDriver, EnemyDriver>(leaderEnemy);
+            this.FightingEnemies = this.FindFighters(leaderEnemy);
         }
 
         /// <summary>
-        ///     Finds all fighters of type <typeparamref name="TBattleDriver"/> and deactivates the ones not participating
+        ///     Finds all fighters with the same tag as <paramref name="leaderBattleDriver"/>
+        ///     and adds the ones not participating to <seealso cref="DeactivatableGameObjects"/>
         /// </summary>
-        /// <typeparam name="TBattleDriver">The battle driver type</typeparam>
-        /// <typeparam name="TDriver">The regular driver type</typeparam>
         /// <param name="leaderBattleDriver">The leader of the bunch</param>
         /// <returns>A list of <seealso cref="BaseBattleDriver"/>s</returns>
-        private List<BaseBattleDriver> FindFighters<TBattleDriver, TDriver>(TBattleDriver leaderBattleDriver)
-            where TBattleDriver : BaseBattleDriver
-            where TDriver : BaseDriver
+        private List<BaseBattleDriver> FindFighters(BaseBattleDriver leaderBattleDriver)
         {
             // Find all GameObjects with the same tag as the leader
             GameObject[] allFighters = GameObject.FindGameObjectsWithTag(leaderBattleDriver.tag);
 
             List<BaseBattleDriver> listOfFighters = new List<BaseBattleDriver>();
 
-            TDriver leaderDriver = leaderBattleDriver.GetComponent<TDriver>();
+            BaseDriver leaderDriver = leaderBattleDriver.GetComponent<BaseDriver>();
 
             // Check each of them
             foreach (GameObject fighter in allFighters)
             {
-                TDriver driver = fighter.GetComponent<TDriver>();
+                BaseDriver driver = fighter.GetComponent<BaseDriver>();
 
                 if (driver != null && (driver.Leader == leaderDriver || driver == leaderDriver))
                 {
                     // Required component; should never be missing
-                    listOfFighters.Add(fighter.GetComponent<TBattleDriver>());
+                    listOfFighters.Add(fighter.GetComponent<BaseBattleDriver>());
                 }
                 else
                 {

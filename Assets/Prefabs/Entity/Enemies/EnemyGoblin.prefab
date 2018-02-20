@@ -434,7 +434,7 @@ MonoBehaviour:
   battleName: Enemy
   level: 1
   healthBase: 12
-  physicalBase: 12
+  physicalBase: 11
   magicalBase: 2
   defenseBase: 9
   speedBase: 10

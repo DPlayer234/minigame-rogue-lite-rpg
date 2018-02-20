@@ -153,13 +153,13 @@
             switch (this.TargetOption)
             {
                 case ActionTargetOption.Anyone:
-                    return VariousCommon.SplitIntoArrayOfLenghtOneArrays(this.User.AlliesAndOpponents);
+                    return this.User.AlliesAndOpponents.SplitIntoArrayOfLenghtOneArrays();
 
                 case ActionTargetOption.OneAlly:
-                    return VariousCommon.SplitIntoArrayOfLenghtOneArrays(this.User.Allies);
+                    return this.User.Allies.SplitIntoArrayOfLenghtOneArrays();
 
                 case ActionTargetOption.OneOpponent:
-                    return VariousCommon.SplitIntoArrayOfLenghtOneArrays(this.User.Opponents);
+                    return this.User.Opponents.SplitIntoArrayOfLenghtOneArrays();
 
                 case ActionTargetOption.Everybody:
                     return new BaseBattleDriver[][]

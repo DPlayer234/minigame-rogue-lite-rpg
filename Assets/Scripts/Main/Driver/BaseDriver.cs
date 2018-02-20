@@ -60,6 +60,9 @@
         /// </summary>
         private const float MinimumFollowDistance = 1.0f;
 
+        /// <summary> Whether this entity is moving </summary>
+        private bool isMoving = false;
+
         /// <summary>
         ///     The <seealso cref="BaseDriver"/> leading the group.
         /// </summary>
@@ -117,6 +120,53 @@
                 informationSetter(highState);
 
                 yield return new WaitForSeconds(1.0f);
+            }
+        }
+
+        /// <summary>
+        ///     The walking animation
+        /// </summary>
+        /// <param name="informationSetter">Used to set the information</param>
+        /// <returns>More time.</returns>
+        public IEnumerator WalkingAnimation(SpriteAnimator.StatusSetter informationSetter)
+        {
+            var lowState = new SpriteAnimationStatus(
+                // importance
+                3.0f,
+                // position
+                new Vector3(0.0f, -0.025f, 0.0f),
+                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+                1.0f,
+                -3.5f,
+                -5.5f,
+                -70.0f,
+                60.0f,
+                70.0f,
+                -60.0f);
+
+            var highState = new SpriteAnimationStatus(
+                // importance
+                3.0f,
+                // position
+                new Vector3(0.0f, 0.025f, 0.0f),
+                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+                -1.0f,
+                3.5f,
+                5.5f,
+                70.0f,
+                -60.0f,
+                -70.0f,
+                60.0f);
+
+            while (true)
+            {
+                informationSetter(lowState);
+
+                yield return new WaitForSeconds(1f / 3f);
+
+                informationSetter(highState);
+
+                yield return new WaitForSeconds(1f / 3f);
             }
         }
 
@@ -180,9 +230,25 @@
             Vector3 velocity = this.rigidbody.velocity;
 
             this.rigidbody.velocity = new Vector3(
-                VariousCommon.ExponentialLerp(velocity.x, movement.x, 0.01f, Time.deltaTime),
+                MathExtension.ExponentialLerp(velocity.x, movement.x, 0.01f, Time.deltaTime),
                 velocity.y,
-                VariousCommon.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
+                MathExtension.ExponentialLerp(velocity.z, movement.y, 0.01f, Time.deltaTime));
+
+            // Update animation
+            bool isMoving = this.rigidbody.velocity.magnitude > this.movementSpeed * 0.5f;
+            if (this.isMoving != isMoving)
+            {
+                if (isMoving)
+                {
+                    this.spriteAnimator.Animation = this.WalkingAnimation;
+                }
+                else
+                {
+                    this.spriteAnimator.Animation = this.IdleAnimation;
+                }
+
+                this.isMoving = isMoving;
+            }
 
             // Make sure the SpriteManager is looking in the correct direction (left/right)
             Vector3 currentVelocity = this.rigidbody.velocity;
@@ -209,6 +275,17 @@
                     this.spriteManager.FlipToDirection(false);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Called by Unity when this behaviour is enabled.
+        /// </summary>
+        private void OnEnable()
+        {
+            if (this.spriteAnimator.Animation == null) return;
+
+            this.isMoving = false;
+            this.spriteAnimator.Animation = this.IdleAnimation;
         }
     }
 }

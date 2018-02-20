@@ -5,13 +5,9 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Contains various common functions.
+    ///     Additional or extension methods for vectors
     /// </summary>
-    /// <remarks>
-    ///     "Magic Numbers" used in functions of this class don't really have any name;
-    ///     the functions don't correctly work with any other value.
-    /// </remarks>
-    public static partial class VariousCommon
+    public static class VectorExtension
     {
         /// <summary>
         ///     Returns a new vector, with each element being the result of multiplying the
@@ -20,7 +16,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector2 VectorMultiply(Vector2 a, Vector2 b)
+        public static Vector2 Multiply(Vector2 a, Vector2 b)
         {
             return new Vector2(
                 a.x * b.x,
@@ -34,7 +30,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector3 VectorMultiply(Vector3 a, Vector3 b)
+        public static Vector3 Multiply(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.x * b.x,
@@ -49,7 +45,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector2 VectorDivide(Vector2 a, Vector2 b)
+        public static Vector2 Divide(Vector2 a, Vector2 b)
         {
             return new Vector2(
                 a.x / b.x,
@@ -63,7 +59,7 @@
         /// <param name="a">The first vector</param>
         /// <param name="b">The second vector</param>
         /// <returns>A new vector as described the summary</returns>
-        public static Vector3 VectorDivide(Vector3 a, Vector3 b)
+        public static Vector3 Divide(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.x / b.x,
@@ -80,9 +76,9 @@
         /// <returns>A new vector</returns>
         public static Vector3 RotateVectorAroundOrigin(Vector3 vector, Vector3 euler)
         {
-            Vector3 result = VariousCommon.RotateVectorAroundOriginZ(vector, euler.z * Mathf.Deg2Rad);
-            result = VariousCommon.RotateVectorAroundOriginX(result, euler.x * Mathf.Deg2Rad);
-            return VariousCommon.RotateVectorAroundOriginY(result, euler.y * Mathf.Deg2Rad);
+            Vector3 result = VectorExtension.RotateVectorAroundOriginZ(vector, euler.z * Mathf.Deg2Rad);
+            result = VectorExtension.RotateVectorAroundOriginX(result, euler.x * Mathf.Deg2Rad);
+            return VectorExtension.RotateVectorAroundOriginY(result, euler.y * Mathf.Deg2Rad);
         }
 
         /// <summary>
