@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="NoAction.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
     using DPlay.RoguePG.Main.BattleDriver;

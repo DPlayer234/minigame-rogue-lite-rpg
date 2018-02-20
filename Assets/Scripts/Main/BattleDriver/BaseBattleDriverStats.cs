@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="BaseBattleDriverStats.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.BattleDriver
 {
     using System.Collections;

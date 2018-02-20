@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="DefaultStorageSetter.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG
 {
     using DPlay.RoguePG.Main.Driver;

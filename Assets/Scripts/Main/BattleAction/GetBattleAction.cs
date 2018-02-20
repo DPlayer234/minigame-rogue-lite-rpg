@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="GetBattleAction.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.BattleAction
 {
     using DPlay.RoguePG.Main.BattleAction.Actions;

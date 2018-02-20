@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="EntityCreationHelper.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Dev
 {
     using System.Collections;

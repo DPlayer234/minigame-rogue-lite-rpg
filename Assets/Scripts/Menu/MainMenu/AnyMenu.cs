@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="AnyMenu.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Menu.MainMenu
 {
     using System.Collections;

@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="CameraController.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.Camera
 {
     using System;

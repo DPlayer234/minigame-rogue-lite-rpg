@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="BattleFlow.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main
 {
     using System;

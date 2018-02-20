@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="PartyMemberDisplay.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Menu.PauseMenu
 {
     using DPlay.RoguePG.Main.BattleAction;

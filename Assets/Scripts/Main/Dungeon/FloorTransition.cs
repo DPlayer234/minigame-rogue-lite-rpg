@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="FloorTransition.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.Dungeon
 {
     using DPlay.RoguePG.Main.Driver;

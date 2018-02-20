@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="GameOverMenu.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Menu.GameOverMenu
 {
     using DPlay.RoguePG.Main.Driver;

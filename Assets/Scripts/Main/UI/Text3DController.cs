@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Text3DController.cs" company="COMPANYPLACEHOLDER">
+//     Copyright (c) Darius Kinstler. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 ﻿namespace DPlay.RoguePG.Main.UI
 {
     using System.Collections;
