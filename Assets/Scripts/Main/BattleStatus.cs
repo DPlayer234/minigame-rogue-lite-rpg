@@ -1,11 +1,11 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
     
     /// <summary>
@@ -110,7 +110,31 @@
                 }
             }
 
-            return listOfFighters;
+            // Sort them
+            List<BaseBattleDriver> listOfFightersSorted = new List<BaseBattleDriver>(listOfFighters.Count);
+
+            for (int i = 0; i < listOfFighters.Count; i++)
+            {
+                foreach (BaseBattleDriver battleDriver in listOfFighters)
+                {
+                    BaseDriver driver = battleDriver.entityDriver;
+                    int number = 0;
+                    while (driver.Following != null)
+                    {
+                        driver = driver.Following;
+                        ++number;
+
+                        if (number > listOfFighters.Count) throw new RPGException(RPGException.Cause.DriverLoopingFollowing);
+                    }
+
+                    if (number == i)
+                    {
+                        listOfFightersSorted.Add(battleDriver);
+                    }
+                }
+            }
+
+            return listOfFightersSorted;
         }
 
         /// <summary>

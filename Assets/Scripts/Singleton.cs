@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG
+﻿namespace DPlay.RoguePG
 {
     using UnityEngine;
 
@@ -12,28 +12,85 @@
         public static T Instance { get; protected set; }
 
         /// <summary>
-        ///     Call this when a new instance is added.
-        /// </summary>
-        protected void NewInstance()
-        {
-            if (Singleton<T>.Instance == this) return;
-
-            if (Singleton<T>.Instance != null)
-            {
-                Debug.LogWarning("There was an additional active " + this.GetType() + ". The old instance was destroyed.");
-                MonoBehaviour.Destroy(Singleton<T>.Instance);
-            }
-
-            Singleton<T>.Instance = this;
-        }
-
-        /// <summary>
         ///     Returns the instance as T
         /// </summary>
         /// <param name="instance">The instance to convert</param>
         public static implicit operator T(Singleton<T> instance)
         {
             return instance as T;
+        }
+
+        /// <summary>
+        ///     Call this when a new instance is added.
+        ///     This is instance is going to override the old one.
+        ///     To keep the old instance instead, call <seealso cref="NewPreferOld(bool)"/>.
+        /// </summary>
+        /// <param name="destroyGameObject">Whether to destroy the GameObject if this instance is destroyed</param>
+        protected void NewPreferThis(bool destroyGameObject = false)
+        {
+            if (Singleton<T>.Instance == this) return;
+
+            if (Singleton<T>.Instance != null)
+            {
+                this.DestroyOld(destroyGameObject);
+            }
+
+            Singleton<T>.Instance = this;
+        }
+
+        /// <summary>
+        ///     Call this when a new instance is added.
+        ///     If there is an old instance, this one is going to be destroyed.
+        ///     To keep the new instance instead, call <seealso cref="NewPreferThis(bool)"/>.
+        /// </summary>
+        /// <param name="destroyGameObject">Whether to destroy the GameObject if this instance is destroyed</param>
+        protected void NewPreferOld(bool destroyGameObject = false)
+        {
+            if (Singleton<T>.Instance == this) return;
+
+            if (Singleton<T>.Instance != null)
+            {
+                this.DestroySelf(destroyGameObject);
+                return;
+            }
+
+            Singleton<T>.Instance = this;
+        }
+
+        /// <summary>
+        ///     Destroys the new instance.
+        /// </summary>
+        /// <param name="destroyGameObject">Whether to destroy the GameObject</param>
+        private void DestroySelf(bool destroyGameObject = false)
+        {
+            Debug.LogWarning("There was an additional active " + this.GetType() + ". The new instance was destroyed.");
+            this.DestroyInstance(destroyGameObject);
+        }
+
+        /// <summary>
+        ///     Destroys the old instance.
+        /// </summary>
+        /// <param name="destroyGameObject">Whether to destroy the GameObject</param>
+        private void DestroyOld(bool destroyGameObject = false)
+        {
+            Debug.LogWarning("There was an additional active " + this.GetType() + ". The old instance was destroyed.");
+            Singleton<T>.Instance.DestroyInstance(destroyGameObject);
+        }
+
+        /// <summary>
+        ///     Destroy this instance;
+        /// </summary>
+        /// <param name="destroyGameObject">Whether to destroy the GameObject</param>
+        private void DestroyInstance(bool destroyGameObject = false)
+        {
+            if (destroyGameObject)
+            {
+                MonoBehaviour.Destroy(this.gameObject);
+            }
+            else
+            {
+                MonoBehaviour.Destroy(Singleton<T>.Instance);
+            }
         }
     }
 }

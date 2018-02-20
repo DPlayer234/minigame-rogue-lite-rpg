@@ -1,9 +1,9 @@
-﻿namespace SAE.RoguePG.Dev
+﻿namespace DPlay.RoguePG.Dev
 {
     using System.Collections;
-    using SAE.RoguePG.Main;
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.Sprite3D;
+    using DPlay.RoguePG.Main;
+    using DPlay.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Sprite3D;
     using UnityEngine;
 
     /// <summary>

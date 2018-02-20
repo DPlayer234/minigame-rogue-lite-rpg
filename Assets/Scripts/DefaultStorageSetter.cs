@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG
+﻿namespace DPlay.RoguePG
 {
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>

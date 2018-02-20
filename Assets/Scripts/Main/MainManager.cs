@@ -1,11 +1,11 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Camera;
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.UI;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Camera;
+    using DPlay.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -85,7 +85,7 @@
         /// </summary>
         private void Awake()
         {
-            this.NewInstance();
+            this.NewPreferThis();
 
             this.ValidateSetup();
 

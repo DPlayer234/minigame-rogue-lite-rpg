@@ -1,10 +1,10 @@
-﻿namespace SAE.RoguePG.Menu.PauseMenu
+﻿namespace DPlay.RoguePG.Menu.PauseMenu
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.UI;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
     using UnityEngine.SceneManagement;
 

@@ -1,8 +1,8 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>

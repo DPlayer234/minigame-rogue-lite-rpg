@@ -451,8 +451,8 @@ MonoBehaviour:
   spriteAnimator: {fileID: 0}
   battleDriver: {fileID: 0}
   highlight: {fileID: 0}
-  movementSpeed: 1.75
-  targetRange: 4
+  movementSpeed: 3
+  targetRange: 1
   defeated: 0
 --- !u!114 &114983947616020568
 MonoBehaviour:

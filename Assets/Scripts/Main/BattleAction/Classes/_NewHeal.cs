@@ -1,10 +1,10 @@
-﻿namespace SAE.RoguePG.Main.BattleAction.Actions
+﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>
@@ -12,16 +12,14 @@
     /// </summary>
     public class _NewHeal : HealAction
     {
-        /// <summary> Action Name </summary>
-        public const string ActionName = "ACTIONNAME";
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="_NewHeal"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
         public _NewHeal(BaseBattleDriver user) : base(user)
         {
-            this.name = ActionName;
+            this.name = "ACTIONNAME";
+            this.description = "ACTIONDESCRIPTION";
 
             // Storing heal-potential (fraction) in attack power.
             this.attackPower = 0.25f;

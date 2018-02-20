@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.Sprite3D
+﻿namespace DPlay.RoguePG.Main.Sprite3D
 {
     using System;
     using System.Collections;

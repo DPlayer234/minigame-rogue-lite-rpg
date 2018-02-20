@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main.BattleAction.Actions
+﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -13,16 +13,14 @@
     /// </summary>
     public class _NewCharge : ChargeAction
     {
-        /// <summary> Action Name </summary>
-        public const string ActionName = "ACTIONNAME";
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="_NewCharge"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
         public _NewCharge(BaseBattleDriver user) : base(user)
         {
-            this.name = ActionName;
+            this.name = "ACTIONNAME";
+            this.description = "ACTIONDESCRIPTION";
 
             this.attackPointCost = 4.0f;
             this.attackPower = 10.0f;

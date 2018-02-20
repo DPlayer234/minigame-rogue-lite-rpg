@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.UI
+﻿namespace DPlay.RoguePG.Main.UI
 {
     using UnityEngine;
     using UnityEngine.UI;

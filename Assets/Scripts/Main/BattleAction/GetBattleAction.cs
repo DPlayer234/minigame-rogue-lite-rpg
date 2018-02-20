@@ -1,7 +1,7 @@
-﻿namespace SAE.RoguePG.Main.BattleAction
+﻿namespace DPlay.RoguePG.Main.BattleAction
 {
-    using SAE.RoguePG.Main.BattleAction.Actions;
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleAction.Actions;
+    using DPlay.RoguePG.Main.BattleDriver;
 
     /// <summary>
     ///     Base class for any action that can be taken during a turn.

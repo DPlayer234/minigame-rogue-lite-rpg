@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main.BattleAction.Actions
+﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -13,16 +13,14 @@
     /// </summary>
     public class NoAction : BattleAction
     {
-        /// <summary> Action Name </summary>
-        public const string ActionName = "End Turn";
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="NoAction"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
         public NoAction(BaseBattleDriver user) : base(user)
         {
-            this.name = ActionName;
+            this.name = "End Turn";
+            this.description = "Ends the current turn.";
 
             this.attackPointCost = 1.0f;
             this.attackPower = 0.0f;

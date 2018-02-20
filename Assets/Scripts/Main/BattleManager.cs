@@ -1,10 +1,10 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Camera;
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Camera;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -58,7 +58,7 @@
             if (MainManager.Instance == null) throw new RPGException(RPGException.Cause.MainManagerNoActiveInstance);
             if (BattleManager.Instance != null) return;
 
-            MainManager.Instance.gameObject.AddComponent<BattleManager>().NewInstance();
+            MainManager.Instance.gameObject.AddComponent<BattleManager>().NewPreferThis();
 
             BattleManager.Instance.StartBattleMode(leaderPlayer, leaderEnemy);
         }

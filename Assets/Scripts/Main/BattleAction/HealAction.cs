@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main.BattleAction
+﻿namespace DPlay.RoguePG.Main.BattleAction
 {
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
     using System.Linq;

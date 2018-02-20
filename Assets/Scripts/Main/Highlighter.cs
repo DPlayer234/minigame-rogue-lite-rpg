@@ -1,7 +1,7 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System.Collections;
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>

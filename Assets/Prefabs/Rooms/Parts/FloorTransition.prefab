@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 4828527403457400}
   - component: {fileID: 23488715553866982}
   - component: {fileID: 102415918523972536}
+  - component: {fileID: 210016826425047754}
   m_Layer: 0
   m_Name: Text3D
   m_TagString: Untagged
@@ -806,6 +807,16 @@ MonoBehaviour:
   animatedTransforms: []
   rootTransform: {fileID: 0}
   bodyTransform: {fileID: 0}
+--- !u!210 &210016826425047754
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1553027922219334}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!210 &210591653201719572
 SortingGroup:
   m_ObjectHideFlags: 1

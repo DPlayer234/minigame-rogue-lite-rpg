@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main.BattleAction.Actions
+﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -13,16 +13,14 @@
     /// </summary>
     public class FireMagic : BattleAction
     {
-        /// <summary> Action Name </summary>
-        public const string ActionName = "Fire Magic";
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="FireMagic"/> class
         /// </summary>
         /// <param name="user">The BattleDriver which will use this action</param>
         public FireMagic(BaseBattleDriver user) : base(user)
         {
-            this.name = ActionName;
+            this.name = "Fire Magic";
+            this.description = "Magic which deals damage to an opponent and has them take damage for a few turns.";
 
             this.attackPointCost = 5.0f;
             this.attackPower = 5.0f;

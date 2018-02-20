@@ -1,8 +1,8 @@
-﻿namespace SAE.RoguePG.Main.UI
+﻿namespace DPlay.RoguePG.Main.UI
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
     using UnityEngine.UI;
 

@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.Driver
+﻿namespace DPlay.RoguePG.Main.Driver
 {
     using System;
     using System.Collections;

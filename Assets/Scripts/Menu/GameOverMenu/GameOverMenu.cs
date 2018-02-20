@@ -1,7 +1,7 @@
-﻿namespace SAE.RoguePG.Menu.GameOverMenu
+﻿namespace DPlay.RoguePG.Menu.GameOverMenu
 {
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.Dungeon;
+    using DPlay.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Dungeon;
     using UnityEngine;
     using UnityEngine.SceneManagement;
     using UnityEngine.UI;

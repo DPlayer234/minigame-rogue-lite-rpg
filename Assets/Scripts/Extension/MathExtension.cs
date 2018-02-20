@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG
+﻿namespace DPlay.RoguePG.Extension
 {
     using System;
     using System.Collections.Generic;

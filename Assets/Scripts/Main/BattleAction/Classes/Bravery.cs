@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main.BattleAction.Actions
+﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
-    using SAE.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -13,9 +13,6 @@
     /// </summary>
     public class Bravery : BattleAction
     {
-        /// <summary> Action Name </summary>
-        public const string ActionName = "Bravery";
-
         /// <summary> How long the buffs last </summary>
         private const int TurnDuration = 1;
 
@@ -38,7 +35,8 @@
         /// <param name="user">The BattleDriver which will use this action</param>
         public Bravery(BaseBattleDriver user) : base(user)
         {
-            this.name = ActionName;
+            this.name = "Bravery";
+            this.description = "Increases Damage and Defense of all allies for 1 turn.";
 
             this.attackPointCost = 12.0f;
             this.attackPower = 0.0f;

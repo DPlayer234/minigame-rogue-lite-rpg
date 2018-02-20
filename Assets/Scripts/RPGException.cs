@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG
+﻿namespace DPlay.RoguePG
 {
     using System;
     using System.Collections.Generic;
@@ -78,6 +78,7 @@
                 { Cause.SpriteNoBody, "This GameObject is lacking a Sprite Body." },
 
                 { Cause.BattleDriverNotLeader, "This function can only be called on the leader of a party. (IsLeader)" },
+                { Cause.DriverLoopingFollowing, "The following references are looping." },
 
                 { Cause.HighlightNoLight, "There is no Light for this Highlight." },
                 { Cause.HighlightOnGameObject, "The Highlight Component must be attached to a parenting GameObject." },
@@ -85,6 +86,8 @@
 
                 { Cause.StatusDisplayMissingComponent, "The StatusDisplay is missing a component! Please check the setup." },
                 { Cause.StatusDisplayNoBattleDriver, "The StatusDisplay has no assigned BattleDriver!" },
+
+                { Cause.UnknownAudioClip, "The audio clip played it not known." }
         };
         }
 
@@ -121,13 +124,16 @@
             SpriteNoBody,
 
             BattleDriverNotLeader,
+            DriverLoopingFollowing,
 
             HighlightNoLight,
             HighlightOnGameObject,
             HighlightNotFound,
 
             StatusDisplayMissingComponent,
-            StatusDisplayNoBattleDriver
+            StatusDisplayNoBattleDriver,
+
+            UnknownAudioClip
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.Camera
+﻿namespace DPlay.RoguePG.Main.Camera
 {
     using System;
     using System.Collections;
@@ -123,7 +123,7 @@
         /// </summary>
         private void Awake()
         {
-            this.NewInstance();
+            this.NewPreferThis();
 
             ActivityHandler.LimitedRangeObjects = new List<GameObject>();
             ActivityHandler.LimitedRangeBehaviours = new List<Behaviour>();

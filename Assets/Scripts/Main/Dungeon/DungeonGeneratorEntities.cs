@@ -1,10 +1,11 @@
-﻿namespace SAE.RoguePG.Main.Dungeon
+﻿namespace DPlay.RoguePG.Main.Dungeon
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.BattleDriver;
-    using SAE.RoguePG.Main.Camera;
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Extension;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.Camera;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -130,24 +131,29 @@
         public void SpawnRecruits()
         {
             GameObject[] recruitSpawnPoints = GameObject.FindGameObjectsWithTag(DungeonGenerator.RecruitSpawnPointTag);
-
+            
             int recruitIndex = 0;
             foreach (GameObject recruitSpawnPoint in recruitSpawnPoints)
             {
-                PlayerDriver recruit = MainManager.SpawnEntityWithBonus(
-                    this.playerPrefabs.GetRandomItem(),
-                    Stat.Random,
-                    Stat.Random);
+                int recruitCount = Random.Range(this.recruitCount.x, this.recruitCount.y + 1);
 
-                recruit.transform.parent = this.entityParent;
-                recruit.transform.position = recruitSpawnPoint.transform.position + this.GetRandomEntityOffset();
+                for (int i = 0; i < recruitCount; i++)
+                {
+                    PlayerDriver recruit = MainManager.SpawnEntityWithBonus(
+                        this.playerPrefabs.GetRandomItem(),
+                        Stat.Random,
+                        Stat.Random);
 
-                recruit.battleDriver.Level = this.EntityLevel;
+                    recruit.transform.parent = this.entityParent;
+                    recruit.transform.position = recruitSpawnPoint.transform.position + this.GetRandomEntityOffset();
 
-                recruit.name = string.Format("Recruit #{0}", recruitIndex);
+                    recruit.battleDriver.Level = this.EntityLevel;
 
-                MonoBehaviour.Destroy(recruitSpawnPoint);
-                ++recruitIndex;
+                    recruit.name = string.Format("Recruit #{0}", recruitIndex);
+
+                    MonoBehaviour.Destroy(recruitSpawnPoint);
+                    ++recruitIndex;
+                }
             }
         }
 

@@ -1,11 +1,11 @@
-﻿namespace SAE.RoguePG.Main.BattleDriver
+﻿namespace DPlay.RoguePG.Main.BattleDriver
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Dev;
-    using SAE.RoguePG.Main.BattleAction;
-    using SAE.RoguePG.Main.Driver;
-    using SAE.RoguePG.Main.Sprite3D;
+    using DPlay.RoguePG.Dev;
+    using DPlay.RoguePG.Main.BattleAction;
+    using DPlay.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Sprite3D;
     using UnityEngine;
 
     /// <summary>
@@ -71,6 +71,11 @@
 
             set
             {
+                if (this.currentHealth > value)
+                {
+                    SFXManager.PlayClip("Death", this.transform.position);
+                }
+
                 this.currentHealth = Mathf.Clamp(value, 0, this.MaximumHealth);
             }
         }

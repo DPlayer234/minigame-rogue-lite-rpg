@@ -1,8 +1,8 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
     using System.Collections;
     using System.Collections.Generic;
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -34,7 +34,7 @@
         /// </summary>
         private void Awake()
         {
-            this.NewInstance();
+            this.NewPreferThis();
         }
 
         /// <summary>

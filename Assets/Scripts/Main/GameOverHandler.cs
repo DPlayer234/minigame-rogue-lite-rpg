@@ -1,6 +1,6 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace DPlay.RoguePG.Main
 {
-    using SAE.RoguePG.Main.Driver;
+    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -51,7 +51,7 @@
         {
             if (this.gameOverMenu == null) throw new RPGException(RPGException.Cause.MenuNoGameOver);
 
-            this.NewInstance();
+            this.NewPreferThis();
 
             GameOverHandler.IsGameOver = false;
             this.gameOverMenu.SetActive(false);

@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main.Dungeon
+﻿namespace DPlay.RoguePG.Main.Dungeon
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -142,7 +142,7 @@
         /// </summary>
         private void InitializeStatic()
         {
-            this.NewInstance();
+            this.NewPreferThis();
         }
 
         /// <summary>

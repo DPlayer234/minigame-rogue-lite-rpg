@@ -1,10 +1,12 @@
-﻿namespace SAE.RoguePG.Main.BattleAction
+﻿namespace DPlay.RoguePG.Main.BattleAction
 {
-    using SAE.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using DPlay.RoguePG.Extension;
+    using DPlay.RoguePG.Main.BattleDriver;
+    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
 
     /// <summary>
@@ -31,19 +33,30 @@
         public const string FallbackLabel = "IDK";
 
         /// <summary> See: <see cref="Name"/> </summary>
-        protected string name;
+        protected string name = "No Name.";
+
+        /// <summary> See: <see cref="Description"/> </summary>
+        protected string description = "No Description provided.";
 
         /// <summary> See: <see cref="AttackPower"/> </summary>
-        protected float attackPower;
+        protected float attackPower = 0.0f;
 
         /// <summary> See: <see cref="AttackPointCost"/> </summary>
-        protected float attackPointCost;
+        protected float attackPointCost = 10.0f;
 
         /// <summary> See: <see cref="TargetOption"/> </summary>
-        protected ActionTargetOption targetOption;
+        protected ActionTargetOption targetOption = ActionTargetOption.Anyone;
 
         /// <summary> See: <see cref="Category"/> </summary>
-        protected ActionCategory category;
+        protected ActionCategory category = ActionCategory.Undefined;
+
+        /// <summary>
+        ///     The format string for the messages.
+        ///     {0}: The attack name.
+        ///     {1}: The user.
+        ///     {2}: The target label.
+        /// </summary>
+        private const string MessageFormat = "<color=#00ff00ff>[{1}]</color> >>\n<color=#0000ffff>[{0}]</color>\n>> <color=#ff0000ff>[{2}]</color>!";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BattleAction"/> class.
@@ -103,6 +116,9 @@
         /// <summary> The name of this action </summary>
         public string Name { get { return this.name; } }
 
+        /// <summary> The description of this action </summary>
+        public string Description { get { return this.description; } }
+
         /// <summary>
         ///     The attack power of this attack.
         ///     Irrelevant if it deals no damage (does not call <seealso cref="DealDamage(BaseBattleDriver)"/>)
@@ -130,6 +146,10 @@
             Debug.LogFormat("{0} is using {1}!", this.User.name, this.Name);
 
             this.User.AttackPoints -= this.AttackPointCost;
+
+            Text3DController text3D = MonoBehaviour.Instantiate(GenericPrefab.Text3D);
+            text3D.transform.position = this.User.spriteManager.rootTransform.position;
+            text3D.Text = string.Format(BattleAction.MessageFormat, this.Name, this.User.BattleName, this.GetTargetLabel(targets));
 
             foreach (BaseBattleDriver target in targets)
             {
