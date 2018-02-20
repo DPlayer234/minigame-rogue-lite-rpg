@@ -11,47 +11,55 @@
     ///     Generates a floor when attached to a GameObject.
     ///     Rooms are generated on a grid.
     /// </summary>
-    public partial class DungeonGenerator : MonoBehaviour
+    public partial class DungeonGenerator : Singleton<DungeonGenerator>
     {
         /// <summary>
         ///     Floor Number
         /// </summary>
-        public int floorNumber = 1;
+        [SerializeField]
+        private int floorNumber = 1;
 
         /// <summary>
         ///     Minimum and maximum enemy count per spawn point.
         /// </summary>
-        public Vector2Int enemyCount;
+        [SerializeField]
+        private Vector2Int enemyCount;
 
         /// <summary>
         ///     How large the rooms are (width and depth)
         /// </summary>
-        public Vector2 roomSize;
+        [SerializeField]
+        private Vector2 roomSize;
 
         /// <summary>
         ///     Parts used in the dungeon
         /// </summary>
-        public DungeonPrefabs parts;
+        [SerializeField]
+        private DungeonPrefabs parts;
 
         /// <summary>
         ///     Prefabs used for players
         /// </summary>
-        public PlayerDriver[] playerPrefabs;
+        [SerializeField]
+        private PlayerDriver[] playerPrefabs;
 
         /// <summary>
         ///     Prefabs used for enemies
         /// </summary>
-        public EnemyDriver[] enemyPrefabs;
+        [SerializeField]
+        private EnemyDriver[] enemyPrefabs;
 
         /// <summary>
         ///     Prefabs used for bosses
         /// </summary>
-        public EnemyDriver[] bossPrefabs;
+        [SerializeField]
+        private EnemyDriver[] bossPrefabs;
 
         /// <summary>
         ///     Viable design for the dungeon
         /// </summary>
-        public DungeonDesign[] designs;
+        [SerializeField]
+        private DungeonDesign[] designs;
 
         /// <summary>
         ///     The design of the dungeon

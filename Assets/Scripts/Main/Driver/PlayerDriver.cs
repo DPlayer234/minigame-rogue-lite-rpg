@@ -83,6 +83,14 @@
         }
 
         /// <summary>
+        ///     Called on game over.
+        /// </summary>
+        public void OnGameOver()
+        {
+            this.gameObject.SetActive(false);
+        }
+
+        /// <summary>
         ///     Calculates and returns the top-down movement vector.
         ///     The axes are mapped X: X, Y: Z.
         /// </summary>

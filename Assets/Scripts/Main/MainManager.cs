@@ -15,7 +15,7 @@
     ///     a new one from being created.
     /// </summary>
     [DisallowMultipleComponent]
-    public class MainManager : MonoBehaviour
+    public class MainManager : Singleton<MainManager>
     {
         /// <summary>
         ///     The current player party
@@ -30,11 +30,6 @@
         /// <summary> The canvas that is in world space. </summary>
         [SerializeField]
         private Canvas worldCanvas;
-
-        /// <summary>
-        ///     The global instance of the <see cref="MainManager"/>.
-        /// </summary>
-        public static MainManager Instance { get; private set; }
 
         /// <summary>
         ///     The <seealso cref="CameraController"/> attached to the MainCamera.
@@ -90,15 +85,7 @@
         /// </summary>
         private void Awake()
         {
-            if (MainManager.Instance != null)
-            {
-                Debug.LogWarning("There was an additional active MainManager. The new instance was destroyed.");
-                MonoBehaviour.Destroy(this);
-                return;
-            }
-
-            MainManager.Instance = this;
-            //// DontDestroyOnLoad(this);
+            this.NewInstance();
 
             this.ValidateSetup();
 

@@ -27,6 +27,17 @@
         }
 
         /// <summary>
+        ///     The number of the current floor.
+        /// </summary>
+        public static int FloorNumber
+        {
+            get
+            {
+                return DungeonGenerator.Instance.floorNumber;
+            }
+        }
+
+        /// <summary>
         ///     The current amount of rooms on the floor (<seealso cref="TotalFloorSize"/>)
         /// </summary>
         public static int CurrentFloorSize
@@ -58,11 +69,6 @@
                 return DungeonGenerator.Instance.roomParent;
             }
         }
-
-        /// <summary>
-        ///     The current <see cref="DungeonGenerator"/> instance
-        /// </summary>
-        private static DungeonGenerator Instance { get; set; }
 
         /// <summary>
         ///     The wall blocking the floor transition (<seealso cref="floorTransitionBlockingWall"/>)
@@ -125,6 +131,8 @@
             floorTransition.transform.position = DungeonGenerator.CurrentFloorTransitionBlockingWall.transform.position;
             floorTransition.transform.rotation = DungeonGenerator.CurrentFloorTransitionBlockingWall.transform.rotation;
 
+            DungeonGenerator.Instance.ApplyDesign(floorTransition.transform);
+
             // Delete the wall
             MonoBehaviour.Destroy(DungeonGenerator.CurrentFloorTransitionBlockingWall);
         }
@@ -134,7 +142,7 @@
         /// </summary>
         private void InitializeStatic()
         {
-            DungeonGenerator.Instance = this;
+            this.NewInstance();
         }
 
         /// <summary>

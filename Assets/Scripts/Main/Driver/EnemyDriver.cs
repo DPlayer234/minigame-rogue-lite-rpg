@@ -87,8 +87,8 @@
         {
             base.FixedUpdate();
 
-            // Start a battle if close enough
-            if (this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < BattleTriggerRange * BattleTriggerRange)
+            // Start a battle if close enough and not alread game overed
+            if (!GameOverHandler.IsGameOver && this.targetPlayer != null && (this.targetPlayer.transform.position - this.transform.position).sqrMagnitude < EnemyDriver.BattleTriggerRange * EnemyDriver.BattleTriggerRange)
             {
                 BattleManager.StartNewBattle(
                     this.targetPlayer.battleDriver as PlayerBattleDriver,

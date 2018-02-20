@@ -10,6 +10,7 @@
     
     /// <summary>
     ///     Class storing the battle status.
+    ///     Instantiating it will load all relevant fighters.
     /// </summary>
     [Serializable]
     public class BattleStatus

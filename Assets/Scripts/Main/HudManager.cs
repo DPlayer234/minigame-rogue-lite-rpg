@@ -9,7 +9,7 @@
     ///     Manages the menus
     /// </summary>
     [DisallowMultipleComponent]
-    public class HudManager : MonoBehaviour
+    public class HudManager : Singleton<HudManager>
     {
         /// <summary> The parent object for the exploration HUD. </summary>
         [SerializeField]
@@ -18,11 +18,6 @@
         /// <summary> The parent object for the battle HUD. </summary>
         [SerializeField]
         private GameObject battleHud;
-
-        /// <summary>
-        ///     The global instance of the <see cref="HudManager"/>.
-        /// </summary>
-        public static HudManager Instance { get; private set; }
 
         /// <summary>
         ///     The parent object for the exploration HUD.
@@ -39,18 +34,7 @@
         /// </summary>
         private void Awake()
         {
-            if (HudManager.Instance != null)
-            {
-                Debug.LogWarning("There was an additional active PauseMenuManager. The new instance was destroyed.");
-                MonoBehaviour.Destroy(this);
-                return;
-            }
-
-            HudManager.Instance = this;
-
-#if UNITY_EDITOR
-            // Debug code... or something goes here
-#endif
+            this.NewInstance();
         }
 
         /// <summary>

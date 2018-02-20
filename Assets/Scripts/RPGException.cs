@@ -72,6 +72,7 @@
 
                 { Cause.MenuNoPause, "There is no pause menu attached to the PauseMenu!" },
                 { Cause.MenuMissingComponent, "The menu does not have all required components! Please check the setup." },
+                { Cause.MenuNoGameOver, "There is no game over menu set in the GameOverHandler!" },
 
                 { Cause.SpriteNoRootHierarchy, "This GameObject is lacking a Sprite Root/Hierarchy." },
                 { Cause.SpriteNoBody, "This GameObject is lacking a Sprite Body." },
@@ -108,11 +109,13 @@
             BattleManagerCantEndUninitialized,
 
             ActivityHandlerNoInstance,
+            GameOverHandlerNoInstance,
 
             MiniMapNoInstance,
 
             MenuNoPause,
             MenuMissingComponent,
+            MenuNoGameOver,
 
             SpriteNoRootHierarchy,
             SpriteNoBody,

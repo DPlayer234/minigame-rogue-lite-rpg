@@ -225,7 +225,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1094456250737760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.91, y: 0, z: 0.13}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4740285560681618}
@@ -415,18 +415,18 @@ MonoBehaviour:
   - The Sun Mage
   - Gundolf
   - Hans
-  battleName: Player
   actionClasses: 02000000040000000300000007000000
   spriteManager: {fileID: 0}
   spriteAnimator: {fileID: 0}
   entityDriver: {fileID: 0}
   highlight: {fileID: 0}
+  battleName: Player
   level: 2
   healthBase: 10
   physicalBase: 6
   magicalBase: 14
   defenseBase: 10
-  speedBase: 11
+  speedBase: 9
 --- !u!114 &114249859629316054
 MonoBehaviour:
   m_ObjectHideFlags: 1

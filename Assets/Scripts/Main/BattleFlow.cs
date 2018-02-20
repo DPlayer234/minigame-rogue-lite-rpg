@@ -7,9 +7,6 @@
 
     /// <summary>
     ///     Manages the flow of a battle.
-    ///     Creating a new instance of this will create a new instance
-    ///     of <seealso cref="Main.BattleStatus"/> and therefore initialize
-    ///     a battle.
     /// </summary>
     public class BattleFlow
     {
@@ -190,12 +187,9 @@
         /// </summary>
         private void TriggerGameOver()
         {
-            Debug.LogError("<b>!! GAME OVER !!</b>");
+            Debug.Log("<b>!! GAME OVER !!</b>");
 
-            foreach (var playerEntity in this.BattleStatus.FightingPlayers)
-            {
-                MonoBehaviour.Destroy(playerEntity.gameObject);
-            }
+            GameOverHandler.SetGameOver();
         }
     }
 }

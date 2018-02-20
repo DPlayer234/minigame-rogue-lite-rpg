@@ -37,7 +37,7 @@
         private PartyMemberDisplay[] partyMemberDisplays;
 
         /// <summary>
-        ///     Starts the game and loads the main scene.
+        ///     Return to the Main Menu scene.
         /// </summary>
         public void GoBackToMainMenu()
         {

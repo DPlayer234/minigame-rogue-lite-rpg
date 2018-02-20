@@ -11,16 +11,13 @@
     ///     Manages the activity of game objects and behaviours.
     ///     Behaves like a singleton and will delete any new instances.
     /// </summary>
-    public class ActivityHandler : MonoBehaviour
+    public class ActivityHandler : Singleton<ActivityHandler>
     {
         /// <summary> Distance from the camera in which <seealso cref="LimitedRangeObjects"/> are active </summary>
         public const float ActiveRange = 40.0f;
 
         /// <summary> The delay in seconds between updates in <seealso cref="UpdateRangeActivity"/> </summary>
         private const float ActivityUpdateRate = 0.5f;
-
-        /// <summary> The active instance </summary>
-        private static ActivityHandler instance;
 
         /// <summary> GameObjects which are only enabled in a limited range </summary>
         public static List<GameObject> LimitedRangeObjects { get; private set; }
@@ -29,34 +26,19 @@
         public static List<Behaviour> LimitedRangeBehaviours { get; private set; }
 
         /// <summary>
-        ///     The active instance
-        /// </summary>
-        public static ActivityHandler Instance
-        {
-            get
-            {
-                if (ActivityHandler.instance == null) throw new RPGException(RPGException.Cause.ActivityHandlerNoInstance);
-                return ActivityHandler.instance;
-            }
-
-            private set
-            {
-                ActivityHandler.instance = value;
-            }
-        }
-
-        /// <summary>
         ///     Whether this is enabled and updated.
         /// </summary>
         public static bool Enabled
         {
             get
             {
+                ActivityHandler.CheckInstance();
                 return ActivityHandler.Instance.enabled;
             }
 
             set
             {
+                ActivityHandler.CheckInstance();
                 ActivityHandler.Instance.enabled = value;
             }
         }
@@ -66,6 +48,7 @@
         /// </summary>
         public static void UpdateAndRestart()
         {
+            ActivityHandler.CheckInstance();
             ActivityHandler.Instance.UpdateAndRestartRangeActivityCheck();
         }
 
@@ -75,6 +58,8 @@
         /// <param name="behaviour">The behaviour</param>
         public static void Add(Behaviour behaviour)
         {
+            ActivityHandler.CheckInstance();
+
             behaviour.enabled = false;
             ActivityHandler.LimitedRangeBehaviours.Add(behaviour);
         }
@@ -85,6 +70,8 @@
         /// <param name="gameObject">The GameObject</param>
         public static void Add(GameObject gameObject)
         {
+            ActivityHandler.CheckInstance();
+
             gameObject.SetActive(false);
             ActivityHandler.LimitedRangeObjects.Add(gameObject);
         }
@@ -124,18 +111,19 @@
         }
 
         /// <summary>
+        ///     Throws an exception if there is no instance.
+        /// </summary>
+        private static void CheckInstance()
+        {
+            if (ActivityHandler.Instance == null) throw new RPGException(RPGException.Cause.ActivityHandlerNoInstance);
+        }
+
+        /// <summary>
         ///     Called by Unity to initialize the <see cref="ActivityHandler"/> whether it is enabled or not.
         /// </summary>
         private void Awake()
         {
-            if (ActivityHandler.instance != null)
-            {
-                Debug.LogWarning("There was an additional active ActivityHandler. The new instance was destroyed.");
-                MonoBehaviour.Destroy(this);
-                return;
-            }
-
-            ActivityHandler.Instance = this;
+            this.NewInstance();
 
             ActivityHandler.LimitedRangeObjects = new List<GameObject>();
             ActivityHandler.LimitedRangeBehaviours = new List<Behaviour>();

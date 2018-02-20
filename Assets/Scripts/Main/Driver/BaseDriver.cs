@@ -156,6 +156,11 @@
         /// </summary>
         protected virtual void FixedUpdate()
         {
+            if (GameOverHandler.IsGameOver)
+            {
+                this.rigidbody.velocity = Vector3.zero;
+            }
+
             BaseDriver following;
 
             Vector2 movement = (

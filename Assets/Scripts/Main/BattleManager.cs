@@ -8,11 +8,10 @@
     using UnityEngine;
 
     /// <summary>
-    ///     Stores and manages general game state of the Main scene.
-    ///     Behaves like a singleton; any new instance will override the old one.
+    ///     Stores and manages general game state of the battle.
     /// </summary>
     [DisallowMultipleComponent]
-    public class BattleManager : MonoBehaviour
+    public class BattleManager : Singleton<BattleManager>
     {
         /// <summary> Tag used by Player Entities </summary>
         public const string PlayerEntityTag = "PlayerEntity";
@@ -34,11 +33,6 @@
 
         /// <summary> The <seealso cref="BattleFlow"/> for the current battle </summary>
         private BattleFlow battleFlow;
-
-        /// <summary>
-        ///     The global instance of the <see cref="BattleManager"/>.
-        /// </summary>
-        public static BattleManager Instance { get; private set; }
 
         /// <summary>
         ///     Whether a battle is active
@@ -64,7 +58,7 @@
             if (MainManager.Instance == null) throw new RPGException(RPGException.Cause.MainManagerNoActiveInstance);
             if (BattleManager.Instance != null) return;
 
-            BattleManager.Instance = MainManager.Instance.gameObject.AddComponent<BattleManager>();
+            MainManager.Instance.gameObject.AddComponent<BattleManager>().NewInstance();
 
             BattleManager.Instance.StartBattleMode(leaderPlayer, leaderEnemy);
         }
@@ -192,6 +186,18 @@
             yield return null;
 
             this.StartBattleMode(leaderPlayer, leaderEnemy);
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <see cref="BattleManager"/>
+        /// </summary>
+        private void Awake()
+        {
+            if (BattleManager.Instance != null && BattleManager.Instance != this)
+            {
+                Debug.LogWarning("What. Why are there two BattleManagers?");
+                MonoBehaviour.Destroy(this);
+            }
         }
     }
 }
