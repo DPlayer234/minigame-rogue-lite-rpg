@@ -50,6 +50,12 @@
         public override void OnBattleStart()
         {
             base.OnBattleStart();
+
+            if (this.isBoss)
+            {
+                // Boss theme
+                MusicManager.PlayMusic("NoFightButCool");
+            }
         }
 
         /// <summary>
@@ -58,6 +64,12 @@
         public override void OnBattleEnd()
         {
             base.OnBattleEnd();
+
+            if (this.isBoss)
+            {
+                // Return to regular song
+                MusicManager.PlayMusic(Dungeon.DungeonGenerator.Design.backgroundMusic);
+            }
 
             if (!this.CanStillFight)
             {

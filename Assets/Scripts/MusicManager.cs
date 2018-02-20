@@ -25,6 +25,9 @@
         /// <summary> The audio source also attached to this GameObject </summary>
         private AudioSource audioSource;
 
+        /// <summary> The original volume on the audio source </summary>
+        private float volume;
+
         /// <summary>
         ///     The available audio clips.
         ///     The keys are the clip names.
@@ -45,19 +48,19 @@
         /// <summary>
         ///     Plays a song.
         /// </summary>
-        public static void PlayMusic(string name)
+        public static void PlayMusic(AudioClip song)
         {
-            if (!MusicManager.SongDictionary.ContainsKey(name)) throw new RPGException(RPGException.Cause.UnknownAudioClip);
-
-            MusicManager.Instance.StartCoroutine(MusicManager.Instance.FadeInAndOut(MusicManager.SongDictionary[name]));
+            MusicManager.Instance.StartCoroutine(MusicManager.Instance.FadeInAndOut(song));
         }
 
         /// <summary>
         ///     Plays a song.
         /// </summary>
-        public static void PlayMusic(AudioClip song)
+        public static void PlayMusic(string name)
         {
-            MusicManager.Instance.StartCoroutine(MusicManager.Instance.FadeInAndOut(song));
+            if (!MusicManager.SongDictionary.ContainsKey(name)) throw new RPGException(RPGException.Cause.UnknownAudioClip);
+
+            MusicManager.Instance.StartCoroutine(MusicManager.Instance.FadeInAndOut(MusicManager.SongDictionary[name]));
         }
 
         /// <summary>
@@ -69,7 +72,9 @@
 
             MonoBehaviour.DontDestroyOnLoad(this);
             this.GenerateAudioClipDictionary();
+
             this.audioSource = this.GetComponent<AudioSource>();
+            this.volume = this.audioSource.volume;
         }
 
         /// <summary>
@@ -90,30 +95,35 @@
         /// <returns>An enumerator</returns>
         private IEnumerator FadeInAndOut(AudioClip song)
         {
-            float timePassed = MusicManager.SongFadeTime * (1.0f - this.audioSource.volume);
+            float timePassed = MusicManager.SongFadeTime * (1.0f - this.audioSource.volume / this.volume);
 
             // Fade song out
             while (timePassed < MusicManager.SongFadeTime)
             {
-                this.audioSource.volume = 1.0f - timePassed / MusicManager.SongFadeTime;
+                this.audioSource.volume = (1.0f - timePassed / MusicManager.SongFadeTime) * this.volume;
                 timePassed += Time.deltaTime;
                 yield return null;
             }
 
+            this.audioSource.volume = 0.0f;
+
             // Switch audio clip
             this.audioSource.Stop();
+            if (song == null) yield break;
+            yield return null;
+
             this.audioSource.clip = song;
             this.audioSource.Play();
 
             // Fade song in
             while (timePassed < MusicManager.SongFadeTime * 2.0f)
             {
-                this.audioSource.volume = (timePassed - MusicManager.SongFadeTime) / MusicManager.SongFadeTime;
+                this.audioSource.volume = ((timePassed - MusicManager.SongFadeTime) / MusicManager.SongFadeTime) * this.volume;
                 timePassed += Time.deltaTime;
                 yield return null;
             }
 
-            this.audioSource.volume = 1.0f;
+            this.audioSource.volume = this.volume;
         }
 
         /// <summary>

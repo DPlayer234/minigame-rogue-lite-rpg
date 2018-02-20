@@ -107,6 +107,8 @@
 
             MainMenuManager.SetMenu(this.firstOpenedMenuIndex);
 
+            MusicManager.PlayMusic("SuperSecretTune");
+
 #if UNITY_EDITOR
             // Debug code... or something goes here
 #endif

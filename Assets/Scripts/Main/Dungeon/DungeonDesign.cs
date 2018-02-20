@@ -21,6 +21,11 @@
         public TagMaterialPair[] materials;
 
         /// <summary>
+        ///     Music playing in the background on that floor
+        /// </summary>
+        public AudioClip backgroundMusic;
+
+        /// <summary>
         ///     Stores a tag and a material
         /// </summary>
         [Serializable]

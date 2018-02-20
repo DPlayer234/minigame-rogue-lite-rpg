@@ -549,7 +549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorNumber: 1
   enemyCount: {x: 0, y: 3}
-  recruitCount: {x: 5, y: 5}
+  recruitCount: {x: 1, y: 2}
   roomSize: {x: 10, y: 10}
   parts:
     wall: {fileID: 1507651457678456, guid: 45afa0568f73f3a489f7b9d901db3c6a, type: 2}
@@ -587,6 +587,25 @@ MonoBehaviour:
       material: {fileID: 2100000, guid: 0846ac1727f8b2147816408b374531ac, type: 2}
     - tag: Wall
       material: {fileID: 2100000, guid: 0c9e2d09136d3fe48af787cfa4628ee2, type: 2}
+    backgroundMusic: {fileID: 8300000, guid: f5633228f8d7b9745bb00eb2968f2ca3, type: 3}
+  - pointLightIntensity: 1.5
+    materials:
+    - tag: Floor
+      material: {fileID: 2100000, guid: 90749c3ced87a674eae325e8efed48e8, type: 2}
+    - tag: Roof
+      material: {fileID: 2100000, guid: 09c589ce09d51d5448be79b5812c85e8, type: 2}
+    - tag: Wall
+      material: {fileID: 2100000, guid: 9a82e1cb0d209414caff04c9a603fec3, type: 2}
+    backgroundMusic: {fileID: 8300000, guid: 700c1311de67af949be24d172915504e, type: 3}
+  - pointLightIntensity: 4.5
+    materials:
+    - tag: Floor
+      material: {fileID: 2100000, guid: b83000dcf34ee2c4c8ad64c3077a66e8, type: 2}
+    - tag: Roof
+      material: {fileID: 2100000, guid: ec3cd1df21913db4e8c34695bffd1ff3, type: 2}
+    - tag: Wall
+      material: {fileID: 2100000, guid: 129963624487e0a4c9ecb0872422d719, type: 2}
+    backgroundMusic: {fileID: 8300000, guid: 9028aa81cbd2cf047adcae722fb43a56, type: 3}
 --- !u!1 &691999598
 GameObject:
   m_ObjectHideFlags: 0

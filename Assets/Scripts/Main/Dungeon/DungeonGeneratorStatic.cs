@@ -71,6 +71,17 @@
         }
 
         /// <summary>
+        ///     The design of the dungeon
+        /// </summary>
+        public static DungeonDesign Design
+        {
+            get
+            {
+                return DungeonGenerator.Instance.design;
+            }
+        }
+
+        /// <summary>
         ///     The wall blocking the floor transition (<seealso cref="floorTransitionBlockingWall"/>)
         /// </summary>
         private static GameObject CurrentFloorTransitionBlockingWall
@@ -143,6 +154,8 @@
         private void InitializeStatic()
         {
             this.NewPreferThis();
+
+            MusicManager.PlayMusic(this.design.backgroundMusic);
         }
 
         /// <summary>
