@@ -28,6 +28,7 @@ TagManager:
   - Roof
   - RecruitSpawnPoint
   - Highlight
+  - StatusDisplayActiveHighlight
   layers:
   - Default
   - TransparentFX

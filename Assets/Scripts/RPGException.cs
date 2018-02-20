@@ -66,6 +66,8 @@
                 { Cause.BattleManagerCantStartInitialized, "You cannot start a battle on an initialized instance!" },
                 { Cause.BattleManagerCantEndUninitialized, "You cannot stop a battle when there has not even been initialized one!" },
 
+                { Cause.ActivityHandlerNoInstance, "There is no active ActivityHandler." },
+
                 { Cause.MiniMapNoInstance, "There is no MiniMap instance!" },
 
                 { Cause.MenuNoPause, "There is no pause menu attached to the PauseMenu!" },
@@ -104,6 +106,8 @@
             BattleManagerNoActiveInstance,
             BattleManagerCantStartInitialized,
             BattleManagerCantEndUninitialized,
+
+            ActivityHandlerNoInstance,
 
             MiniMapNoInstance,
 

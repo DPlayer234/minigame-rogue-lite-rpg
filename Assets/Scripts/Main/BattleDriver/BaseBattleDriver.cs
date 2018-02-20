@@ -20,7 +20,7 @@
     public abstract partial class BaseBattleDriver : MonoBehaviour
     {
         /// <summary> "Levels" added for each stat </summary>
-        public const int LevelStatOffset = 4;
+        public const int LevelStatOffset = 9;
 
         /// <summary> The multiplier for the base stat when it gets a bonus </summary>
         public const float BonusStatMultiplier = 1.15f;

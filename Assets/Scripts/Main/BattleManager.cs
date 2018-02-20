@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Camera;
     using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
@@ -80,6 +81,9 @@
             this.battleStatus = new BattleStatus(leaderPlayer, leaderEnemy);
             this.battleFlow = new BattleFlow(this, this.battleStatus);
 
+            // Disable activity handling
+            ActivityHandler.Enabled = false;
+
             // Deactivate unneeded GameObjects
             foreach (GameObject gameObject in this.battleStatus.DeactivatableGameObjects)
             {
@@ -122,6 +126,9 @@
             }
 
             this.SetupEntities(battleStarts: false);
+
+            // Disable activity handling
+            ActivityHandler.Enabled = true;
 
             // Reactivate deactivated GameObjects
             foreach (GameObject gameObject in this.battleStatus.DeactivatableGameObjects)

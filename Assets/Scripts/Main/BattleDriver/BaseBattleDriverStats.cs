@@ -14,16 +14,16 @@
     /// </summary>
     public abstract partial class BaseBattleDriver
     {
-        // Integer overflow for health HIGHLY unlikely until floor ~8,700.
+        // Integer overflow for health HIGHLY unlikely until floor ~10,000.
         // It's safe to assume, that this is never going to happen.
         // If it does, enjoy negative BOSS HP.
-        // Negative regular HP shouldn't occur until floor ~27,000.
+        // Negative regular HP shouldn't occur until floor ~30,000.
 
         /// <summary> Maximum amount of <seealso cref="AttackPoints"/>. Also represents the amount needed to get a turn. </summary>
         public const float MaximumAttackPoints = 10.0f;
 
         /// <summary> The minimum wait in seconds for the next turn </summary>
-        public const float MinimumTurnWait = 0.5f;
+        public const float MinimumTurnWait = 1.0f;
         
         /// <summary> The base value for the <seealso cref="MaximumHealth"/> stat</summary>
         public float healthBase = 10.0f;

@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Camera;
     using SAE.RoguePG.Main.Driver;
     using SAE.RoguePG.Main.UI;
     using UnityEngine;
@@ -24,7 +25,7 @@
 
         /// <summary> The main camera in the scene. To be set from the UnityEditor. </summary>
         [SerializeField]
-        private Camera mainCamera;
+        private UnityEngine.Camera mainCamera;
 
         /// <summary> The canvas that is in world space. </summary>
         [SerializeField]

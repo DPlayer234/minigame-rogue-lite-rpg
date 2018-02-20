@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Camera;
     using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
@@ -254,7 +255,7 @@
                 this.floorTransitionBlockingWall.transform.parent = this.roomParent;
             }
 
-            this.AddLimitedRange(newRoom.GetComponentsInChildren<Light>());
+            ActivityHandler.Add(newRoom.GetComponentsInChildren<Light>());
 
             return newRoom;
         }

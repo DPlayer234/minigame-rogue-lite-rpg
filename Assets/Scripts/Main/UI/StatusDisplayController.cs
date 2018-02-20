@@ -25,6 +25,23 @@
         /// <summary> The tag used by the AP bar elements </summary>
         private const string APBarTag = "StatusDisplayAP";
 
+        /// <summary> The tag used by the active highlight </summary>
+        private const string ActiveHightlightTag = "StatusDisplayActiveHighlight";
+
+        /// <summary>
+        ///     The format string for the label.
+        ///     {0} is the <seealso cref="BaseBattleDriver.BattleName"/> and
+        ///     {1} is the <seealso cref="BaseBattleDriver.Level"/>.
+        /// </summary>
+        private const string LabelFormat = "{0} <color=#ffff00ff>[{1}]</color>";
+
+        /// <summary>
+        ///     The format string for the bar labels.
+        ///     {0} is the current value and
+        ///     {1} is the maximum value.
+        /// </summary>
+        private const string BarLabelFormat = "{0}/{1}";
+
         /// <summary>
         ///     The <seealso cref="BaseBattleDriver"/> to display the information of.
         /// </summary>
@@ -44,6 +61,9 @@
 
         /// <summary> The AP bar label <seealso cref="TextMesh"/> </summary>
         private Text apLabel;
+
+        /// <summary> The GameObject used for highlighting </summary>
+        private GameObject activeHightlight;
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="StatusDisplayController"/> whether it is or is not active.
@@ -68,6 +88,11 @@
                 {
                     // Found AP Bar Part
                     this.AssignTransformOrText(child, ref this.apBar, ref this.apLabel);
+                }
+                else if (child.CompareTag(StatusDisplayController.ActiveHightlightTag))
+                {
+                    // Found highlight
+                    this.activeHightlight = child.gameObject;
                 }
             }
         }
@@ -105,7 +130,7 @@
         /// </summary>
         private void Validate()
         {
-            if (this.label == null || this.healthBar == null || this.healthLabel == null || this.apBar == null || this.apLabel == null)
+            if (this.label == null || this.healthBar == null || this.healthLabel == null || this.apBar == null || this.apLabel == null || this.activeHightlight == null)
             {
                 throw new RPGException(RPGException.Cause.StatusDisplayMissingComponent);
             }
@@ -124,7 +149,7 @@
             bar.transform.localScale = new Vector3(Mathf.Clamp01(currentValue / maximumValue), 1.0f, 1.0f);
 
             // Update the associated display text
-            text.text = string.Format("{0}/{1}", Mathf.RoundToInt(currentValue), Mathf.RoundToInt(maximumValue));
+            text.text = string.Format(StatusDisplayController.BarLabelFormat, Mathf.RoundToInt(currentValue), Mathf.RoundToInt(maximumValue));
         }
 
         /// <summary>
@@ -134,10 +159,12 @@
         {
             if (this.battleDriver != null)
             {
-                this.label.text = string.Format("{0} Lv. {1}", this.battleDriver.BattleName, this.battleDriver.Level);
+                this.label.text = string.Format(StatusDisplayController.LabelFormat, this.battleDriver.BattleName, this.battleDriver.Level);
 
                 this.UpdateBar(this.healthBar, this.healthLabel, this.battleDriver.CurrentHealth, this.battleDriver.MaximumHealth);
                 this.UpdateBar(this.apBar, this.apLabel, this.battleDriver.AttackPoints, BaseBattleDriver.MaximumAttackPoints);
+
+                this.activeHightlight.SetActive(this.battleDriver.TakingTurn);
             }
         }
     }

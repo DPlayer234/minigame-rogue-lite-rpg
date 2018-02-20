@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using SAE.RoguePG.Main.BattleDriver;
+    using SAE.RoguePG.Main.Camera;
     using SAE.RoguePG.Main.Driver;
     using UnityEngine;
 
@@ -88,7 +89,7 @@
 
             this.InitializeStatic();
 
-            MainManager.CameraController.UpdateAndRestartRangeActivityCheck();
+            ActivityHandler.UpdateAndRestart();
         }
 
         /// <summary>
@@ -124,50 +125,6 @@
 
             this.entityParent.position = Vector3.zero;
             this.roomParent.position = Vector3.zero;
-        }
-
-        /// <summary>
-        ///     Adds a behaviour to be only active in a limited range
-        /// </summary>
-        /// <param name="behaviour">The behaviour</param>
-        private void AddLimitedRange(Behaviour behaviour)
-        {
-            behaviour.enabled = false;
-            MainManager.CameraController.LimitedRangeBehaviours.Add(behaviour);
-        }
-
-        /// <summary>
-        ///     Adds a GameObject to be only active in a limited range
-        /// </summary>
-        /// <param name="gameObject">The GameObject</param>
-        private void AddLimitedRange(GameObject gameObject)
-        {
-            gameObject.SetActive(false);
-            MainManager.CameraController.LimitedRangeObjects.Add(gameObject);
-        }
-
-        /// <summary>
-        ///     Adds behaviours to be only active in a limited range
-        /// </summary>
-        /// <param name="behaviours">The behaviours</param>
-        private void AddLimitedRange(Behaviour[] behaviours)
-        {
-            foreach (Behaviour behaviour in behaviours)
-            {
-                this.AddLimitedRange(behaviour);
-            }
-        }
-
-        /// <summary>
-        ///     Adds GameObjects to be only active in a limited range
-        /// </summary>
-        /// <param name="gameObjects">The GameObjects</param>
-        private void AddLimitedRange(GameObject[] gameObjects)
-        {
-            foreach (GameObject gameObject in gameObjects)
-            {
-                this.AddLimitedRange(gameObject);
-            }
         }
     }
 }

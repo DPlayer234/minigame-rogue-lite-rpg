@@ -1,4 +1,4 @@
-﻿namespace SAE.RoguePG.Main
+﻿namespace SAE.RoguePG.Main.Camera
 {
     using System;
     using System.Collections;
@@ -11,12 +11,6 @@
     [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour
     {
-        /// <summary> Distance from the camera in which <seealso cref="LimitedRangeObjects"/> are active </summary>
-        public const float ActiveRange = 40.0f;
-
-        /// <summary> The delay in seconds between updates in <seealso cref="UpdateRangeActivity"/> </summary>
-        private const float ActivityUpdateRate = 0.5f;
-
         /// <summary>
         ///     The <seealso cref="Transform"/> of the GameObject to follow
         /// </summary>
@@ -61,12 +55,6 @@
         /// <summary> Layer used by entity collision </summary>
         private int opaqueLayerMask;
 
-        /// <summary> GameObjects which are only enabled in a limited range </summary>
-        public List<GameObject> LimitedRangeObjects { get; set; }
-
-        /// <summary> Behaviours which are only enabled in a limited range </summary>
-        public List<Behaviour> LimitedRangeBehaviours { get; set; }
-
         /// <summary>
         ///     How far away should the camera be from <see cref="following"/>
         /// </summary>
@@ -90,94 +78,11 @@
         }
 
         /// <summary>
-        ///     Restarts the range activity check and immediately performs one.
-        /// </summary>
-        public void UpdateAndRestartRangeActivityCheck()
-        {
-            this.StopAllCoroutines();
-            this.StartCoroutine(this.UpdateRangeActivity());
-        }
-
-        /// <summary>
         ///     Called by Unity to initialize the <see cref="CameraController"/> whether it is enabled or not.
         /// </summary>
         private void Awake()
         {
-            this.LimitedRangeObjects = new List<GameObject>();
-            this.LimitedRangeBehaviours = new List<Behaviour>();
-
             this.opaqueLayerMask = LayerMask.GetMask("Default");
-        }
-
-        /// <summary>
-        ///     Called by Unity to initialize the <see cref="CameraController"/> when it is first enabled.
-        /// </summary>
-        private void Start()
-        {
-            this.UpdateAndRestartRangeActivityCheck();
-        }
-
-        /// <summary>
-        ///     Updates which objects and behaviour in <seealso cref="LimitedRangeObjects"/> and
-        ///     <seealso cref="LimitedRangeBehaviours"/> are active.
-        /// </summary>
-        /// <returns>An iterator</returns>
-        private IEnumerator UpdateRangeActivity()
-        {
-            Func<bool> waitWhileBattleActive = delegate
-            {
-                return BattleManager.IsBattleActive;
-            };
-
-            while (true)
-            {
-                foreach (GameObject gameObject in this.LimitedRangeObjects)
-                {
-                    if (gameObject == null)
-                    {
-                        continue;
-                    }
-
-                    bool shouldBeActive = this.IsInActiveRange(gameObject.transform);
-
-                    if (gameObject.activeSelf != shouldBeActive)
-                    {
-                        gameObject.SetActive(shouldBeActive);
-                    }
-                }
-
-                foreach (Behaviour behaviour in this.LimitedRangeBehaviours)
-                {
-                    if (behaviour == null)
-                    {
-                        continue;
-                    }
-
-                    bool shouldBeEnabled = this.IsInActiveRange(behaviour.transform);
-
-                    if (behaviour.enabled != shouldBeEnabled)
-                    {
-                        behaviour.enabled = shouldBeEnabled;
-                    }
-                }
-
-                yield return new WaitForSecondsRealtime(CameraController.ActivityUpdateRate);
-
-                if (waitWhileBattleActive())
-                {
-                    yield return new WaitWhile(waitWhileBattleActive);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Returns whether the given transform is in the active range
-        /// </summary>
-        /// <param name="transform">The transform to check</param>
-        /// <returns>Whether it is in the active range</returns>
-        private bool IsInActiveRange(Transform transform)
-        {
-            return (this.transform.position - transform.position).sqrMagnitude < CameraController.ActiveRange * CameraController.ActiveRange;
         }
 
         /// <summary>
