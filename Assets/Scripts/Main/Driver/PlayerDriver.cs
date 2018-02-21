@@ -4,11 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Driver
+namespace DPlay.RoguePG.Main.Driver
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using DPlay.RoguePG.Main.Sprite3D;
     using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
@@ -20,14 +18,14 @@
     public class PlayerDriver : BaseDriver
     {
         /// <summary>
-        ///     The current player party
-        /// </summary>
-        public static Party<PlayerDriver> Party { get; private set; }
-
-        /// <summary>
         ///     The recruitable component attached to this GameObject
         /// </summary>
         private RecruitablePlayer recruitableComponent;
+
+        /// <summary>
+        ///     The current player party
+        /// </summary>
+        public static Party<PlayerDriver> Party { get; private set; }
 
         /// <summary>
         ///     Whether this player driver is recruitable (and therefore not in the party)

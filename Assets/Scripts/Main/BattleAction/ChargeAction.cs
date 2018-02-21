@@ -4,13 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleAction
+namespace DPlay.RoguePG.Main.BattleAction
 {
-    using DPlay.RoguePG.Main.BattleDriver;
     using System;
     using System.Collections;
-    using System.Linq;
-    using System.Text;
+    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>
@@ -52,7 +50,7 @@
 
             Rigidbody rigidbody = this.User.GetComponent<Rigidbody>();
 
-            Vector3 lookAt = (target.transform.position - this.User.transform.position);
+            Vector3 lookAt = target.transform.position - this.User.transform.position;
             lookAt.Normalize();
             lookAt *= this.velocityMultiplier;
 

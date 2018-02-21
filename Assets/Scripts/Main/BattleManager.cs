@@ -4,13 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Camera;
-    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>

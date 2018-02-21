@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Sprite3D
+namespace DPlay.RoguePG.Main.Sprite3D
 {
     using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.Rendering;
 
@@ -24,12 +23,6 @@
         /// <summary> The tag used by the sprite body </summary>
         public const string SpriteBodyTag = "SpriteBody";
 
-        /// <summary> Multiplier for sorting order </summary>
-        private const float SortingOrderMultiplier = 20.0f;
-
-        /// <summary> How fast the flip animation is played. </summary>
-        private const float FlipSpeed = 10.0f;
-
         /// <summary> Contains all the associated <see cref="Transform"/>s usable in animations. </summary>
         [HideInInspector]
         public Transform[] animatedTransforms;
@@ -41,6 +34,12 @@
         /// <summary> Transform of the Sprite body </summary>
         [HideInInspector]
         public Transform bodyTransform;
+
+        /// <summary> Multiplier for sorting order </summary>
+        private const float SortingOrderMultiplier = 20.0f;
+
+        /// <summary> How fast the flip animation is played. </summary>
+        private const float FlipSpeed = 10.0f;
 
         /// <summary> Whether it's facing right. </summary>
         private bool isFacingRight;

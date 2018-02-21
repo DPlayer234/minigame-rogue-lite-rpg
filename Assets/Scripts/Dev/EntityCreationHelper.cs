@@ -4,12 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Dev
+namespace DPlay.RoguePG.Dev
 {
-    using System.Collections;
     using DPlay.RoguePG.Main;
     using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.Sprite3D;
     using UnityEngine;
 
     /// <summary>
@@ -88,20 +86,20 @@
     internal class EntityInformation
     {
         /// <summary> What to tag the Entity as </summary>
-        public readonly string tag;
+        public readonly string Tag;
 
         /// <summary> Color of an attached light source </summary>
-        public readonly Color lightColor;
+        public readonly Color LightColor;
 
         /// <summary>
-        ///     Initializes an instance of the <seealso cref="EntityInformation"/> class
+        ///     Initializes a new instance of the <see cref="EntityInformation"/> class.
         /// </summary>
         /// <param name="tag">The tag to set</param>
         /// <param name="lightColor">Color of an attached light source</param>
         public EntityInformation(string tag, Color lightColor)
         {
-            this.tag = tag;
-            this.lightColor = lightColor;
+            this.Tag = tag;
+            this.LightColor = lightColor;
         }
 
         /// <summary>
@@ -110,14 +108,14 @@
         /// <param name="gameObject">The <seealso cref="GameObject"/> to modify</param>
         public void AssignValuesTo(GameObject gameObject)
         {
-            gameObject.tag = this.tag;
+            gameObject.tag = this.Tag;
 
             // Assign Light Color
             Light light = gameObject.GetComponentInChildren<Light>();
 
             if (light != null)
             {
-                light.color = this.lightColor;
+                light.color = this.LightColor;
             }
             else
             {

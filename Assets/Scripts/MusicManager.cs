@@ -4,13 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG
+namespace DPlay.RoguePG
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using UnityEngine;
 
     /// <summary>
@@ -54,6 +51,7 @@
         /// <summary>
         ///     Plays a song.
         /// </summary>
+        /// <param name="song">A clip to use as a song</param>
         public static void PlayMusic(AudioClip song)
         {
             MusicManager.Instance.StartCoroutine(MusicManager.Instance.FadeInAndOut(song));
@@ -62,6 +60,7 @@
         /// <summary>
         ///     Plays a song.
         /// </summary>
+        /// <param name="name">The name of the song</param>
         public static void PlayMusic(string name)
         {
             if (!MusicManager.SongDictionary.ContainsKey(name)) throw new RPGException(RPGException.Cause.UnknownAudioClip);

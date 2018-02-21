@@ -4,14 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using DPlay.RoguePG.Dev;
-    using DPlay.RoguePG.Main.BattleAction;
-    using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.Sprite3D;
     using DPlay.RoguePG.Main.UI;
     using UnityEngine;
 
@@ -35,6 +30,7 @@
         ///     Creates status bars for its entire party.
         /// </summary>
         /// <param name="parent">The transform to parent them to</param>
+        /// <param name="prefab">The <seealso cref="StatusDisplayController"/> prefab to use</param>
         public void CreateStatusBars(Transform parent, StatusDisplayController prefab)
         {
             this.ThrowExceptionIfNotLeader();

@@ -4,10 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Menu.MainMenu
+namespace DPlay.RoguePG.Menu.MainMenu
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     /// <summary>

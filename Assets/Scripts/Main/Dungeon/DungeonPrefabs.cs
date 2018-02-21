@@ -4,12 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using UnityEngine;
 
     /// <summary>
@@ -18,7 +15,7 @@
     [Serializable]
     public class DungeonPrefabs
     {
-        /// <summary> Walls </summary>
+        /// <summary> The Walls to fill gaps where no room goes </summary>
         public GameObject wall;
 
         /// <summary> Floor transition </summary>

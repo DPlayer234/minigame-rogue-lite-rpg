@@ -4,11 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.UI
+namespace DPlay.RoguePG.Main.UI
 {
     using UnityEngine;
     using UnityEngine.UI;
 
+    /// <summary>
+    ///     Contains extension functions for <seealso cref="Button"/>s
+    /// </summary>
     public static class ButtonExtension
     {
         /// <summary>

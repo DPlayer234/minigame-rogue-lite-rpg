@@ -4,12 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleAction
+namespace DPlay.RoguePG.Main.BattleAction
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using DPlay.RoguePG.Extension;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.UI;
@@ -239,9 +235,9 @@
                     break;
             }
             
-            int damageValue = (int)(Mathf.Max(
+            int damageValue = (int)Mathf.Max(
                 0.0f,
-                (BaseBattleDriver.LevelStatOffset + this.User.Level) * this.AttackPower * damageStat / target.Defense));
+                (BaseBattleDriver.LevelStatOffset + this.User.Level) * this.AttackPower * damageStat / target.Defense);
             target.CurrentHealth -= damageValue;
             return damageValue;
         }

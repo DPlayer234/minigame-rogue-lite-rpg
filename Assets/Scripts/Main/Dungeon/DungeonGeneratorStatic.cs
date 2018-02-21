@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
     using System.Collections;
     using System.Collections.Generic;

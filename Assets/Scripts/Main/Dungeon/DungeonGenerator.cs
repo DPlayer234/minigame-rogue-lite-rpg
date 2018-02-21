@@ -4,11 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Camera;
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
@@ -19,6 +16,9 @@
     /// </summary>
     public partial class DungeonGenerator : Singleton<DungeonGenerator>
     {
+        /// <summary> Tag used for anything to be deleted on the next floor </summary>
+        private const string DeleteOnNextFloorTag = "DeleteOnNextFloor";
+
         /// <summary>
         ///     Floor Number
         /// </summary>
@@ -77,9 +77,6 @@
         ///     The design of the dungeon
         /// </summary>
         private DungeonDesign design;
-
-        /// <summary> Tag used for anything to be deleted on the next floor </summary>
-        private const string DeleteOnNextFloorTag = "DeleteOnNextFloor";
 
         /// <summary>
         ///     Called by Unity to initialize the <seealso cref="DungeonGenerator"/>

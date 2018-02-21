@@ -4,15 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG
+namespace DPlay.RoguePG
 {
     using System;
     using System.Collections.Generic;
 
     // I'm fully aware that this is not the most elegant solution.
     // Or the best I could come up with.
-    // Honestly, I just wanted everything to be in one file.
-    // (Also, nobody looks at the exception type; the message matters much more.)
+    // Honestly, I just didn't want to write 20+ exception classes.
+
     /// <summary>
     ///     An exception in relation to the project.
     /// </summary>
@@ -25,33 +25,7 @@
         public Cause cause;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RPGException"/> class.
-        /// </summary>
-        public RPGException()
-        {
-            this.cause = Cause.Unknown;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RPGException"/> class.
-        ///     Uses a cause to display an error message.
-        /// </summary>
-        public RPGException(Cause cause) : base(RPGException.ErrorMessages[cause])
-        {
-            this.cause = cause;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RPGException"/> class.
-        ///     Uses a cause to display an error message and appends a custom message.
-        /// </summary>
-        public RPGException(Cause cause, string message) : base(RPGException.ErrorMessages[cause] + message)
-        {
-            this.cause = cause;
-        }
-
-        /// <summary>
-        ///     Initializes the static fields and properites of the <see cref="RPGException"/> class.
+        ///     Initializes static members of the <see cref="RPGException"/> class.
         /// </summary>
         static RPGException()
         {
@@ -94,7 +68,36 @@
                 { Cause.StatusDisplayNoBattleDriver, "The StatusDisplay has no assigned BattleDriver!" },
 
                 { Cause.UnknownAudioClip, "The audio clip played it not known." }
-        };
+            };
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="RPGException"/> class.
+        /// </summary>
+        public RPGException()
+        {
+            this.cause = Cause.Unknown;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="RPGException"/> class.
+        ///     Uses a cause to display an error message.
+        /// </summary>
+        /// <param name="cause">The exception cause</param>
+        public RPGException(Cause cause) : base(RPGException.ErrorMessages[cause])
+        {
+            this.cause = cause;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="RPGException"/> class.
+        ///     Uses a cause to display an error message and appends a custom message.
+        /// </summary>
+        /// <param name="cause">The exception cause</param>
+        /// <param name="message">An additional message</param>
+        public RPGException(Cause cause, string message) : base(RPGException.ErrorMessages[cause] + message)
+        {
+            this.cause = cause;
         }
 
         /// <summary>

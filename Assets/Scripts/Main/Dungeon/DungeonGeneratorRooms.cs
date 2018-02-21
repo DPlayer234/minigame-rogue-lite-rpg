@@ -4,15 +4,33 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
-    using System.Collections;
     using System.Collections.Generic;
     using DPlay.RoguePG.Extension;
-    using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Camera;
-    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
+
+    /// <summary>
+    ///     Defines common room types
+    /// </summary>
+    public enum RoomType
+    {
+        /// <summary> There is no room </summary>
+        None = -1,
+
+        /// <summary> The starting room </summary>
+        Start,
+
+        /// <summary> A room without any special features </summary>
+        Common,
+
+        /// <summary> The boss room, containing the boss and the path to the next floor </summary>
+        Boss,
+
+        /// <summary> A room with 'treasure' of some kind </summary>
+        Treasure
+    }
 
     /// <summary>
     ///     Generates a floor when attached to a GameObject.
@@ -187,7 +205,6 @@
         /// </summary>
         /// <param name="validSpecialLocations">A list of valid locations for special rooms</param>
         /// <param name="roomType">The room type</param>
-        /// <returns>The position of the special room</returns>
         private void AddSpecialRoomToLayout(List<Vector2Int> validSpecialLocations, RoomType roomType)
         {
             Vector2Int roomPosition = validSpecialLocations.GetRandomItem();
@@ -241,6 +258,7 @@
         /// </summary>
         /// <param name="position">The position of the room on the grid</param>
         /// <param name="roomType">The type of the room</param>
+        /// <returns>The new room</returns>
         private GameObject SpawnRoom(Vector2Int position, RoomType roomType)
         {
             GameObject newRoom = MonoBehaviour.Instantiate(this.typeToPrefabs[roomType].GetRandomItem(), this.roomParent);
@@ -342,26 +360,5 @@
                 }
             }
         }
-    }
-
-    /// <summary>
-    ///     Defines common room types
-    /// </summary>
-    public enum RoomType
-    {
-        /// <summary> There is no room </summary>
-        None = -1,
-
-        /// <summary> The starting room </summary>
-        Start,
-
-        /// <summary> A room without any special features </summary>
-        Common,
-
-        /// <summary> The boss room, containing the boss and the path to the next floor </summary>
-        Boss,
-
-        /// <summary> A room with 'treasure' of some kind </summary>
-        Treasure
     }
 }

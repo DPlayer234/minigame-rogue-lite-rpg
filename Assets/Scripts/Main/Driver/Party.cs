@@ -4,12 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Driver
+namespace DPlay.RoguePG.Main.Driver
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using UnityEngine;
 
     /// <summary>
     ///     Wraps a <seealso cref="List{T}"/> to be a fixed maximum size of <seealso cref="Party{T}.MaximumSize"/>
@@ -32,27 +31,9 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="Party{T}"/> class
         /// </summary>
-        /// <param name="maximumSize">The maximum size of the party</param>
         public Party()
         {
             this.list = new List<T>(Party<T>.MaximumSize);
-        }
-
-        /// <summary>
-        ///     Gets or sets the item at <paramref name="index"/>
-        /// </summary>
-        /// <param name="index">The index to check for</param>
-        public T this[int index]
-        {
-            get
-            {
-                return this.list[index];
-            }
-
-            set
-            {
-                this.list[index] = value;
-            }
         }
 
         /// <summary>
@@ -85,6 +66,24 @@
             get
             {
                 return this.Count >= Party<T>.MaximumSize;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the item at <paramref name="index"/>
+        /// </summary>
+        /// <param name="index">The index to check for</param>
+        /// <returns>The item at the given index</returns>
+        public T this[int index]
+        {
+            get
+            {
+                return this.list[index];
+            }
+
+            set
+            {
+                this.list[index] = value;
             }
         }
 

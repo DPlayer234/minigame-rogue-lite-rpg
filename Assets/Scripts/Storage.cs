@@ -4,15 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG
+namespace DPlay.RoguePG
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using DPlay.RoguePG.Main;
     using DPlay.RoguePG.Main.Driver;
-    using UnityEngine;
 
     /// <summary>
     ///     Stores some general game state, but doesn't really do anything by itself.

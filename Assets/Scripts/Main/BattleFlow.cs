@@ -4,11 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using System;
     using DPlay.RoguePG.Main.BattleDriver;
-    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -23,6 +22,7 @@
         ///     Initializes a new instance of the <see cref="BattleFlow"/> class.
         /// </summary>
         /// <param name="battleManager">The <seealso cref="BattleManager"/> depending on this instance</param>
+        /// <param name="battleStatus">The <seealso cref="BattleStatus"/> object</param>
         public BattleFlow(BattleManager battleManager, BattleStatus battleStatus)
         {
             this.battleManager = battleManager;

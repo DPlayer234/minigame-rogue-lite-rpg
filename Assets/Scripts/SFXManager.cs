@@ -4,12 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG
+namespace DPlay.RoguePG
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using UnityEngine;
 
     /// <summary>
@@ -30,6 +27,8 @@
         /// <summary>
         ///     Plays a clip by name.
         /// </summary>
+        /// <param name="name">The name of the clip</param>
+        /// <param name="position">The position to play it at</param>
         public static void PlayClip(string name, Vector3 position)
         {
             if (!SFXManager.AudioClipDictionary.ContainsKey(name)) throw new RPGException(RPGException.Cause.UnknownAudioClip);
@@ -39,6 +38,9 @@
         /// <summary>
         ///     Plays a clip by name with a set volume.
         /// </summary>
+        /// <param name="name">The name of the clip</param>
+        /// <param name="position">The position to play it at</param>
+        /// <param name="volume">The normalized volume</param>
         public static void PlayClip(string name, Vector3 position, float volume)
         {
             if (!SFXManager.AudioClipDictionary.ContainsKey(name)) throw new RPGException(RPGException.Cause.UnknownAudioClip);

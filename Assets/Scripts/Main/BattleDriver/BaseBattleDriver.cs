@@ -4,9 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System.Collections;
     using System.Collections.Generic;
     using DPlay.RoguePG.Dev;
     using DPlay.RoguePG.Extension;
@@ -131,7 +130,7 @@
 
             set
             {
-                this.waitingOnAnimationCount += (value ? 1 : -1);
+                this.waitingOnAnimationCount += value ? 1 : -1;
             }
         }
 
@@ -279,6 +278,7 @@
         ///     Leaves the party from the battle.
         ///     The last party member will never leave.
         /// </summary>
+        /// <returns>Return whether it left the party with the call</returns>
         public virtual bool LeaveParty()
         {
             if (this.Allies.Count > 1)

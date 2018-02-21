@@ -4,13 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Menu.PauseMenu
+namespace DPlay.RoguePG.Menu.PauseMenu
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
     using UnityEngine.SceneManagement;
 

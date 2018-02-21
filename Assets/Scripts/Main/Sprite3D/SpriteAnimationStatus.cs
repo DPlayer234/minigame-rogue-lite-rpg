@@ -4,11 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Sprite3D
+namespace DPlay.RoguePG.Main.Sprite3D
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     /// <summary>
@@ -21,18 +19,18 @@
         ///     A value of 1.0 means that it'll take 1 second; a value of 2.0 is twice as fast f.e.
         ///     Cannot be less than 0.0.
         /// </summary>
-        public readonly float speed;
+        public readonly float Speed;
 
         /// <summary>
         ///     Where should the body go?
         /// </summary>
-        public readonly Vector3 position;
+        public readonly Vector3 Position;
 
         /// <summary>
         ///     Where should everything rotate to? (Z-Axis)
         ///     They are in the order the elements are displayed in the Editor, from top to bottom, starting at the SpriteBody.
         /// </summary>
-        public readonly float[] rotations;
+        public readonly float[] Rotations;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SpriteAnimationStatus"/> class.
@@ -44,9 +42,9 @@
         {
             if (speed < 0.0f) throw new ArgumentOutOfRangeException("speed");
 
-            this.speed = speed;
-            this.position = position;
-            this.rotations = rotations;
+            this.Speed = speed;
+            this.Position = position;
+            this.Rotations = rotations;
         }
     }
 }

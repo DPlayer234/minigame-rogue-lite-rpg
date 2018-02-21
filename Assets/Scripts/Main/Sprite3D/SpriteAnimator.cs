@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Sprite3D
+namespace DPlay.RoguePG.Main.Sprite3D
 {
     using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Extension;
     using UnityEngine;
 
@@ -52,6 +51,11 @@
         /// <summary> Set or get the Animation delegate </summary>
         public SpriteAnimation Animation
         {
+            get
+            {
+                return this.animation;
+            }
+
             set
             {
                 if (this.animationCoroutine != null)
@@ -65,11 +69,6 @@
                 }
 
                 this.animation = value;
-            }
-
-            get
-            {
-                return this.animation;
             }
         }
 
@@ -125,19 +124,19 @@
         {
             if (this.endStatus != null)
             {
-                this.progress += Time.deltaTime * this.endStatus.speed;
+                this.progress += Time.deltaTime * this.endStatus.Speed;
 
 #if UNITY_EDITOR
-                if (this.endStatus.rotations.Length != this.startStatus.rotations.Length)
+                if (this.endStatus.Rotations.Length != this.startStatus.Rotations.Length)
                     Debug.LogWarning("The Amount of Sprites and Rotations does not match up.");
 #endif
 
                 // Move Body
                 this.spriteManager.bodyTransform.localPosition =
-                    MathExtension.SmootherStep(this.startStatus.position, this.endStatus.position, this.progress);
+                    MathExtension.SmootherStep(this.startStatus.Position, this.endStatus.Position, this.progress);
 
                 // Rotate Absolutely Everything Else
-                int length = Mathf.Min(this.endStatus.rotations.Length, this.startStatus.rotations.Length);
+                int length = Mathf.Min(this.endStatus.Rotations.Length, this.startStatus.Rotations.Length);
                 Vector3 localEulerAngles;
                 for (int i = 0; i < length; i++)
                 {
@@ -146,7 +145,7 @@
                     this.spriteManager.animatedTransforms[i].localEulerAngles = new Vector3(
                         localEulerAngles.x,
                         localEulerAngles.y,
-                        MathExtension.SmootherStep(this.startStatus.rotations[i], this.endStatus.rotations[i], this.progress));
+                        MathExtension.SmootherStep(this.startStatus.Rotations[i], this.endStatus.Rotations[i], this.progress));
                 }
             }
         }

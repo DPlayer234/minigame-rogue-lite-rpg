@@ -4,13 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.UI
+namespace DPlay.RoguePG.Main.UI
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
-    using UnityEngine.UI;
 
     /// <summary>
     ///     Controls the rotation and movement of a 3D text
@@ -102,7 +98,7 @@
             this.transform.forward = MainManager.CameraController.transform.forward;
 
             this.textMesh.characterSize =
-                initialTextSize * (
+                this.initialTextSize * (
                     // Scaling up; new object
                     this.age < Text3DController.ScaleTime ?
                     this.age / Text3DController.ScaleTime :

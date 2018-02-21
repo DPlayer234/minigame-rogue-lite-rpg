@@ -4,16 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
-    using System.Collections;
     using System.Collections.Generic;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Camera;
     using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
-    using UnityEngine.UI;
 
     /// <summary>
     ///     Stores and manages general game state of the Main scene.
@@ -50,6 +47,7 @@
         /// <summary>
         ///     Spawns an entity based on a prefab with a bonus
         /// </summary>
+        /// <typeparam name="T">The type of the prefab</typeparam>
         /// <param name="prefab">The prefab to use</param>
         /// <param name="bonus1">The first bonus stat</param>
         /// <param name="bonus2">The second bonus stat</param>

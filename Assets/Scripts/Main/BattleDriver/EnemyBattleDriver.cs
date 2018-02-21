@@ -4,13 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Extension;
-    using DPlay.RoguePG.Main.BattleAction;
-    using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
 
     /// <summary>
@@ -138,6 +134,7 @@
         /// <summary>
         ///     Leaves the party.
         /// </summary>
+        /// <returns>Whether the party was left with the call</returns>
         public override bool LeaveParty()
         {
             if (base.LeaveParty())

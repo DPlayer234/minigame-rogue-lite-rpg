@@ -4,14 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
+namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using DPlay.RoguePG.Main.BattleDriver;
-    using UnityEngine;
 
     /// <summary>
     ///     Healing action that fully recovers HP

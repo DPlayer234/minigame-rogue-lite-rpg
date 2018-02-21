@@ -4,15 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Main.BattleAction;
-    using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
-    using UnityEngine.UI;
 
     /// <summary>
     ///     Makes battles work.

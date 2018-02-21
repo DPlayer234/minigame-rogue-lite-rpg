@@ -4,12 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Extension
+namespace DPlay.RoguePG.Extension
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using UnityEngine;
 
     /// <summary>

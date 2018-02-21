@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG
+namespace DPlay.RoguePG
 {
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;

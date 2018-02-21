@@ -4,16 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
-    
+
     /// <summary>
     ///     Class storing the battle status.
     ///     Instantiating it will load all relevant fighters.

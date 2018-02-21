@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
@@ -22,7 +22,7 @@
         private GameObject gameOverMenu;
 
         /// <summary>
-        ///     Initializes the static fields and properites of the <see cref="GameOverHandler"/> class.
+        ///     Initializes static members of the <see cref="GameOverHandler"/> class.
         /// </summary>
         static GameOverHandler()
         {

@@ -4,15 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Driver
+namespace DPlay.RoguePG.Main.Driver
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Main.BattleDriver;
-    using DPlay.RoguePG.Main.Sprite3D;
     using DPlay.RoguePG.Main.UI;
     using UnityEngine;
-    using UnityEngine.UI;
 
     /// <summary>
     ///     Allows this player to be recruitable.
@@ -40,14 +35,6 @@
         private PlayerDriver playerDriver;
 
         /// <summary>
-        ///     Called by Unity to initialize the <seealso cref="RecruitablePlayer"/> whether it is active or not
-        /// </summary>
-        private void Awake()
-        {
-            playerDriver = this.GetComponent<PlayerDriver>();
-        }
-
-        /// <summary>
         ///     Gets whether this entity is in recruitment range
         /// </summary>
         private bool IsInRecruitmentRange
@@ -60,6 +47,14 @@
 
                 return (this.transform.position - partyLeader.transform.position).sqrMagnitude < RecruitablePlayer.RecruitmentRange * RecruitablePlayer.RecruitmentRange;
             }
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <seealso cref="RecruitablePlayer"/> whether it is active or not
+        /// </summary>
+        private void Awake()
+        {
+            this.playerDriver = this.GetComponent<PlayerDriver>();
         }
 
         /// <summary>
@@ -87,7 +82,7 @@
         {
             if (this.recruitUI != null)
             {
-                MonoBehaviour.Destroy(recruitUI);
+                MonoBehaviour.Destroy(this.recruitUI);
             }
         }
 

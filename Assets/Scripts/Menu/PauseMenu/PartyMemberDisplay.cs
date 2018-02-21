@@ -4,12 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Menu.PauseMenu
+namespace DPlay.RoguePG.Menu.PauseMenu
 {
     using DPlay.RoguePG.Main.BattleAction;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.UI;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -161,13 +160,13 @@
                 this.battleDriver.TurnSpeed);
 
             // Actions
-            string actionText = "";
+            string actionText = string.Empty;
             foreach (BattleAction.ActionClass actionClass in this.battleDriver.actionClasses)
             {
                 if (actionClass != BattleAction.ActionClass.NoAction)
                 {
                     BattleAction action = BattleAction.GetBattleAction(actionClass, this.battleDriver);
-                    actionText += (actionText.Length > 0 ? "\n" : "") + string.Format(PartyMemberDisplay.ActionFormat, action.Name, action.Description);
+                    actionText += (actionText.Length > 0 ? "\n" : string.Empty) + string.Format(PartyMemberDisplay.ActionFormat, action.Name, action.Description);
                 }
             }
 

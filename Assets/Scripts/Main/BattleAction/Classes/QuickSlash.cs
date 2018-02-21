@@ -4,15 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleAction.Actions
+namespace DPlay.RoguePG.Main.BattleAction.Actions
 {
     using DPlay.RoguePG.Main.BattleDriver;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using UnityEngine;
 
     /// <summary>
     ///     Stronger physical attack

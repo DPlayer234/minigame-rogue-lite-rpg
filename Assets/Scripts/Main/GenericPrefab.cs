@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using DPlay.RoguePG.Main.UI;
     using UnityEngine;

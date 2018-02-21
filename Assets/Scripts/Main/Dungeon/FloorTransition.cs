@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
@@ -19,6 +19,7 @@
         /// <summary>
         ///     Does its thing and proceeds to the next floor if the given GameObject is a leading player
         /// </summary>
+        /// <param name="gameObject">The GameObject that needs to be a player</param>
         private void ProceedIfPlayer(GameObject gameObject)
         {
             PlayerDriver playerDriver = gameObject.GetComponent<PlayerDriver>();

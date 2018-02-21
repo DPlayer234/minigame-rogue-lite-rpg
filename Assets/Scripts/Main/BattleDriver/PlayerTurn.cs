@@ -4,15 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using DPlay.RoguePG.Main.BattleAction;
-    using DPlay.RoguePG.Main.BattleDriver;
-    using DPlay.RoguePG.Main.Driver;
     using DPlay.RoguePG.Main.UI;
     using UnityEngine;
     using UnityEngine.UI;
@@ -34,9 +28,8 @@
 
         /// <summary>
         ///     The buttons' anchor point
-        ///     (Pretend this is const)
         /// </summary>
-        private static Vector2 ButtonAnchorPoint = Vector2.zero;
+        private static Vector2 ButtonAnchorPoint { get { return Vector2.zero; } }
 
         /// <summary> The parent object for action buttons </summary>
         private GameObject actionButtonHolder;

@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Driver
+namespace DPlay.RoguePG.Main.Driver
 {
     using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Extension;
     using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Sprite3D;
@@ -91,11 +90,11 @@
         public IEnumerator IdleAnimation(SpriteAnimator.StatusSetter informationSetter)
         {
             var lowState = new SpriteAnimationStatus(
-                // importance
+            // speed
                 0.8f,
-                // position
+            // position
                 new Vector3(0.0f, -0.025f, 0.0f),
-                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+            // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
                 1.0f,
                 -3.5f,
                 -5.5f,
@@ -105,11 +104,11 @@
                 -10.0f);
 
             var highState = new SpriteAnimationStatus(
-                // importance
+            // speed
                 0.8f,
-                // position
+            // position
                 new Vector3(0.0f, 0.025f, 0.0f),
-                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+            // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
                 -1.0f,
                 3.5f,
                 5.5f,
@@ -138,11 +137,11 @@
         public IEnumerator WalkingAnimation(SpriteAnimator.StatusSetter informationSetter)
         {
             var lowState = new SpriteAnimationStatus(
-                // importance
+            // speed
                 3.0f,
-                // position
+            // position
                 new Vector3(0.0f, -0.025f, 0.0f),
-                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+            // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
                 1.0f,
                 -3.5f,
                 -5.5f,
@@ -152,11 +151,11 @@
                 -60.0f);
 
             var highState = new SpriteAnimationStatus(
-                // importance
+            // speed
                 3.0f,
-                // position
+            // position
                 new Vector3(0.0f, 0.025f, 0.0f),
-                // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
+            // rotations > Body, Head, Hat, LeftArm, LeftLeg, RightArm, RightLeg
                 -1.0f,
                 3.5f,
                 5.5f,

@@ -4,10 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.UI
+namespace DPlay.RoguePG.Main.UI
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
     using UnityEngine.UI;
@@ -21,6 +19,11 @@
         ///     Height of each individual controller
         /// </summary>
         public const float Height = 50.0f;
+
+        /// <summary>
+        ///     The <seealso cref="BaseBattleDriver"/> to display the information of.
+        /// </summary>
+        public BaseBattleDriver battleDriver;
 
         /// <summary> The tag used by the label </summary>
         private const string LabelTag = "StatusDisplayLabel";
@@ -47,11 +50,6 @@
         ///     {1} is the maximum value.
         /// </summary>
         private const string BarLabelFormat = "{0}/{1}";
-
-        /// <summary>
-        ///     The <seealso cref="BaseBattleDriver"/> to display the information of.
-        /// </summary>
-        public BaseBattleDriver battleDriver;
 
         /// <summary> The label <seealso cref="TextMesh"/> </summary>
         private Text label;

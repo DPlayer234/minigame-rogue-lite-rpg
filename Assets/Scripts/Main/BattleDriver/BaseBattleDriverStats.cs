@@ -4,14 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleDriver
+namespace DPlay.RoguePG.Main.BattleDriver
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using DPlay.RoguePG.Dev;
-    using DPlay.RoguePG.Main.BattleAction;
-    using DPlay.RoguePG.Main.Driver;
-    using DPlay.RoguePG.Main.Sprite3D;
     using UnityEngine;
 
     /// <summary>
@@ -138,6 +132,8 @@
         ///     Sets a stat by the enumator
         /// </summary>
         /// <param name="stat">Which stat</param>
+        /// <param name="value">The value to set the stat to</param>
+        /// <returns>Returns <paramref name="value"/></returns>
         public float SetStat(Stat stat, float value)
         {
             switch (stat)
@@ -187,6 +183,7 @@
         /// </summary>
         /// <param name="stat">Which stat</param>
         /// <param name="value">The value to set it to</param>
+        /// <returns>Returns <paramref name="value"/></returns>
         public float SetBaseStat(Stat stat, float value)
         {
             switch (stat)

@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main
+namespace DPlay.RoguePG.Main
 {
     using System.Collections;
-    using DPlay.RoguePG.Main.BattleDriver;
     using UnityEngine;
 
     /// <summary>
@@ -26,7 +25,7 @@
         private const float Intensity = 50.0f;
 
         /// <summary> The found light source used for highlighting </summary>
-        new private Light light;
+        private new Light light;
 
         /// <summary> Coroutine used to activate and deactivate the <seealso cref="Highlighter"/> after calling <seealso cref="Enable(float)"/> </summary>
         private Coroutine disablingCoroutine;
@@ -62,7 +61,6 @@
         /// <summary>
         ///     Enables or changes the highlight.
         /// </summary>
-        /// <param name="intensity">The light intensity</param>
         public void Enable()
         {
             this.StopDeactivationCoroutine();
@@ -76,7 +74,6 @@
         ///     Enables or changes the highlight.
         /// </summary>
         /// <param name="color">The color for the light</param>
-        /// <param name="intensity">The light intensity</param>
         public void Enable(Color color)
         {
             this.Enable();
@@ -88,7 +85,6 @@
         /// </summary>
         /// <param name="color">The color for the light</param>
         /// <param name="duration">The duration in seconds</param>
-        /// <param name="intensity">The light intensity</param>
         public void Enable(Color color, float duration)
         {
             this.Enable(duration);
@@ -99,7 +95,6 @@
         ///     Enables the highlight and leaves it enabled for the <paramref name="duration"/> in seconds.
         /// </summary>
         /// <param name="duration">The duration in seconds</param>
-        /// <param name="intensity">The light intensity</param>
         public void Enable(float duration)
         {
             this.Enable();
@@ -128,7 +123,8 @@
         /// <summary>
         ///     When run as a coroutine, will disable the highlight after the <paramref name="waitTime"/> in seconds.
         /// </summary>
-        /// <param name="waitTime"></param>
+        /// <param name="waitTime">The time to wait before disabling</param>
+        /// <returns>An enumerator</returns>
         private IEnumerator DisableAfter(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);

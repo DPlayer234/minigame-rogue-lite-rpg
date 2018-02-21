@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Menu.GameOverMenu
+namespace DPlay.RoguePG.Menu.GameOverMenu
 {
     using DPlay.RoguePG.Main.Driver;
     using DPlay.RoguePG.Main.Dungeon;
@@ -23,7 +23,7 @@
         [SerializeField]
         [TextArea]
         [Tooltip("{0}: Floor\n{1}: Average Character Level\n{2}: Score")]
-        private string gameOverResultsFormat = "";
+        private string gameOverResultsFormat = "{0}{1}{2}";
 
         /// <summary>
         ///     The text displaying the results.

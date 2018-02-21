@@ -4,12 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.Dungeon
+namespace DPlay.RoguePG.Main.Dungeon
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using DPlay.RoguePG.Extension;
-    using DPlay.RoguePG.Main.BattleDriver;
     using DPlay.RoguePG.Main.Camera;
     using DPlay.RoguePG.Main.Driver;
     using UnityEngine;
@@ -134,7 +131,7 @@
         /// <summary>
         ///     Spawns recruits at RecruitSpawnPoints
         /// </summary>
-        public void SpawnRecruits()
+        private void SpawnRecruits()
         {
             GameObject[] recruitSpawnPoints = GameObject.FindGameObjectsWithTag(DungeonGenerator.RecruitSpawnPointTag);
             

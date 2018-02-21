@@ -4,13 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Main.BattleAction
+namespace DPlay.RoguePG.Main.BattleAction
 {
     using DPlay.RoguePG.Main.BattleDriver;
-    using System;
-    using System.Collections;
-    using System.Linq;
-    using System.Text;
     using UnityEngine;
 
     /// <summary>

@@ -4,10 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-﻿namespace DPlay.RoguePG.Menu.MainMenu
+namespace DPlay.RoguePG.Menu.MainMenu
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using DPlay.RoguePG.Main.Driver;
     using DPlay.RoguePG.Main.Sprite3D;
