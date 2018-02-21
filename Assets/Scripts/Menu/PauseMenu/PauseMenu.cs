@@ -21,6 +21,11 @@
     public class PauseMenu : MonoBehaviour
     {
         /// <summary>
+        ///     The color addition for every 2nd element (per channel)
+        /// </summary>
+        private const float ColorAdd2nd = 0.3f;
+
+        /// <summary>
         ///     The actual pause menu root (may not be this object)
         /// </summary>
         [SerializeField]
@@ -85,6 +90,15 @@
                 partyMemberDisplay.pauseMenu = this;
 
                 partyMemberDisplay.transform.localPosition = new Vector3(0.0f, height, 0.0f);
+
+                if (index % 2 == 1)
+                {
+                    partyMemberDisplay.image.color += new Color(
+                        PauseMenu.ColorAdd2nd,
+                        PauseMenu.ColorAdd2nd,
+                        PauseMenu.ColorAdd2nd,
+                        0.0f);
+                }
 
                 partyMemberDisplay.Setup();
 

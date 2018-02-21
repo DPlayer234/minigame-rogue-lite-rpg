@@ -35,6 +35,10 @@
         [HideInInspector]
         public PauseMenu pauseMenu;
 
+        /// <summary> The image component </summary>
+        [HideInInspector]
+        public Image image;
+
         /// <summary> The text storing the member name </summary>
         public Text memberName;
 
@@ -171,6 +175,14 @@
         }
 
         /// <summary>
+        ///     Called by Unity to initialize the <see cref="PartyMemberDisplay"/> whether it is active or not
+        /// </summary>
+        private void Awake()
+        {
+            this.image = this.GetComponent<Image>();
+        }
+
+        /// <summary>
         ///     Called by Unity to initialize the <see cref="PartyMemberDisplay"/> when it first becomes active
         /// </summary>
         private void Start()
@@ -178,7 +190,7 @@
             if (this.memberName == null || this.dismissalButton == null ||
                 this.moveUpButton == null || this.moveDownButton == null ||
                 this.statusTextLeft == null || this.statusTextRight == null ||
-                this.actionText == null)
+                this.actionText == null || this.image == null)
             {
                 throw new RPGException(RPGException.Cause.MenuMissingComponent);
             }
